@@ -7,6 +7,8 @@
 ** hge_tut01 - Minimal HGE application
 */
 
+test commit
+
 
 #include "..\HGE\hge.h"
 
