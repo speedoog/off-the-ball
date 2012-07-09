@@ -25,6 +25,98 @@ bool FrameFunc()
 	return false;
 }
 
+#include "DirectX9Sdk/Include/d3d9.h"
+#include "DirectX9Sdk/Include/d3dx9.h"
+#define DIRECTINPUT_VERSION 0x0800
+#include "DirectX9Sdk/Include/dinput.h"            //DirectInput header (NEW)
+
+LPDIRECTINPUT8 _pDIObject=0;           //DirectInput main object
+int _nNbDevices = 0;
+
+bool IsXboxPad(const DIDEVICEINSTANCE* pCurrentDevice)
+{
+	const WCHAR* pName =pCurrentDevice->tszInstanceName;
+  	bool bIsXBOXPad = (pName[0]=='X') &&
+					  (pName[1]=='B') &&
+					  (pName[2]=='O') &&
+					  (pName[3]=='X');
+	return bIsXBOXPad;
+}
+
+BOOL CALLBACK GetNbDevicesCallback(const DIDEVICEINSTANCE* pCurrentDevice, void* pContext) 
+{
+	if (IsXboxPad(pCurrentDevice))
+	{
+		++_nNbDevices;
+	}
+	return DIENUM_CONTINUE;
+}
+
+BOOL CALLBACK GetDevicesCallback(const DIDEVICEINSTANCE* pCurrentDevice, void* pContext) 
+{
+	return DIENUM_CONTINUE;
+}
+
+/*
+BOOL CALLBACK FOR_INPUT_DX::GetDevicesCallback(const DIDEVICEINSTANCE *	pCurrentDevice,
+											   void *					pContext) 
+{
+	if(!strstr(pCurrentDevice->tszInstanceName, "PLAYSTATION") && !strstr(pCurrentDevice->tszInstanceName, "XBOX"))
+	{
+		FOR_INPUT_DX*		pForInputDX;
+		INPUT_INIT_INFO_DX	initInfo;
+
+		pForInputDX = (FOR_INPUT_DX*)pContext;
+
+		LPDIRECTINPUTDEVICE8 pDID8;
+		HRESULT nHr;
+		nHr = pForInputDX->_pDI->CreateDevice(pCurrentDevice->guidInstance, &pDID8, NULL ); 
+		if (!(FAILED( nHr )))
+		{ 
+			initInfo.SetDeviceName(pCurrentDevice->tszInstanceName);
+			initInfo.SetInputDevice(pDID8);
+
+			if (pForInputDX->GetOwnerForInput()->GetInputDevice(pForInputDX->_nCurrentDevices)->Init(&initInfo) == false)
+			{
+				QDT::KCORE::QDT_Warning("Can't Init Input device of %s", initInfo.GetDeviceName().GetBuffer());
+			}
+		}
+
+		pForInputDX->_nCurrentDevices++;
+	}
+	return	(DIENUM_CONTINUE); 
+}
+*/
+
+bool TestInput()
+{
+	// Create DirectInput object:
+	HRESULT nHr = DirectInput8Create( GetModuleHandle(NULL),
+										DIRECTINPUT_VERSION,
+										IID_IDirectInput8,
+										(void**)&_pDIObject,
+										NULL ); 
+
+	
+	if (FAILED(nHr))
+	{
+		return false;
+	}
+
+	// Count DirectInput devices and creates an INPUT_DEVICE for each ones
+	void* pthis=NULL;
+	_pDIObject->EnumDevices( DI8DEVCLASS_ALL, GetNbDevicesCallback, (void*)pthis, DIEDFL_ATTACHEDONLY );
+	if (_nNbDevices == 0)
+	{
+		return false;
+	}
+
+	_pDIObject->EnumDevices( DI8DEVCLASS_ALL, GetDevicesCallback, (void*)pthis, DIEDFL_ATTACHEDONLY );
+	
+	return true;
+}
+
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	// Here we use global pointer to HGE interface.
@@ -44,6 +136,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// Run in windowed mode
 	// Default window size is 800x600
 	hge->System_SetState(HGE_WINDOWED, true);
+
+	TestInput();
 
 	// Don't use BASS for sound
 //	hge->System_SetState(HGE_USESOUND, false);
