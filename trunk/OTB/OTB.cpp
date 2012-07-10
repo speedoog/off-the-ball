@@ -36,10 +36,10 @@ bool RenderFunc()
 
 	for (int i=0; i<PcPadManager::PAD_MAX_ENTRIES; ++i)
 	{
-		fnt->printf(10, i*25.0f, HGETEXT_LEFT, "%d", i);
+		fnt->printf(10, i*25.0f, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(PcPadManager::CtrlIdx, i)+4);
 
 		PcPadManager::CtrlStatus status =PadManager.GetCtrlState((PcPadManager::CtrlIdx)i);
-		fnt->printf(50, i*25.0f, HGETEXT_LEFT, "%d", status);
+		fnt->printf(250, i*25.0f, HGETEXT_LEFT, "%d", status);
 	}
 	
 	hge->Gfx_EndScene();

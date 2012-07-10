@@ -20,10 +20,10 @@
 PcPadManager::PcPadManager()
 {
 	_hWnd		=NULL;
-	_pDI		=NULL;
-	_pJoystick	=NULL;
+	_pDirectInput		=NULL;
+	_pDInputDevice	=NULL;
 	_bInited	=false;
-	memset(&_js,0,sizeof(DIJOYSTATE2));
+	memset(&_JoyState,0,sizeof(DIJOYSTATE2));
 }
 
 // ********************************************
@@ -48,32 +48,32 @@ int	PcPadManager::Init(HWND	hWnd)
 	hr=DirectInput8Create(	GetModuleHandle(NULL),
 							DIRECTINPUT_VERSION,
 							IID_IDirectInput8,
-							(void**)&_pDI,
+							(void**)&_pDirectInput,
 							NULL);
-	RfxAssert(_pDI);
+	RfxAssert(_pDirectInput);
 	RfxAssert(!hr);
-	if (!_pDI)			return	-1;
+	if (!_pDirectInput)			return	-1;
 	if (hr)				return	-2;
 	
 	// Look for a simple joystick we can use for this sample program.
-	hr =_pDI->EnumDevices(DI8DEVCLASS_GAMECTRL,EnumJoysticksCallback,(void*)this,DIEDFL_ATTACHEDONLY);
+	hr =_pDirectInput->EnumDevices(DI8DEVCLASS_GAMECTRL,EnumJoysticksCallback,(void*)this,DIEDFL_ATTACHEDONLY);
 	RfxAssert(!hr);
 	if (hr)				return	-3;
 
 	// Make sure we got a joystick
-	RfxAssert(_pJoystick);
-	if (!_pJoystick)	return	-4;
+	RfxAssert(_pDInputDevice);
+	if (!_pDInputDevice)	return	-4;
 
 	// Set the data format to "simple joystick" - a predefined data format 
-	hr =_pJoystick->SetDataFormat(&c_dfDIJoystick2);
+	hr =_pDInputDevice->SetDataFormat(&c_dfDIJoystick2);
 	RfxAssert(!hr);
 
 	// Set the cooperative level to let DInput know how this device should interact with the system and with other DInput applications.
-	hr =_pJoystick->SetCooperativeLevel(hWnd, DISCL_EXCLUSIVE| DISCL_FOREGROUND);
+	hr =_pDInputDevice->SetCooperativeLevel(hWnd, DISCL_EXCLUSIVE| DISCL_FOREGROUND);
 	RfxAssert(!hr);
 
 	// Enumerate the joystick objects. The callback function enabled user interface elements for objects that are found, and sets the min/max values property for discovered axes.
-	hr =_pJoystick->EnumObjects(EnumObjectsCallback,(void*)this, DIDFT_ALL);
+	hr =_pDInputDevice->EnumObjects(EnumObjectsCallback,(void*)this, DIDFT_ALL);
 	RfxAssert(!hr);
 
 	_bInited =true;
@@ -89,14 +89,14 @@ void PcPadManager::Kill()
 	RfxAssert(_bInited);
 
 	// Unacquire the device one last time just in case  the app tried to exit while the device is still acquired.
-	if (_pJoystick) 
+	if (_pDInputDevice) 
 	{
-		_pJoystick->Unacquire();
+		_pDInputDevice->Unacquire();
 	}
 
 	// Release any DirectInput objects.
-	RfxRelease(_pJoystick);
-	RfxRelease(_pDI);
+	RfxRelease(_pDInputDevice);
+	RfxRelease(_pDirectInput);
 
 	_bInited =false;
 }
@@ -109,33 +109,33 @@ void PcPadManager::Update(void)
 	RfxAssert(_bInited);
 
 	HRESULT hr;
-	RfxAssert(_pJoystick);
-	if (!_pJoystick)		return;
+	RfxAssert(_pDInputDevice);
+	if (!_pDInputDevice)		return;
 
 	// Poll the device to read the current state
-	hr = _pJoystick->Poll();
+	hr = _pDInputDevice->Poll();
 	if (FAILED(hr))
 	{
 		// DInput is telling us that the input stream has been interrupted. We aren't tracking any state between polls, so
 		// we don't have any special reset that needs to be done. We just re-acquire and try again.
-		hr = _pJoystick->Acquire();
+		hr = _pDInputDevice->Acquire();
 		while( hr == DIERR_INPUTLOST ) 
 		{
-			hr = _pJoystick->Acquire();
+			hr = _pDInputDevice->Acquire();
 		}
 
-		hr = _pJoystick->Poll(); 
+		hr = _pDInputDevice->Poll(); 
 		if(!FAILED(hr))
 		{
 			// Get the input's device state
-			_pJoystick->GetDeviceState(sizeof(DIJOYSTATE2),&_js);
+			_pDInputDevice->GetDeviceState(sizeof(DIJOYSTATE2),&_JoyState);
 		}
 
 		return;
 	}
 
 	// Get the input's device state
-	_pJoystick->GetDeviceState(sizeof(DIJOYSTATE2),&_js);
+	_pDInputDevice->GetDeviceState(sizeof(DIJOYSTATE2),&_JoyState);
 
 }
 
@@ -146,26 +146,30 @@ PcPadManager::CtrlStatus PcPadManager::GetCtrlState(CtrlIdx j)const
 {
 	switch(j)
 	{
-	case	PAD_BTN_CROSS:			return	(CtrlStatus)_js.rgbButtons[2];
-	case	PAD_BTN_CIRCLE:			return	(CtrlStatus)_js.rgbButtons[1];
-	case	PAD_BTN_SQUARE:			return	(CtrlStatus)_js.rgbButtons[3];
-	case	PAD_BTN_TRIANGLE:		return	(CtrlStatus)_js.rgbButtons[0];
-	case	PAD_BTN_START:			return	(CtrlStatus)_js.rgbButtons[8];
-	case	PAD_BTN_SELECT:			return	(CtrlStatus)_js.rgbButtons[9];
-	case	PAD_BTN_R1:				return	(CtrlStatus)_js.rgbButtons[7];
-	case	PAD_BTN_R2:				return	(CtrlStatus)_js.rgbButtons[5];
-	case	PAD_BTN_L1:				return	(CtrlStatus)_js.rgbButtons[6];
-	case	PAD_BTN_L2:				return	(CtrlStatus)_js.rgbButtons[4];
-	case	PAD_BTN_UP:				return	(CtrlStatus)(_js.rgdwPOV[0]&0xFF);
-	case	PAD_BTN_DOWN:			return	(CtrlStatus)(_js.rgdwPOV[1]&0xFF);
-	case	PAD_BTN_LEFT:			return	(CtrlStatus)(_js.rgdwPOV[2]&0xFF);
-	case	PAD_BTN_RIGHT:			return	(CtrlStatus)(_js.rgdwPOV[3]&0xFF);
-	case	PAD_BTN_OVER_AXIS1:		return	(CtrlStatus)_js.rgbButtons[10];
-	case	PAD_BTN_OVER_AXIS2:		return	(CtrlStatus)_js.rgbButtons[11];
-	case	PAD_AXIS_X:				return	(CtrlStatus)(_js.lX&0xFF);
-	case	PAD_AXIS_Y:				return	(CtrlStatus)(0xFF-(_js.lY&0xFF));
-	case	PAD_AXIS_Z:				return	(CtrlStatus)(_js.lZ&0xFF);
-	case	PAD_AXIS_ZROTATION:		return	(CtrlStatus)(_js.lRz&0xFF);
+	case	PAD_BTN_A:			return	(CtrlStatus)_JoyState.rgbButtons[0];
+	case	PAD_BTN_B:			return	(CtrlStatus)_JoyState.rgbButtons[1];
+	case	PAD_BTN_X:			return	(CtrlStatus)_JoyState.rgbButtons[2];
+	case	PAD_BTN_Y:			return	(CtrlStatus)_JoyState.rgbButtons[3];
+
+	case	PAD_BTN_LEFT_BTN:	return	(CtrlStatus)_JoyState.rgbButtons[4];
+	case	PAD_BTN_RIGHT_BTN:	return	(CtrlStatus)_JoyState.rgbButtons[5];
+
+	case	PAD_BTN_SELECT:		return	(CtrlStatus)_JoyState.rgbButtons[6];
+	case	PAD_BTN_START:		return	(CtrlStatus)_JoyState.rgbButtons[7];
+	case	PAD_BTN_THUMB_L:	return	(CtrlStatus)_JoyState.rgbButtons[8];
+	case	PAD_BTN_THUMB_R:	return	(CtrlStatus)_JoyState.rgbButtons[9];
+
+	case	PAD_LEFTPAD_AXIS_X:	return	(CtrlStatus)(_JoyState.lX&0xFF);
+	case	PAD_LEFTPAD_AXIS_Y:	return	(CtrlStatus)(0xFF-(_JoyState.lY&0xFF));
+
+	case	PAD_BTN_UP:			return	(CtrlStatus)(_JoyState.rgdwPOV[0]&0xFF);
+	case	PAD_BTN_DOWN:		return	(CtrlStatus)(_JoyState.rgdwPOV[1]&0xFF);
+	case	PAD_BTN_LEFT:		return	(CtrlStatus)(_JoyState.rgdwPOV[2]&0xFF);
+	case	PAD_BTN_RIGHT:		return	(CtrlStatus)(_JoyState.rgdwPOV[3]&0xFF);
+	case	PAD_BTN_OVER_AXIS1:	return	(CtrlStatus)_JoyState.rgbButtons[10];
+	case	PAD_BTN_OVER_AXIS2:	return	(CtrlStatus)_JoyState.rgbButtons[11];
+	case	PAD_AXIS_Z:			return	(CtrlStatus)(_JoyState.lZ&0xFF);
+	case	PAD_AXIS_ZROTATION:	return	(CtrlStatus)(_JoyState.lRz&0xFF);
 	default:;
 	}
 	return	0;
@@ -174,10 +178,7 @@ PcPadManager::CtrlStatus PcPadManager::GetCtrlState(CtrlIdx j)const
 bool IsXboxPad(const DIDEVICEINSTANCE* pCurrentDevice)
 {
 	const char* pName =pCurrentDevice->tszInstanceName;
-	bool bIsXBOXPad = (pName[0]=='X') &&
-		(pName[1]=='B') &&
-		(pName[2]=='O') &&
-		(pName[3]=='X');
+	bool bIsXBOXPad = (pName[0]=='X') && (pName[1]=='B') && (pName[2]=='O') && (pName[3]=='X');
 	return bIsXBOXPad;
 }
 
@@ -193,15 +194,13 @@ BOOL CALLBACK PcPadManager::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidIn
 		return DIENUM_CONTINUE;
 	}
 
-	HRESULT			hr;
-	PcPadManager*	pthis =(PcPadManager*)pContext;
+	PcPadManager* pthis =(PcPadManager*)pContext;
 
 	// Obtain an interface to the enumerated joystick.
-	hr = pthis->_pDI->CreateDevice(pdidInstance->guidInstance,&(pthis->_pJoystick),NULL);
-
-	// If it failed, then we can't use this joystick. (Maybe the user unplugged it while we were in the middle of enumerating it.)
+	HRESULT hr = pthis->_pDirectInput->CreateDevice(pdidInstance->guidInstance,&(pthis->_pDInputDevice),NULL);
 	if (FAILED(hr))
 	{
+		// If it failed, then we can't use this joystick. (Maybe the user unplugged it while we were in the middle of enumerating it.)
 		return DIENUM_CONTINUE;
 	}
 
@@ -234,7 +233,7 @@ BOOL CALLBACK PcPadManager::EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pd
 		diprg.lMax              =255;
 
 		// Set the range for the axis
-		pthis->_pJoystick->SetProperty(DIPROP_RANGE, &diprg.diph);
+		pthis->_pDInputDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
 	}
 
 	return DIENUM_CONTINUE;
