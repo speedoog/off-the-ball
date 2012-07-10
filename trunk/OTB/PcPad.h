@@ -6,8 +6,8 @@
 	purpose:	PC joypad
 *********************************************************************/
 
-#ifndef RFXPCPAD_INCLUDED
-#define RFXPCPAD_INCLUDED
+#ifndef _PCPAD_INCLUDED_
+#define _PCPAD_INCLUDED_
 
 #ifndef	WIN32
 #error Incorrectly included file. This file should only be included in Win32 projects.
@@ -16,9 +16,10 @@
 #define DIRECTINPUT_VERSION 0x0800
 #include <windows.h>
 #include <basetsd.h>
-#include <dinput.h>
 
-class RfxPcPadManager
+#include "DirectX9Sdk/Include/dinput.h"            //DirectInput header (NEW)
+
+class PcPadManager
 {
 public:
     typedef int PadIdx;
@@ -48,27 +49,25 @@ public:
 			PAD_FORCEDWORD=0x7FFFFFFF
     };
 
-			typedef unsigned char		CtrlStatus;
+	typedef unsigned char		CtrlStatus;
 
-															RfxPcPadManager			(void);
-															~RfxPcPadManager		(void);
-			int											init								(HWND	a_hWnd);
-			void										kill								(void);
-			void										update							(void);
-			CtrlStatus            	getCtrlState    		(CtrlIdx j) const; 
-
-private:
-			static	BOOL CALLBACK	EnumObjectsCallback		(const DIDEVICEOBJECTINSTANCE* a_pdidoi, void* a_pContext);
-			static	BOOL CALLBACK	EnumJoysticksCallback	(const DIDEVICEINSTANCE* a_pdidInstance, void* a_pContext);
-															RfxPcPadManager   	(const RfxPcPadManager&);
-      RfxPcPadManager&        operator=     			(const RfxPcPadManager&);
+				PcPadManager();
+				~PcPadManager();
+	int			Init(HWND hWnd);
+	void		Kill();
+	void		Update();
+	CtrlStatus  GetCtrlState(CtrlIdx j) const; 
 
 private:
-			bool									inited_;						//!< Has been inited ?
-			LPDIRECTINPUT8				pDI_;								//!< DInput Device interface
-			LPDIRECTINPUTDEVICE8	pJoystick_;					//!< DInput Joystick
-			HWND									hWnd_;							//!< Main window hWnd
-		 	DIJOYSTATE2						js_;								//!< DInput joystick state
+	static	BOOL CALLBACK	EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, void* pContext);
+	static	BOOL CALLBACK	EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, void* pContext);
+
+private:
+	bool					_bInited;					// Has been inited ?
+	LPDIRECTINPUT8			_pDI;						// DInput Device interface
+	LPDIRECTINPUTDEVICE8	_pJoystick;					// DInput Joystick
+	HWND					_hWnd;						// Main window hWnd
+	DIJOYSTATE2				_js;						// DInput joystick state
 };
 
-#endif	//RFXPCPAD_INCLUDED
+#endif	//_PCPAD_INCLUDED_
