@@ -7,18 +7,19 @@
 ** hge_tut01 - Minimal HGE application
 */
 
-test commit
-
-
 #include "..\HGE\hge.h"
+#include "..\HGE\hgefont.h"
+#include "PcPad.h"
 
-HGE *hge = 0;
+HGE*		hge =0;
+hgeFont*	fnt =0;
 
-// This function will be called by HGE once per frame.
-// Put your game loop code here. In this example we
-// just check whether ESC key has been pressed.
+PcPadManager	PadManager;
+
 bool FrameFunc()
 {
+	PadManager.Update();
+
 	// By returning "true" we tell HGE
 	// to stop running the application.
 	if (hge->Input_GetKeyState(HGEK_ESCAPE)) return true;
@@ -27,97 +28,24 @@ bool FrameFunc()
 	return false;
 }
 
-#include "DirectX9Sdk/Include/d3d9.h"
-#include "DirectX9Sdk/Include/d3dx9.h"
-#define DIRECTINPUT_VERSION 0x0800
-#include "DirectX9Sdk/Include/dinput.h"            //DirectInput header (NEW)
-
-LPDIRECTINPUT8 _pDIObject=0;           //DirectInput main object
-int _nNbDevices = 0;
-
-bool IsXboxPad(const DIDEVICEINSTANCE* pCurrentDevice)
+bool RenderFunc()
 {
-	const WCHAR* pName =pCurrentDevice->tszInstanceName;
-  	bool bIsXBOXPad = (pName[0]=='X') &&
-					  (pName[1]=='B') &&
-					  (pName[2]=='O') &&
-					  (pName[3]=='X');
-	return bIsXBOXPad;
-}
+	// Render graphics
+	hge->Gfx_BeginScene();
+	hge->Gfx_Clear(0);
 
-BOOL CALLBACK GetNbDevicesCallback(const DIDEVICEINSTANCE* pCurrentDevice, void* pContext) 
-{
-	if (IsXboxPad(pCurrentDevice))
+	for (int i=0; i<PcPadManager::PAD_MAX_ENTRIES; ++i)
 	{
-		++_nNbDevices;
+		fnt->printf(10, i*25.0f, HGETEXT_LEFT, "%d", i);
+
+		PcPadManager::CtrlStatus status =PadManager.GetCtrlState((PcPadManager::CtrlIdx)i);
+		fnt->printf(50, i*25.0f, HGETEXT_LEFT, "%d", status);
 	}
-	return DIENUM_CONTINUE;
-}
-
-BOOL CALLBACK GetDevicesCallback(const DIDEVICEINSTANCE* pCurrentDevice, void* pContext) 
-{
-	return DIENUM_CONTINUE;
-}
-
-/*
-BOOL CALLBACK FOR_INPUT_DX::GetDevicesCallback(const DIDEVICEINSTANCE *	pCurrentDevice,
-											   void *					pContext) 
-{
-	if(!strstr(pCurrentDevice->tszInstanceName, "PLAYSTATION") && !strstr(pCurrentDevice->tszInstanceName, "XBOX"))
-	{
-		FOR_INPUT_DX*		pForInputDX;
-		INPUT_INIT_INFO_DX	initInfo;
-
-		pForInputDX = (FOR_INPUT_DX*)pContext;
-
-		LPDIRECTINPUTDEVICE8 pDID8;
-		HRESULT nHr;
-		nHr = pForInputDX->_pDI->CreateDevice(pCurrentDevice->guidInstance, &pDID8, NULL ); 
-		if (!(FAILED( nHr )))
-		{ 
-			initInfo.SetDeviceName(pCurrentDevice->tszInstanceName);
-			initInfo.SetInputDevice(pDID8);
-
-			if (pForInputDX->GetOwnerForInput()->GetInputDevice(pForInputDX->_nCurrentDevices)->Init(&initInfo) == false)
-			{
-				QDT::KCORE::QDT_Warning("Can't Init Input device of %s", initInfo.GetDeviceName().GetBuffer());
-			}
-		}
-
-		pForInputDX->_nCurrentDevices++;
-	}
-	return	(DIENUM_CONTINUE); 
-}
-*/
-
-bool TestInput()
-{
-	// Create DirectInput object:
-	HRESULT nHr = DirectInput8Create( GetModuleHandle(NULL),
-										DIRECTINPUT_VERSION,
-										IID_IDirectInput8,
-										(void**)&_pDIObject,
-										NULL ); 
-
 	
-	if (FAILED(nHr))
-	{
-		return false;
-	}
+	hge->Gfx_EndScene();
 
-	// Count DirectInput devices and creates an INPUT_DEVICE for each ones
-	void* pthis=NULL;
-	_pDIObject->EnumDevices( DI8DEVCLASS_ALL, GetNbDevicesCallback, (void*)pthis, DIEDFL_ATTACHEDONLY );
-	if (_nNbDevices == 0)
-	{
-		return false;
-	}
-
-	_pDIObject->EnumDevices( DI8DEVCLASS_ALL, GetDevicesCallback, (void*)pthis, DIEDFL_ATTACHEDONLY );
-	
-	return true;
+	return false;
 }
-
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -125,25 +53,35 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	// init
 	hge->System_SetState(HGE_FRAMEFUNC,		FrameFunc);
+	hge->System_SetState(HGE_RENDERFUNC,	RenderFunc);
 	hge->System_SetState(HGE_SHOWSPLASH,	false);
 	hge->System_SetState(HGE_SCREENWIDTH,	1280);
 	hge->System_SetState(HGE_SCREENHEIGHT,	720);
 	hge->System_SetState(HGE_TITLE,			"Off the Ball");
 	hge->System_SetState(HGE_WINDOWED,		true);
 
-	TestInput();
-
 	// Tries to initiate HGE with the states set. If something goes wrong, "false" is returned
 	// and more specific description of what have happened can be read with System_GetErrorMessage().
 	if (hge->System_Initiate())
 	{
+		HWND hwnd =hge->System_GetState(HGE_HWND);
+		PadManager.Init(hwnd);
+
+		// Load a font
+		fnt=new hgeFont("Data/font1.fnt");
+
 		hge->System_Start();
+
+		// end of game
+		delete fnt;
+		PadManager.Kill();
 	}
 	else
 	{	
 		// If HGE initialization failed show error message
-		MessageBoxA(NULL, hge->System_GetErrorMessage(), "Error", MB_OK | MB_ICONERROR | MB_APPLMODAL);
+		MessageBox(NULL, hge->System_GetErrorMessage(), "Error", MB_OK | MB_ICONERROR | MB_APPLMODAL);
 	}
+
 
 	// Now ESC has been pressed or the user
 	// has closed the window by other means.

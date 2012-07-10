@@ -9,16 +9,20 @@
 // NGC
 // PSX2
 #if defined(WIN32)
-	#define	_WIN32_WINNT		0x0500
-	#include  "windows.h"
-	#include <cassert>
-	#pragma warning (disable: 4127 4100 4511 4512 4702 4189)
-#elif defined (NGC)
-	#include <dolphin/os.h>
+#	ifndef _WIN32_WINNT
+#		define	_WIN32_WINNT		0x0500
+#	endif
+#	include  "windows.h"
+#	include <cassert>
+#	pragma warning (disable: 4127 4100 4511 4512 4702 4189)
+#	elif defined (NGC)
+#	include <dolphin/os.h>
 #endif
 
-#define RfxDelete(_Obj)						if (_Obj) {delete (_Obj);(_Obj)=NULL;}
+#define RfxDelete(_Obj)					if (_Obj) {delete (_Obj);(_Obj)=NULL;}
 #define RfxDeleteTab(_Tab)				if (_Tab) {delete [](_Tab);(_Tab)=NULL;}
+#define RfxRelease(p)					{ if(p) { (p)->Release(); (p)=NULL; } }
+
 template<typename T> inline void RfxClamp(T& _x, T _min_, T _max_)	{ _x = (_x<_min_  ? _min_ : _x<_max_ ? _x : _max_); }
 template<typename T> inline void RfxClipMin(T& _x, T _min_)					{	_x = ((_x)<(_min_) ? (_min_) : (_x));	}
 template<typename T> inline void RfxClipMax(T& _x, T _max_)					{ _x = ((_x)>(_max_) ? (_max_) : (_x));	}

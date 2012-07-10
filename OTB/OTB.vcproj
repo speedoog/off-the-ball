@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -40,12 +40,14 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				UseUnicodeResponseFiles="true"
 				Optimization="0"
 				AdditionalIncludeDirectories="../"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
+				TreatWChar_tAsBuiltInType="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -62,6 +64,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(SolutionDir)DirectX9Sdk\Lib\X86\d3d9.lib $(SolutionDir)DirectX9Sdk\Lib\X86\d3dx9.lib $(SolutionDir)DirectX9Sdk\Lib\X86\dinput8.lib $(SolutionDir)DirectX9Sdk\Lib\X86\dxguid.lib Winmm.lib"
+				OutputFile="$(SolutionDir)\Out\$(ProjectName)D.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -94,7 +97,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -137,6 +140,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(SolutionDir)DirectX9Sdk\Lib\X86\d3d9.lib $(SolutionDir)DirectX9Sdk\Lib\X86\d3dx9.lib $(SolutionDir)DirectX9Sdk\Lib\X86\dinput8.lib $(SolutionDir)DirectX9Sdk\Lib\X86\dxguid.lib Winmm.lib"
+				OutputFile="$(SolutionDir)\Out\$(ProjectName).exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -185,6 +189,26 @@
 			</File>
 			<File
 				RelativePath=".\Resource.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Pad"
+			>
+			<File
+				RelativePath=".\base.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\base.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PcPad.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PcPad.h"
 				>
 			</File>
 		</Filter>
