@@ -36,8 +36,10 @@ bool RenderFunc()
 
 	for (int i=0; i<PcPadManager::PAD_MAX_ENTRIES; ++i)
 	{
+		fnt->SetColor(0xFFFFA000);
 		fnt->printf(10, i*25.0f, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(PcPadManager::CtrlIdx, i)+4);
 
+		fnt->SetColor(0xFFFF00A0);
 		PcPadManager::CtrlStatus status =PadManager.GetCtrlState((PcPadManager::CtrlIdx)i);
 		fnt->printf(250, i*25.0f, HGETEXT_LEFT, "%d", status);
 	}

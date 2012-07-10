@@ -162,6 +162,9 @@ PcPadManager::CtrlStatus PcPadManager::GetCtrlState(CtrlIdx j)const
 	case	PAD_LEFTPAD_AXIS_X:	return	(CtrlStatus)(_JoyState.lX&0xFF);
 	case	PAD_LEFTPAD_AXIS_Y:	return	(CtrlStatus)(0xFF-(_JoyState.lY&0xFF));
 
+	case	PAD_RIGHTPAD_AXIS_X:return	(CtrlStatus)(_JoyState.lRx&0xFF);
+	case	PAD_RIGHTPAD_AXIS_Y:return	(CtrlStatus)(0xFF-(_JoyState.lRy&0xFF));
+
 	case	PAD_BTN_UP:			return	(CtrlStatus)(_JoyState.rgdwPOV[0]&0xFF);
 	case	PAD_BTN_DOWN:		return	(CtrlStatus)(_JoyState.rgdwPOV[1]&0xFF);
 	case	PAD_BTN_LEFT:		return	(CtrlStatus)(_JoyState.rgdwPOV[2]&0xFF);
@@ -169,7 +172,6 @@ PcPadManager::CtrlStatus PcPadManager::GetCtrlState(CtrlIdx j)const
 	case	PAD_BTN_OVER_AXIS1:	return	(CtrlStatus)_JoyState.rgbButtons[10];
 	case	PAD_BTN_OVER_AXIS2:	return	(CtrlStatus)_JoyState.rgbButtons[11];
 	case	PAD_AXIS_Z:			return	(CtrlStatus)(_JoyState.lZ&0xFF);
-	case	PAD_AXIS_ZROTATION:	return	(CtrlStatus)(_JoyState.lRz&0xFF);
 	default:;
 	}
 	return	0;
