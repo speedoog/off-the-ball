@@ -207,6 +207,14 @@ void CALL HGE_Impl::Gfx_RenderLine(float x1, float y1, float x2, float y2, DWORD
 	}
 }
 
+void CALL HGE_Impl::Gfx_RenderBox(float x1, float y1, float x2, float y2, DWORD color, float z)
+{
+	Gfx_RenderLine(x1, y1, x1, y2, color, z);
+	Gfx_RenderLine(x1, y2, x2, y2, color, z);
+	Gfx_RenderLine(x2, y2, x2, y1, color, z);
+	Gfx_RenderLine(x2, y1, x1, y1, color, z);
+}
+
 void CALL HGE_Impl::Gfx_RenderTriple(const hgeTriple *triple)
 {
 	if(VertArray)

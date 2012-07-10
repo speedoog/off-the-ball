@@ -52,13 +52,13 @@ int	PcPadManager::Init(HWND	hWnd)
 							NULL);
 	RfxAssert(_pDirectInput);
 	RfxAssert(!hr);
-	if (!_pDirectInput)			return	-1;
-	if (hr)				return	-2;
+	if (!_pDirectInput)		return	-1;
+	if (hr)					return	-2;
 	
 	// Look for a simple joystick we can use for this sample program.
 	hr =_pDirectInput->EnumDevices(DI8DEVCLASS_GAMECTRL,EnumJoysticksCallback,(void*)this,DIEDFL_ATTACHEDONLY);
 	RfxAssert(!hr);
-	if (hr)				return	-3;
+	if (hr)					return	-3;
 
 	// Make sure we got a joystick
 	RfxAssert(_pDInputDevice);
@@ -125,7 +125,7 @@ void PcPadManager::Update(void)
 		}
 
 		hr = _pDInputDevice->Poll(); 
-		if(!FAILED(hr))
+		if (!FAILED(hr))
 		{
 			// Get the input's device state
 			_pDInputDevice->GetDeviceState(sizeof(DIJOYSTATE2),&_JoyState);
@@ -137,6 +137,21 @@ void PcPadManager::Update(void)
 	// Get the input's device state
 	_pDInputDevice->GetDeviceState(sizeof(DIJOYSTATE2),&_JoyState);
 
+	// Update Left
+	_AxisLeft.x =float(_JoyState.lX&0xFF)/128.0f-1.0f;
+	_AxisLeft.y =float(255-(_JoyState.lX&0xFF))/128.0f-1.0f;
+	// deadzone
+	if (fabsf(_AxisLeft.x)<0.15f)	_AxisLeft.x =0;
+	if (fabsf(_AxisLeft.y)<0.15f)	_AxisLeft.y =0;
+
+	// Update Right
+	_AxisRight.x =float(_JoyState.lRx&0xFF)/128.0f-1.0f;
+	_AxisRight.y =float(255-(_JoyState.lRy&0xFF))/128.0f-1.0f;
+	if (_AxisRight.Length()<0.3f)
+	{
+		_AxisRight.x =0;
+		_AxisRight.y =0;
+	}
 }
 
 // ********************************************

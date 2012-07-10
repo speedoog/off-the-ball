@@ -11,29 +11,64 @@
 #include "..\HGE\hgefont.h"
 #include "PcPad.h"
 
-HGE*		hge =0;
-hgeFont*	fnt =0;
+HGE*			hge =0;
+hgeFont*		fnt =0;
 
 PcPadManager	PadManager;
+
+int		nScreenSizeX =1280;
+int		nScreenSizeY =720;
+
+float	rGroundY	 =nScreenSizeY/10.0f;
+float	rPosX		 =nScreenSizeX/10.0f;
+float	rCharSizeY	 =nScreenSizeY/4.0f;
+float	rCharSizeX	 =rCharSizeY/5.0f;
+float	rCharRacketY =rCharSizeY*0.75f;
+float	rRacketLen	 =rCharSizeY*0.6f;
+hgeVector vRacketDir(0, 1.0f);
+
+float	rCharSpeed	 =nScreenSizeX/2.0f;
+
+hgeVector vBallPos(nScreenSizeX/2.0f, nScreenSizeY/2.0f);
+hgeVector vBallSpeed(5,5);
 
 bool FrameFunc()
 {
 	PadManager.Update();
 
-	// By returning "true" we tell HGE
-	// to stop running the application.
+	float rDeltaTime =hge->Timer_GetDelta();
+
+	// move char
+	const hgeVector& vAxisLeft =PadManager.GetAxisLeft();
+	rPosX +=vAxisLeft.x*rDeltaTime*rCharSpeed;
+
+	// move racket
+	const hgeVector& vAxisRight =PadManager.GetAxisRight();
+	if (vAxisRight.Length()>0.0f)
+	{
+		hgeVector vAxisRightNorm(vAxisRight);
+		vAxisRightNorm.Normalize();
+		vRacketDir =hgeVector(vAxisRightNorm.x, -vAxisRightNorm.y);
+	}
+
+	// ball phy
+	vBallPos     +=vBallSpeed*rDeltaTime;
+	vBallSpeed.y +=800.0f*rDeltaTime;
+
+	if (vBallPos.y>(nScreenSizeY-rGroundY))
+	{
+		vBallSpeed.y =-vBallSpeed.y*0.75f;
+	}
+	
+	// Exit w/ Esc
 	if (hge->Input_GetKeyState(HGEK_ESCAPE)) return true;
 
 	// Continue execution
 	return false;
 }
 
-bool RenderFunc()
+void DrawInputs() 
 {
-	// Render graphics
-	hge->Gfx_BeginScene();
-	hge->Gfx_Clear(0);
-
 	for (int i=0; i<PcPadManager::PAD_MAX_ENTRIES; ++i)
 	{
 		fnt->SetColor(0xFFFFA000);
@@ -43,7 +78,29 @@ bool RenderFunc()
 		PcPadManager::CtrlStatus status =PadManager.GetCtrlState((PcPadManager::CtrlIdx)i);
 		fnt->printf(250, i*25.0f, HGETEXT_LEFT, "%d", status);
 	}
-	
+}
+
+bool RenderFunc()
+{
+	// Render graphics
+	hge->Gfx_BeginScene();
+	hge->Gfx_Clear(0);
+
+//	DrawInputs();
+
+	// gnd
+	hge->Gfx_RenderLine(0, nScreenSizeY-rGroundY, nScreenSizeX, nScreenSizeY-rGroundY, 0xFFFFFFFF);
+
+	// char
+	hge->Gfx_RenderBox(rPosX-rCharSizeX, nScreenSizeY-(rGroundY+5), rPosX+rCharSizeX, nScreenSizeY-(rGroundY+rCharSizeY), 0xFFFF0000);
+
+	// racket
+	float rRacketY =nScreenSizeY-(rGroundY+rCharRacketY);
+	hge->Gfx_RenderLine(rPosX, rRacketY, rPosX+vRacketDir.x*rRacketLen, rRacketY+vRacketDir.y*rRacketLen, 0xFF60FF60);
+
+	// ball
+	hge->Gfx_RenderBox(vBallPos.x-5, vBallPos.y-5, vBallPos.x+5, vBallPos.y+5, 0xFFFFFF00);
+
 	hge->Gfx_EndScene();
 
 	return false;
@@ -70,7 +127,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		PadManager.Init(hwnd);
 
 		// Load a font
-		fnt=new hgeFont("Data/font1.fnt");
+		fnt=new hgeFont("Data/font2.fnt");
 
 		hge->System_Start();
 
