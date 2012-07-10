@@ -19,6 +19,8 @@
 
 #include "DirectX9Sdk/Include/dinput.h"            //DirectInput header (NEW)
 #include "base.h"
+#include "../hge/hgevector.h"
+
 
 class PcPadManager
 {
@@ -58,12 +60,14 @@ public:
 
 	typedef unsigned char CtrlStatus;
 
-				PcPadManager();
-				~PcPadManager();
-	int			Init(HWND hWnd);
-	void		Kill();
-	void		Update();
-	CtrlStatus  GetCtrlState(CtrlIdx j) const; 
+						PcPadManager();
+						~PcPadManager();
+	int					Init(HWND hWnd);
+	void				Kill();
+	void				Update();
+	CtrlStatus  		GetCtrlState(CtrlIdx j) const;
+	const hgeVector&	GetAxisLeft() const		{ return _AxisLeft;  }
+	const hgeVector&	GetAxisRight() const	{ return _AxisRight; }
 
 private:
 	static	BOOL CALLBACK	EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, void* pContext);
@@ -75,6 +79,8 @@ private:
 	LPDIRECTINPUTDEVICE8	_pDInputDevice;				// DInput Joystick
 	HWND					_hWnd;						// Main window hWnd
 	DIJOYSTATE2				_JoyState;					// DInput joystick state
+
+	hgeVector				_AxisLeft, _AxisRight;
 };
 
 #endif	//_PCPAD_INCLUDED_
