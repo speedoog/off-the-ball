@@ -18,38 +18,43 @@
 #include <basetsd.h>
 
 #include "DirectX9Sdk/Include/dinput.h"            //DirectInput header (NEW)
+#include "base.h"
 
 class PcPadManager
 {
 public:
     typedef int PadIdx;
-    enum CtrlIdx
-    {
-			PAD_BTN_CROSS=0,
-			PAD_BTN_CIRCLE,
-			PAD_BTN_SQUARE,
-			PAD_BTN_TRIANGLE,
-			PAD_BTN_START,
-			PAD_BTN_SELECT,
-			PAD_BTN_R1,
-			PAD_BTN_R2,
-			PAD_BTN_L1,
-			PAD_BTN_L2,
-			PAD_BTN_UP,
-			PAD_BTN_DOWN,
-			PAD_BTN_LEFT,
-			PAD_BTN_RIGHT,
-			PAD_BTN_OVER_AXIS1,
-			PAD_BTN_OVER_AXIS2,
-			PAD_AXIS_X,
-			PAD_AXIS_Y,
-			PAD_AXIS_Z,
-			PAD_AXIS_ZROTATION,
-			PAD_MAX_ENTRIES,
-			PAD_FORCEDWORD=0x7FFFFFFF
-    };
 
-	typedef unsigned char		CtrlStatus;
+    SMARTENUM_DECLARE(CtrlIdx,
+		PAD_BTN_A,
+		PAD_BTN_B,
+		PAD_BTN_X,
+		PAD_BTN_Y,
+
+		PAD_BTN_LEFT_BTN,
+		PAD_BTN_RIGHT_BTN,
+
+		PAD_BTN_SELECT,
+		PAD_BTN_START,
+		PAD_BTN_THUMB_L,
+		PAD_BTN_THUMB_R,
+
+		PAD_LEFTPAD_AXIS_X,
+		PAD_LEFTPAD_AXIS_Y,
+
+		PAD_BTN_UP,
+		PAD_BTN_DOWN,
+		PAD_BTN_LEFT,
+		PAD_BTN_RIGHT,
+		PAD_BTN_OVER_AXIS1,
+		PAD_BTN_OVER_AXIS2,
+		PAD_AXIS_Z,
+		PAD_AXIS_ZROTATION,
+
+		PAD_MAX_ENTRIES,
+    );
+
+	typedef unsigned char CtrlStatus;
 
 				PcPadManager();
 				~PcPadManager();
@@ -64,10 +69,10 @@ private:
 
 private:
 	bool					_bInited;					// Has been inited ?
-	LPDIRECTINPUT8			_pDI;						// DInput Device interface
-	LPDIRECTINPUTDEVICE8	_pJoystick;					// DInput Joystick
+	LPDIRECTINPUT8			_pDirectInput;				// DInput Device interface
+	LPDIRECTINPUTDEVICE8	_pDInputDevice;				// DInput Joystick
 	HWND					_hWnd;						// Main window hWnd
-	DIJOYSTATE2				_js;						// DInput joystick state
+	DIJOYSTATE2				_JoyState;					// DInput joystick state
 };
 
 #endif	//_PCPAD_INCLUDED_
