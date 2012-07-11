@@ -30,7 +30,22 @@ hgeVector vRacketDir(0, 1.0f);
 float	rCharSpeed	 =nScreenSizeX/2.0f;
 
 hgeVector vBallPos(nScreenSizeX/2.0f, nScreenSizeY/2.0f);
-hgeVector vBallSpeed(5,5);
+hgeVector vBallLastPos(nScreenSizeX/2.0f, nScreenSizeY/2.0f);
+hgeVector vBallSpeed(500,5);
+
+void ApplyWorldTransform() 
+{
+	static float rCenterX 	=0;			// center of scale & rotation
+	static float rCenterY 	=360;
+	static float rCenterDx	=0;			// post-offset
+	static float rCenterDy	=0;
+	static float rRotation	=0;			// rotation in radians
+	static float rScaleX	=1;
+	static float rScaleY	=-1;
+
+	// Transformations are applied in this order: first scaling, then rotation and finally displacement. 
+	hge->Gfx_SetTransform(rCenterX, rCenterY, rCenterDx, rCenterDy, rRotation, rScaleX, rScaleY);
+}
 
 bool FrameFunc()
 {
@@ -51,15 +66,41 @@ bool FrameFunc()
 		vRacketDir =hgeVector(vAxisRightNorm.x, -vAxisRightNorm.y);
 	}
 
-	// ball phy
+	// ball basic phy
+	vBallLastPos =vBallPos;
 	vBallPos     +=vBallSpeed*rDeltaTime;
-	vBallSpeed.y +=800.0f*rDeltaTime;
+	vBallSpeed.y +=1500.0f*rDeltaTime;			// gravity
 
+	// check racket collide
+	hgeVector vRacketCenter(rPosX, rCharRacketY);
+	hgeVector vDiff =vBallPos-vRacketCenter;
+	if (vDiff.Length()<rRacketLen)
+	{
+		vBallSpeed =-vBallSpeed;
+	}
+
+	// Collision GND
 	if (vBallPos.y>(nScreenSizeY-rGroundY))
 	{
-		vBallSpeed.y =-vBallSpeed.y*0.75f;
+		if (vBallSpeed.y<500)
+		{
+			//reset
+			vBallPos =hgeVector(nScreenSizeX/2.0f, nScreenSizeY/2.0f);
+		}
+		else
+		{
+			vBallPos.y =(nScreenSizeY-rGroundY);
+			vBallSpeed.y =-vBallSpeed.y*0.80f;
+		}
 	}
-	
+	// Collision Walls
+	if (vBallPos.x>nScreenSizeX || vBallPos.x<0)
+	{
+		vBallSpeed.x =-vBallSpeed.x;
+	}
+
+	ApplyWorldTransform();
+
 	// Exit w/ Esc
 	if (hge->Input_GetKeyState(HGEK_ESCAPE)) return true;
 
@@ -86,7 +127,7 @@ bool RenderFunc()
 	hge->Gfx_BeginScene();
 	hge->Gfx_Clear(0);
 
-//	DrawInputs();
+	DrawInputs();
 
 	// gnd
 	hge->Gfx_RenderLine(0, nScreenSizeY-rGroundY, nScreenSizeX, nScreenSizeY-rGroundY, 0xFFFFFFFF);
@@ -99,7 +140,7 @@ bool RenderFunc()
 	hge->Gfx_RenderLine(rPosX, rRacketY, rPosX+vRacketDir.x*rRacketLen, rRacketY+vRacketDir.y*rRacketLen, 0xFF60FF60);
 
 	// ball
-	hge->Gfx_RenderBox(vBallPos.x-5, vBallPos.y-5, vBallPos.x+5, vBallPos.y+5, 0xFFFFFF00);
+//	hge->Gfx_RenderBox(vBallPos.x-5, vBallPos.y-5, vBallPos.x+5, vBallPos.y+5, 0xFFFFFF00);
 
 	hge->Gfx_EndScene();
 
@@ -128,6 +169,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		// Load a font
 		fnt=new hgeFont("Data/font2.fnt");
+		fnt->SetScale(-1);
+		fnt->SetProportion(-1);
 
 		hge->System_Start();
 
