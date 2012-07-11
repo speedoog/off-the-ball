@@ -195,8 +195,9 @@ PcPadManager::CtrlStatus PcPadManager::GetCtrlState(CtrlIdx j)const
 bool IsXboxPad(const DIDEVICEINSTANCE* pCurrentDevice)
 {
 	const char* pName =pCurrentDevice->tszInstanceName;
-	bool bIsXBOXPad = (pName[0]=='X') && (pName[1]=='B') && (pName[2]=='O') && (pName[3]=='X');
-	return bIsXBOXPad;
+	const char* p=strstr(pName, "XBOX");
+	//bool bIsXBOXPad = (pName[0]=='X') && (pName[1]=='B') && (pName[2]=='O') && (pName[3]=='X');
+	return (p!=NULL);
 }
 
 // ********************************************

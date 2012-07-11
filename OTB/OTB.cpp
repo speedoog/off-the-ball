@@ -16,8 +16,8 @@ hgeFont*		fnt =0;
 
 PcPadManager	PadManager;
 
-int		nScreenSizeX =1280;
-int		nScreenSizeY =720;
+int		nScreenSizeX =800;
+int		nScreenSizeY =450;
 
 float	rGroundY	 =nScreenSizeY/10.0f;
 float	rPosX		 =nScreenSizeX/10.0f;
@@ -155,8 +155,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	hge->System_SetState(HGE_FRAMEFUNC,		FrameFunc);
 	hge->System_SetState(HGE_RENDERFUNC,	RenderFunc);
 	hge->System_SetState(HGE_SHOWSPLASH,	false);
-	hge->System_SetState(HGE_SCREENWIDTH,	1280);
-	hge->System_SetState(HGE_SCREENHEIGHT,	720);
+	hge->System_SetState(HGE_SCREENWIDTH,	nScreenSizeX);
+	hge->System_SetState(HGE_SCREENHEIGHT,	nScreenSizeY);
 	hge->System_SetState(HGE_TITLE,			"Off the Ball");
 	hge->System_SetState(HGE_WINDOWED,		true);
 
