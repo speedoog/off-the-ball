@@ -9,15 +9,21 @@
 
 #include "..\HGE\hge.h"
 #include "..\HGE\hgefont.h"
+#include "..\HGE\hgeparticle.h"
 #include "PcPad.h"
 
-HGE*			hge =0;
-hgeFont*		fnt =0;
+HGE*				hge =0;
+hgeFont*			fnt =0;
+// hgeSprite*			spt =0;
+// hgeParticleSystem*	par =0;
+// HTEXTURE			tex;
 
 PcPadManager	PadManager;
 
-int		nScreenSizeX =800;
-int		nScreenSizeY =450;
+// int		nScreenSizeX =800;
+// int		nScreenSizeY =450;
+int		nScreenSizeX =1280;
+int		nScreenSizeY =720;
 
 float	rGroundY	 =nScreenSizeY/10.0f;
 float	rPosX		 =nScreenSizeX/10.0f;
@@ -36,7 +42,7 @@ hgeVector vBallSpeed(500,5);
 void ApplyWorldTransform() 
 {
 	static float rCenterX 	=0;			// center of scale & rotation
-	static float rCenterY 	=nScreenSizeY/2;
+	static float rCenterY 	=float(nScreenSizeY)/2.0f;
 	static float rCenterDx	=0;			// post-offset
 	static float rCenterDy	=0;
 	static float rRotation	=0;			// rotation in radians
@@ -98,6 +104,8 @@ bool FrameFunc()
 	{
 		vBallSpeed.x =-vBallSpeed.x;
 	}
+// 	par->MoveTo(vBallPos.x,vBallPos.y);
+// 	par->Update(rDeltaTime);
 
 	ApplyWorldTransform();
 
@@ -143,6 +151,8 @@ bool RenderFunc()
 	// ball
 	hge->Gfx_RenderBox(vBallPos.x-5, vBallPos.y-5, vBallPos.x+5, vBallPos.y+5, 0xFFFFFF00);
 
+//	par->Render();
+
 	hge->Gfx_EndScene();
 
 	return false;
@@ -173,10 +183,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		fnt->SetScale(-1);
 		fnt->SetProportion(-1);
 
+		// Create and set up a particle system
+// 		tex=hge->Texture_Load("Data/particles.png");
+// 		spt=new hgeSprite(tex, 32, 32, 32, 32);
+// 		spt->SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE);
+// 		spt->SetHotSpot(16,16);
+// 		par=new hgeParticleSystem("Data/ParticleRed.psi",spt);
+// 		par->Fire();
+
+
 		hge->System_Start();
 
 		// end of game
+// 		delete par;
+// 		delete spt;
 		delete fnt;
+
 		PadManager.Kill();
 	}
 	else
