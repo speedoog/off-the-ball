@@ -36,7 +36,7 @@ hgeVector vBallSpeed(500,5);
 void ApplyWorldTransform() 
 {
 	static float rCenterX 	=0;			// center of scale & rotation
-	static float rCenterY 	=360;
+	static float rCenterY 	=nScreenSizeY/2;
 	static float rCenterDx	=0;			// post-offset
 	static float rCenterDy	=0;
 	static float rRotation	=0;			// rotation in radians
@@ -127,7 +127,8 @@ bool RenderFunc()
 	hge->Gfx_BeginScene();
 	hge->Gfx_Clear(0);
 
-	DrawInputs();
+//	DrawInputs();
+	fnt->printf(10, 40.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
 
 	// gnd
 	hge->Gfx_RenderLine(0, nScreenSizeY-rGroundY, nScreenSizeX, nScreenSizeY-rGroundY, 0xFFFFFFFF);
@@ -140,7 +141,7 @@ bool RenderFunc()
 	hge->Gfx_RenderLine(rPosX, rRacketY, rPosX+vRacketDir.x*rRacketLen, rRacketY+vRacketDir.y*rRacketLen, 0xFF60FF60);
 
 	// ball
-//	hge->Gfx_RenderBox(vBallPos.x-5, vBallPos.y-5, vBallPos.x+5, vBallPos.y+5, 0xFFFFFF00);
+	hge->Gfx_RenderBox(vBallPos.x-5, vBallPos.y-5, vBallPos.x+5, vBallPos.y+5, 0xFFFFFF00);
 
 	hge->Gfx_EndScene();
 
