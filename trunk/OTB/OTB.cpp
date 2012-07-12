@@ -32,14 +32,14 @@ Game			_Game;
 PcPadManager	PadManager;
 
 // normal window
-// int  _nScreenSizeX =1280;
-// int  _nScreenSizeY =720;
-// bool _bWindowed    =true;
+int  _nScreenSizeX =1280;
+int  _nScreenSizeY =720;
+bool _bWindowed    =true;
 
 // eeepc window
-int	 _nScreenSizeX =900;
-int	 _nScreenSizeY =500;
-bool _bWindowed	   =true;
+// int	 _nScreenSizeX =900;
+// int	 _nScreenSizeY =500;
+// bool _bWindowed	   =true;
 
 // eeepc fullscreen
 // int  _nScreenSizeX =1024;
