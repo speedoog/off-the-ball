@@ -22,11 +22,11 @@ PcPadManager	PadManager;
 
 // int		nScreenSizeX =800;
 // int		nScreenSizeY =450;
-int		nScreenSizeX =1280;
-int		nScreenSizeY =720;
+// int		nScreenSizeX =1280;
+// int		nScreenSizeY =720;
 
-// int		nScreenSizeX =800;
-// int		nScreenSizeY =600;
+int		nScreenSizeX =800;
+int		nScreenSizeY =600;
 static float rTop	=10.0f;
 static float rBottom=-1.0f;
 static float rRatio =16.0f/10.0f;
