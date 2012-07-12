@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="OTB"
 	ProjectGUID="{05A63F5E-44E1-48F5-9391-93E691757A78}"
 	RootNamespace="OTB"
@@ -237,11 +237,35 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\Game.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Game.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Level.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Level.h"
+			>
+		</File>
+		<File
 			RelativePath=".\OTB.cpp"
 			>
 		</File>
 		<File
 			RelativePath=".\OTB.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Player.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Player.h"
 			>
 		</File>
 	</Files>
