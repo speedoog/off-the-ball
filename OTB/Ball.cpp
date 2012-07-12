@@ -16,43 +16,72 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#include "Game.h"
+
+#include "Ball.h"
+
+float rGravity	=-9.0f;
+float rRadius	=0.1f;
 
 // ********************************************
 //	Ctor
 // ********************************************
-Game::Game()
+Ball::Ball()
 {
-	_Player1.SetPosition(hgeVector(-5,0));
-	_Player2.SetPosition(hgeVector( 5,0));
+	Reset();
 }
 
 // ********************************************
 //	Dtor
 // ********************************************
-Game::~Game()
+Ball::~Ball()
 {
 
+}
+
+// ********************************************
+//	Reset
+// ********************************************
+void Ball::Reset()
+{
+	_vPos		=hgeVector(-5,5);
+	_vLastPos	=_vPos;
+	_vVelocity	=hgeVector(3,1);
 }
 
 // ********************************************
 //	Update
 // ********************************************
-void Game::Update(const float rDeltaTime)
+void Ball::Update(const float rDeltaTime)
 {
-	_Level.Update(rDeltaTime);
-	_Ball.Update(rDeltaTime);
-	_Player1.Update(rDeltaTime);
-	_Player2.Update(rDeltaTime);
+	float rNewDT =rDeltaTime*1.1f;
+	_vLastPos	=_vPos;
+	_vPos		+=_vVelocity*rNewDT;
+	_vVelocity.y+=rGravity*rNewDT;
+
+	// Collision GND
+	if (_vPos.y<0)
+	{
+		if (_vVelocity.y>(-5.f))
+		{
+			Reset();
+		}
+		else
+		{
+			_vPos.y =0;
+			_vVelocity.y =-_vVelocity.y*0.80f;
+		}
+	}
+	// Collision Walls
+	if ((_vPos.x>9) || (_vPos.x<-9))
+	{
+		_vVelocity.x =-_vVelocity.x;
+	}
 }
 
 // ********************************************
 //	Render
 // ********************************************
-void Game::Render()
+void Ball::Render()
 {
-	_Level.Render();
-	_Ball.Render();
-	_Player1.Render();
-	_Player2.Render();
+	hge->Gfx_RenderBox(_vPos.x-rRadius, _vPos.y-rRadius, _vPos.x+rRadius, _vPos.y+rRadius, 0xFFFFFF00);
 }
