@@ -17,3 +17,5 @@ blablabla...
 
 
 <wiki:video url="http://www.youtube.com/watch?v=EMOL_MhwEGU"/>
+
+<h1>toto</h1>
