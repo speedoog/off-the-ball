@@ -1,16 +1,26 @@
-
-/*
-** Haaf's Game Engine 1.8
-** Copyright (C) 2003-2007, Relish Games
-** hge.relishgames.com
-**
-** hge_tut01 - Minimal HGE application
-*/
+//////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//     ________   _____  _____    __  .__             __________        .__  .__        //
+//     \_____  \_/ ____\/ ____\ _/  |_|  |__   ____   \______   \_____  |  | |  |       //
+//      /   |   \   __\\   __\  \   __\  |  \_/ __ \   |    |  _/\__  \ |  | |  |       //
+//     /    |    \  |   |  |     |  | |   Y  \  ___/   |    |   \ / __ \|  |_|  |__     //
+//     \_______  /__|   |__|     |__| |___|  /\___  >  |______  /(____  /____/____/     //
+//             \/                          \/     \/          \/      \/                //
+//                                                                                      //
+//                          .o                                                          //
+//                   ¨>   .                                      <¨                     //
+//                  /_                       |                    | ___                 //
+//               __/\ `\                     |                   / \                    //
+//                   \,                      |                 ,/  /                    //
+// ------------------------------------------ ----------------------------------------- //
+//                        Copyright(c) 2012 by Bertrand Faure                           //
+//////////////////////////////////////////////////////////////////////////////////////////
 
 #include "..\HGE\hge.h"
 #include "..\HGE\hgefont.h"
 #include "..\HGE\hgeparticle.h"
 #include "PcPad.h"
+#include "Game.h"
 
 HGE*				hge =0;
 hgeFont*			fnt =0;
@@ -18,42 +28,51 @@ hgeFont*			fnt =0;
 // hgeParticleSystem*	par =0;
 // HTEXTURE			tex;
 
+Game			_Game;
 PcPadManager	PadManager;
 
-// int		nScreenSizeX =640;
-// int		nScreenSizeY =360;
-int		nScreenSizeX =1280;
-int		nScreenSizeY =720;
-// int		nScreenSizeX =800;
-// int		nScreenSizeY =600;
+// normal window
+// int  _nScreenSizeX =1280;
+// int  _nScreenSizeY =720;
+// bool _bWindowed    =true;
+
+// eeepc window
+int	 _nScreenSizeX =900;
+int	 _nScreenSizeY =500;
+bool _bWindowed	   =true;
+
+// eeepc fullscreen
+// int  _nScreenSizeX =1024;
+// int  _nScreenSizeY =600;
+// bool _bWindowed    =false;
 
 static float rTop	=10.0f;
 static float rBottom=-1.0f;
 static float rRatio =16.0f/10.0f;
 float rSizeY =rTop-rBottom;
-float rScreenRatio =float(nScreenSizeX)/float(nScreenSizeY);
-float rGlobalScale =float(nScreenSizeY)/rSizeY;
+float rScreenRatio =float(_nScreenSizeX)/float(_nScreenSizeY);
+float rGlobalScale =float(_nScreenSizeY)/rSizeY;
 
 
-float	rGroundY	 =nScreenSizeY/10.0f;
-float	rPosX		 =nScreenSizeX/10.0f;
-float	rCharSizeY	 =nScreenSizeY/4.0f;
+float	rGroundY	 =_nScreenSizeY/10.0f;
+float	rPosX		 =_nScreenSizeX/10.0f;
+float	rCharSizeY	 =_nScreenSizeY/4.0f;
 float	rCharSizeX	 =rCharSizeY/5.0f;
 float	rCharRacketY =rCharSizeY*0.75f;
 float	rRacketLen	 =rCharSizeY*0.6f;
 hgeVector vRacketDir(0, 1.0f);
 
-float	rCharSpeed	 =nScreenSizeX/2.0f;
+float	rCharSpeed	 =_nScreenSizeX/2.0f;
 
-hgeVector vBallPos(nScreenSizeX/2.0f, nScreenSizeY/2.0f);
-hgeVector vBallLastPos(nScreenSizeX/2.0f, nScreenSizeY/2.0f);
+hgeVector vBallPos(_nScreenSizeX/2.0f, _nScreenSizeY/2.0f);
+hgeVector vBallLastPos(_nScreenSizeX/2.0f, _nScreenSizeY/2.0f);
 hgeVector vBallSpeed(500,5);
 
 void ApplyWorldTransform() 
 {
 /*
 	static float rCenterX 	=0;			// center of scale & rotation
-	static float rCenterY 	=float(nScreenSizeY)/2.0f;
+	static float rCenterY 	=float(_nScreenSizeY)/2.0f;
 	static float rCenterDx	=0;			// post-offset
 	static float rCenterDy	=0;
 	static float rRotation	=0;			// rotation in radians
@@ -64,8 +83,8 @@ void ApplyWorldTransform()
 
 	static float rCenterX 	=0;			// center of scale & rotation
 	static float rCenterY 	=rBottom+(rSizeY/2.0f);
-	static float rCenterDx	=float(nScreenSizeX)/2.0f;
-	static float rCenterDy	=float(nScreenSizeY)/2.0f;
+	static float rCenterDx	=float(_nScreenSizeX)/2.0f;
+	static float rCenterDy	=float(_nScreenSizeY)/2.0f;
 	static float rRotation	=0;
 //	rRotation+=0.02f;
 
@@ -78,6 +97,8 @@ bool FrameFunc()
 	PadManager.Update();
 
 	float rDeltaTime =hge->Timer_GetDelta();
+
+	_Game.Update(rDeltaTime);
 
 	// move char
 	const hgeVector& vAxisLeft =PadManager.GetAxisLeft();
@@ -106,21 +127,21 @@ bool FrameFunc()
 	}
 
 	// Collision GND
-	if (vBallPos.y>(nScreenSizeY-rGroundY))
+	if (vBallPos.y>(_nScreenSizeY-rGroundY))
 	{
 		if (vBallSpeed.y<500)
 		{
 			//reset
-			vBallPos =hgeVector(nScreenSizeX/2.0f, nScreenSizeY/2.0f);
+			vBallPos =hgeVector(_nScreenSizeX/2.0f, _nScreenSizeY/2.0f);
 		}
 		else
 		{
-			vBallPos.y =(nScreenSizeY-rGroundY);
+			vBallPos.y =(_nScreenSizeY-rGroundY);
 			vBallSpeed.y =-vBallSpeed.y*0.80f;
 		}
 	}
 	// Collision Walls
-	if (vBallPos.x>nScreenSizeX || vBallPos.x<0)
+	if (vBallPos.x>_nScreenSizeX || vBallPos.x<0)
 	{
 		vBallSpeed.x =-vBallSpeed.x;
 	}
@@ -160,15 +181,8 @@ bool RenderFunc()
 	hge->Gfx_BeginScene();
 	hge->Gfx_Clear(0);
 
-	hge->Gfx_RenderBox( -5.0f, 0.01f,
-						-5.7f, 1.8f);
 
-	// level
-	hge->Gfx_RenderLine(-9, 0, 9, 0, 0xFFFF5000);	// gnd
-	hge->Gfx_RenderLine(-9, 9, 9, 9, 0xFF00FF00);	// top
-	hge->Gfx_RenderLine(-9, 0,-9, 9, 0xFF00FF00);	// left
-	hge->Gfx_RenderLine( 9, 0, 9, 9, 0xFF00FF00);	// right
-	hge->Gfx_RenderLine( 0, 0, 0, 1, 0xFFFFFF00);	// net
+	_Game.Render();
 
 	//DrawInputs();
 
@@ -176,13 +190,13 @@ bool RenderFunc()
 	fnt->printf(10, 40.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
 
 	// gnd
-	hge->Gfx_RenderLine(0, nScreenSizeY-rGroundY, nScreenSizeX, nScreenSizeY-rGroundY, 0xFFFFFFFF);
+	hge->Gfx_RenderLine(0, _nScreenSizeY-rGroundY, _nScreenSizeX, _nScreenSizeY-rGroundY, 0xFFFFFFFF);
 
 	// char
-	hge->Gfx_RenderBox(rPosX-rCharSizeX, nScreenSizeY-(rGroundY+5), rPosX+rCharSizeX, nScreenSizeY-(rGroundY+rCharSizeY), 0xFFFF0000);
+	hge->Gfx_RenderBox(rPosX-rCharSizeX, _nScreenSizeY-(rGroundY+5), rPosX+rCharSizeX, _nScreenSizeY-(rGroundY+rCharSizeY), 0xFFFF0000);
 
 	// racket
-	float rRacketY =nScreenSizeY-(rGroundY+rCharRacketY);
+	float rRacketY =_nScreenSizeY-(rGroundY+rCharRacketY);
 	hge->Gfx_RenderLine(rPosX, rRacketY, rPosX+vRacketDir.x*rRacketLen, rRacketY+vRacketDir.y*rRacketLen, 0xFF60FF60);
 
 	// ball
@@ -204,10 +218,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	hge->System_SetState(HGE_FRAMEFUNC,		FrameFunc);
 	hge->System_SetState(HGE_RENDERFUNC,	RenderFunc);
 	hge->System_SetState(HGE_SHOWSPLASH,	false);
-	hge->System_SetState(HGE_SCREENWIDTH,	nScreenSizeX);
-	hge->System_SetState(HGE_SCREENHEIGHT,	nScreenSizeY);
+	hge->System_SetState(HGE_SCREENWIDTH,	_nScreenSizeX);
+	hge->System_SetState(HGE_SCREENHEIGHT,	_nScreenSizeY);
 	hge->System_SetState(HGE_TITLE,			"Off the Ball");
-	hge->System_SetState(HGE_WINDOWED,		true);
+	hge->System_SetState(HGE_WINDOWED,		_bWindowed);
 
 	// Tries to initiate HGE with the states set. If something goes wrong, "false" is returned
 	// and more specific description of what have happened can be read with System_GetErrorMessage().

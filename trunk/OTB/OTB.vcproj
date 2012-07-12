@@ -196,14 +196,6 @@
 			Name="Pad"
 			>
 			<File
-				RelativePath=".\base.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\base.h"
-				>
-			</File>
-			<File
 				RelativePath=".\PcPad.cpp"
 				>
 			</File>
@@ -213,7 +205,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="xml"
+			Name="Xml"
 			>
 			<File
 				RelativePath=".\xml\DynamicBuffer.cpp"
@@ -236,6 +228,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Base"
+			>
+			<File
+				RelativePath=".\Base.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Base.h"
+				>
+			</File>
+		</Filter>
+		<File
+			RelativePath=".\Ball.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Ball.h"
+			>
+		</File>
 		<File
 			RelativePath=".\Game.cpp"
 			>

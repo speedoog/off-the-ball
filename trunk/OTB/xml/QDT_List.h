@@ -1,21 +1,21 @@
-//*****************************************************************************
-//
-// Copyright (C) 2000-2005 Quantic Dream SA
-//
-// These coded instructions, statements and computer programs contain
-// unpublished information proprietary to Quantic Dream SA and are 
-// protected by French and EEC copyright laws. They may not be 
-// disclosed to third parties or copied or duplicated, in whole or in part, 
-// without prior written consent of Quantic Dream SA
-//
-// Unpublished-rights reserved under the Copyright Laws of the EEC.
-//
-//*****************************************************************************
-//
-//	CLASS:	QDT_LIST, QDT_LIST_ELEMENT
-//	The SCRIPT_MANAGER class implements ...
-//
-//	05-10-24:	NHO - Created
+//////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//     ________   _____  _____    __  .__             __________        .__  .__        //
+//     \_____  \_/ ____\/ ____\ _/  |_|  |__   ____   \______   \_____  |  | |  |       //
+//      /   |   \   __\\   __\  \   __\  |  \_/ __ \   |    |  _/\__  \ |  | |  |       //
+//     /    |    \  |   |  |     |  | |   Y  \  ___/   |    |   \ / __ \|  |_|  |__     //
+//     \_______  /__|   |__|     |__| |___|  /\___  >  |______  /(____  /____/____/     //
+//             \/                          \/     \/          \/      \/                //
+//                                                                                      //
+//                          .o                                                          //
+//                   ¨>   .                                      <¨                     //
+//                  /_                       |                    | ___                 //
+//               __/\ `\                     |                   / \                    //
+//                   \,                      |                 ,/  /                    //
+// ------------------------------------------ ----------------------------------------- //
+//                        Copyright(c) 2012 by Bertrand Faure                           //
+//////////////////////////////////////////////////////////////////////////////////////////
+
 //*****************************************************************************
 //
 // HOW TO USE IT :
