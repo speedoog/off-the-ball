@@ -25,6 +25,16 @@ PcPadManager	PadManager;
 int		nScreenSizeX =1280;
 int		nScreenSizeY =720;
 
+// int		nScreenSizeX =800;
+// int		nScreenSizeY =600;
+static float rTop	=10.0f;
+static float rBottom=-1.0f;
+static float rRatio =16.0f/10.0f;
+float rSizeY =rTop-rBottom;
+float rScreenRatio =float(nScreenSizeX)/float(nScreenSizeY);
+float rGlobalScale=float(nScreenSizeY)/rSizeY;
+
+
 float	rGroundY	 =nScreenSizeY/10.0f;
 float	rPosX		 =nScreenSizeX/10.0f;
 float	rCharSizeY	 =nScreenSizeY/4.0f;
@@ -41,6 +51,7 @@ hgeVector vBallSpeed(500,5);
 
 void ApplyWorldTransform() 
 {
+/*
 	static float rCenterX 	=0;			// center of scale & rotation
 	static float rCenterY 	=float(nScreenSizeY)/2.0f;
 	static float rCenterDx	=0;			// post-offset
@@ -48,9 +59,18 @@ void ApplyWorldTransform()
 	static float rRotation	=0;			// rotation in radians
 	static float rScaleX	=1;
 	static float rScaleY	=-1;
+	hge->Gfx_SetTransform(rCenterX, rCenterY, rCenterDx, rCenterDy, rRotation, rScaleX, rScaleY);
+*/
+
+	static float rCenterX 	=0;			// center of scale & rotation
+	static float rCenterY 	=rBottom+(rSizeY/2.0f);
+	static float rCenterDx	=float(nScreenSizeX)/2.0f;
+	static float rCenterDy	=float(nScreenSizeY)/2.0f;
+	static float rRotation	=0;
+	rRotation+=0.02f;
 
 	// Transformations are applied in this order: first scaling, then rotation and finally displacement. 
-	hge->Gfx_SetTransform(rCenterX, rCenterY, rCenterDx, rCenterDy, rRotation, rScaleX, rScaleY);
+	hge->Gfx_SetTransform(rCenterX, rCenterY, rCenterDx, rCenterDy, rRotation, rGlobalScale, -rGlobalScale);
 }
 
 bool FrameFunc()
@@ -118,14 +138,16 @@ bool FrameFunc()
 
 void DrawInputs() 
 {
+	float rTextPosY=9;
 	for (int i=0; i<PcPadManager::PAD_MAX_ENTRIES; ++i)
 	{
 		fnt->SetColor(0xFFFFA000);
-		fnt->printf(10, i*25.0f, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(PcPadManager::CtrlIdx, i)+4);
+		fnt->printf(-9, rTextPosY, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(PcPadManager::CtrlIdx, i)+4);
 
 		fnt->SetColor(0xFFFF00A0);
 		PcPadManager::CtrlStatus status =PadManager.GetCtrlState((PcPadManager::CtrlIdx)i);
-		fnt->printf(250, i*25.0f, HGETEXT_LEFT, "%d", status);
+		fnt->printf(-5, rTextPosY, HGETEXT_LEFT, "%d", status);
+		rTextPosY-=0.3f;
 	}
 }
 
@@ -135,7 +157,18 @@ bool RenderFunc()
 	hge->Gfx_BeginScene();
 	hge->Gfx_Clear(0);
 
-//	DrawInputs();
+	hge->Gfx_RenderBox(-5,0.01,-5.7,1.8f);
+
+	// level
+	hge->Gfx_RenderLine(-9,0,9,0, 0xFFFF5000);	// gnd
+	hge->Gfx_RenderLine(-9,9,9,9, 0xFF00FF00);	// top
+	hge->Gfx_RenderLine(-9,0,-9,9, 0xFF00FF00); // left
+	hge->Gfx_RenderLine(9,0,9,9, 0xFF00FF00);	// right
+	hge->Gfx_RenderLine(0,0,0,1, 0xFFFFFF00);	// net
+
+	DrawInputs();
+
+	/*
 	fnt->printf(10, 40.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
 
 	// gnd
@@ -150,6 +183,7 @@ bool RenderFunc()
 
 	// ball
 	hge->Gfx_RenderBox(vBallPos.x-5, vBallPos.y-5, vBallPos.x+5, vBallPos.y+5, 0xFFFFFF00);
+	*/
 
 //	par->Render();
 
@@ -179,8 +213,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		PadManager.Init(hwnd);
 
 		// Load a font
-		fnt=new hgeFont("Data/font2.fnt");
-		fnt->SetScale(-1);
+		fnt=new hgeFont("Data/font1.fnt");
+		fnt->SetScale(-(1.0f/rGlobalScale));
 		fnt->SetProportion(-1);
 
 		// Create and set up a particle system
