@@ -20,19 +20,19 @@ hgeFont*			fnt =0;
 
 PcPadManager	PadManager;
 
+// int		nScreenSizeX =640;
+// int		nScreenSizeY =360;
+int		nScreenSizeX =1280;
+int		nScreenSizeY =720;
 // int		nScreenSizeX =800;
-// int		nScreenSizeY =450;
-// int		nScreenSizeX =1280;
-// int		nScreenSizeY =720;
+// int		nScreenSizeY =600;
 
-int		nScreenSizeX =800;
-int		nScreenSizeY =600;
 static float rTop	=10.0f;
 static float rBottom=-1.0f;
 static float rRatio =16.0f/10.0f;
 float rSizeY =rTop-rBottom;
 float rScreenRatio =float(nScreenSizeX)/float(nScreenSizeY);
-float rGlobalScale=float(nScreenSizeY)/rSizeY;
+float rGlobalScale =float(nScreenSizeY)/rSizeY;
 
 
 float	rGroundY	 =nScreenSizeY/10.0f;
@@ -67,7 +67,7 @@ void ApplyWorldTransform()
 	static float rCenterDx	=float(nScreenSizeX)/2.0f;
 	static float rCenterDy	=float(nScreenSizeY)/2.0f;
 	static float rRotation	=0;
-	rRotation+=0.02f;
+//	rRotation+=0.02f;
 
 	// Transformations are applied in this order: first scaling, then rotation and finally displacement. 
 	hge->Gfx_SetTransform(rCenterX, rCenterY, rCenterDx, rCenterDy, rRotation, rGlobalScale, -rGlobalScale);
@@ -138,6 +138,9 @@ bool FrameFunc()
 
 void DrawInputs() 
 {
+	static float scale=-(0.1f/rSizeY);
+	fnt->SetScale(scale);
+
 	float rTextPosY=9;
 	for (int i=0; i<PcPadManager::PAD_MAX_ENTRIES; ++i)
 	{
@@ -157,16 +160,17 @@ bool RenderFunc()
 	hge->Gfx_BeginScene();
 	hge->Gfx_Clear(0);
 
-	hge->Gfx_RenderBox(-5,0.01,-5.7,1.8f);
+	hge->Gfx_RenderBox( -5.0f, 0.01f,
+						-5.7f, 1.8f);
 
 	// level
-	hge->Gfx_RenderLine(-9,0,9,0, 0xFFFF5000);	// gnd
-	hge->Gfx_RenderLine(-9,9,9,9, 0xFF00FF00);	// top
-	hge->Gfx_RenderLine(-9,0,-9,9, 0xFF00FF00); // left
-	hge->Gfx_RenderLine(9,0,9,9, 0xFF00FF00);	// right
-	hge->Gfx_RenderLine(0,0,0,1, 0xFFFFFF00);	// net
+	hge->Gfx_RenderLine(-9, 0, 9, 0, 0xFFFF5000);	// gnd
+	hge->Gfx_RenderLine(-9, 9, 9, 9, 0xFF00FF00);	// top
+	hge->Gfx_RenderLine(-9, 0,-9, 9, 0xFF00FF00);	// left
+	hge->Gfx_RenderLine( 9, 0, 9, 9, 0xFF00FF00);	// right
+	hge->Gfx_RenderLine( 0, 0, 0, 1, 0xFFFFFF00);	// net
 
-	DrawInputs();
+	//DrawInputs();
 
 	/*
 	fnt->printf(10, 40.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
