@@ -40,6 +40,10 @@ void Resources::Init()
 {
 	// load all
 	_pFont =new hgeFont("Data/font1.fnt");
+	_pFont->SetProportion(-1);
+
+	float scale =-0.01f;
+	_pFont->SetScale(scale);
 }
 
 // ********************************************

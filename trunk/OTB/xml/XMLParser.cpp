@@ -52,7 +52,7 @@ int XML_ATTRIBUTE::WriteToFile(FILE *pFile)
 }
 
 //-------------------------------------------------------------------------------
-XML_ATTRIBUTE *XML_ELEMENT::FindAttribute(char *pAttribName)
+XML_ATTRIBUTE *XML_ELEMENT::FindAttribute(const char *pAttribName)
 {
 	XML_ATTRIBUTE *pAtt = (XML_ATTRIBUTE*)_Attributes.GetHead();
 
@@ -66,7 +66,7 @@ XML_ATTRIBUTE *XML_ELEMENT::FindAttribute(char *pAttribName)
 }
 
 //-------------------------------------------------------------------------------
-int XML_ELEMENT::GetAttributeAsData(char *pAttrib, unsigned char *Destination)
+int XML_ELEMENT::GetAttributeAsData(const char *pAttrib, unsigned char *Destination)
 {
 	XML_ATTRIBUTE	*pAtt = FindAttribute(pAttrib);
 	char			Tmp[3];
@@ -94,7 +94,7 @@ int XML_ELEMENT::GetAttributeAsData(char *pAttrib, unsigned char *Destination)
 }
 
 //-------------------------------------------------------------------------------
-int XML_ELEMENT::GetAttributeAsData(char *pAttrib, DYNAMIC_BUFFER &Destination)
+int XML_ELEMENT::GetAttributeAsData(const char *pAttrib, DYNAMIC_BUFFER &Destination)
 {
 	XML_ATTRIBUTE	*pAtt = FindAttribute(pAttrib);
 	char			Tmp[3];
@@ -122,7 +122,7 @@ int XML_ELEMENT::GetAttributeAsData(char *pAttrib, DYNAMIC_BUFFER &Destination)
 }
 
 //-------------------------------------------------------------------------------
-float XML_ELEMENT::GetAttribute(char *pAttrib, float fDef)
+float XML_ELEMENT::GetAttribute(const char *pAttrib, float fDef)
 {
 	XML_ATTRIBUTE *pAtt = FindAttribute(pAttrib);
 
@@ -137,7 +137,7 @@ float XML_ELEMENT::GetAttribute(char *pAttrib, float fDef)
 }
 
 //-------------------------------------------------------------------------------
-char *XML_ELEMENT::GetAttribute(char *pAttrib, char *pDef)
+char *XML_ELEMENT::GetAttribute(const char *pAttrib, char *pDef)
 {
 	XML_ATTRIBUTE *pAtt = FindAttribute(pAttrib);
 
@@ -148,7 +148,7 @@ char *XML_ELEMENT::GetAttribute(char *pAttrib, char *pDef)
 }
 
 //-------------------------------------------------------------------------------
-int XML_ELEMENT::GetAttribute(char *pAttrib, int nDef)
+int XML_ELEMENT::GetAttribute(const char *pAttrib, int nDef)
 {
 	int nDest;
 	GetAttributeAsInt(pAttrib, nDest, nDef);
@@ -156,7 +156,7 @@ int XML_ELEMENT::GetAttribute(char *pAttrib, int nDef)
 }
 
 //-------------------------------------------------------------------------------
-int XML_ELEMENT::GetAttributeAsChar(char *pAttrib, char *Destination, char *pDefaultValue)
+int XML_ELEMENT::GetAttributeAsChar(const char *pAttrib, char *Destination, char *pDefaultValue)
 {
 	XML_ATTRIBUTE *pAtt = FindAttribute(pAttrib);
 
@@ -171,7 +171,7 @@ int XML_ELEMENT::GetAttributeAsChar(char *pAttrib, char *Destination, char *pDef
 }
 
 //-------------------------------------------------------------------------------
-int XML_ELEMENT::GetAttributeAsInt(char *pAttrib, int &Destination, int DefaultValue)
+int XML_ELEMENT::GetAttributeAsInt(const char *pAttrib, int &Destination, int DefaultValue)
 {
 	XML_ATTRIBUTE *pAtt = FindAttribute(pAttrib);
 
@@ -444,7 +444,7 @@ XML_PARSER::XMLRC XML_PARSER::LoadFromFile(const char *pFileName)
 }
 
 //-------------------------------------------------------------------------------
-XML_ELEMENT	*XML_ELEMENT::FindElement(char *pName, int bRecursiveSearch)
+XML_ELEMENT	*XML_ELEMENT::FindElement(const char *pName, int bRecursiveSearch)
 {
 	XML_ELEMENT	*pElem = (XML_ELEMENT*)_Childs.GetHead();
 
