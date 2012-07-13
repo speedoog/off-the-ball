@@ -16,66 +16,23 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#include "player.h"
+#ifndef __RESOURCES_H__
+#define __RESOURCES_H__
+#pragma once
 
-#include "Game.h"
-#include "PcPad.h"
+#include "base.h"
+#include "..\HGE\hgefont.h"
 
-float rCharSpeed 	=1.5f;
-float rCharSizeX 	=0.35f;
-float rCharSizeY 	=1.8f;
-float rCharRacketY	=rCharSizeY*0.75f;
-float rRacketLen	=rCharSizeY*0.6f;
-
-hgeVector vRacketDir(0, 1.0f);
-
-// ********************************************
-//	Ctor
-// ********************************************
-Player::Player(Game* pGame)
+class Resources
 {
-	_pGame =pGame;
-}
+public:
+				Resources();
+				~Resources();
+	void		Init();
+	void		Kill();
 
-// ********************************************
-//	Dtor
-// ********************************************
-Player::~Player()
-{
+	hgeFont* _pFont;
+protected:
+};
 
-}
-
-// ********************************************
-//	Update
-// ********************************************
-void Player::Update(const float rDeltaTime)
-{
-	PcPadManager& Pad =_pGame->GetPadManager();
-
-	// move char
-	const hgeVector& vAxisLeft =Pad.GetAxisLeft();
-	_vPos.x +=vAxisLeft.x*rDeltaTime*rCharSpeed;
-
-	// move racket
-	const hgeVector& vAxisRight =Pad.GetAxisRight();
-	if (vAxisRight.Length()>0.0f)
-	{
-		hgeVector vAxisRightNorm(vAxisRight);
-		vAxisRightNorm.Normalize();
-		vRacketDir =hgeVector(vAxisRightNorm.x, -vAxisRightNorm.y);
-	}
-
-}
-
-// ********************************************
-//	Render
-// ********************************************
-void Player::Render()
-{
-	hge->Gfx_RenderBox(_vPos.x-rCharSizeX, _vPos.y, _vPos.x+rCharSizeX, _vPos.y+rCharSizeY);
-
-	// racket
-	hge->Gfx_RenderLine(_vPos.x, rCharRacketY,
-						_vPos.x+vRacketDir.x*rRacketLen, rCharRacketY+vRacketDir.y*rRacketLen, 0xFF60FF60);
-
-}
+#endif	//__RESOURCES_H__

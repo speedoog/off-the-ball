@@ -17,19 +17,15 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 #include "..\HGE\hge.h"
-#include "..\HGE\hgefont.h"
 #include "..\HGE\hgeparticle.h"
-#include "PcPad.h"
 #include "Game.h"
 
 HGE*				hge =0;
-hgeFont*			fnt =0;
 // hgeSprite*			spt =0;
 // hgeParticleSystem*	par =0;
 // HTEXTURE			tex;
 
 Game			_Game;
-PcPadManager	PadManager;
 
 // normal window
 int  _nScreenSizeX =1280;
@@ -53,20 +49,11 @@ float rSizeY =rTop-rBottom;
 float rScreenRatio =float(_nScreenSizeX)/float(_nScreenSizeY);
 float rGlobalScale =float(_nScreenSizeY)/rSizeY;
 
-
-float	rGroundY	 =_nScreenSizeY/10.0f;
 float	rPosX		 =_nScreenSizeX/10.0f;
-float	rCharSizeY	 =_nScreenSizeY/4.0f;
-float	rCharSizeX	 =rCharSizeY/5.0f;
-float	rCharRacketY =rCharSizeY*0.75f;
-float	rRacketLen	 =rCharSizeY*0.6f;
-hgeVector vRacketDir(0, 1.0f);
+// float	rCharSizeY	 =_nScreenSizeY/4.0f;
+// float	rCharSizeX	 =rCharSizeY/5.0f;
 
-float	rCharSpeed	 =_nScreenSizeX/2.0f;
-
-hgeVector vBallPos(_nScreenSizeX/2.0f, _nScreenSizeY/2.0f);
-hgeVector vBallLastPos(_nScreenSizeX/2.0f, _nScreenSizeY/2.0f);
-hgeVector vBallSpeed(500,5);
+//float	rCharSpeed	 =_nScreenSizeX/2.0f;
 
 void ApplyWorldTransform() 
 {
@@ -94,61 +81,14 @@ void ApplyWorldTransform()
 
 bool FrameFunc()
 {
-	PadManager.Update();
-
-	float rDeltaTime =hge->Timer_GetDelta();
+	const float rDeltaTime =hge->Timer_GetDelta();
 
 	_Game.Update(rDeltaTime);
 
-	// move char
-	const hgeVector& vAxisLeft =PadManager.GetAxisLeft();
-	rPosX +=vAxisLeft.x*rDeltaTime*rCharSpeed;
 
-	// move racket
-	const hgeVector& vAxisRight =PadManager.GetAxisRight();
-	if (vAxisRight.Length()>0.0f)
-	{
-		hgeVector vAxisRightNorm(vAxisRight);
-		vAxisRightNorm.Normalize();
-		vRacketDir =hgeVector(vAxisRightNorm.x, -vAxisRightNorm.y);
-	}
-
-	// ball basic phy
-	vBallLastPos =vBallPos;
-	vBallPos     +=vBallSpeed*rDeltaTime;
-	vBallSpeed.y +=1500.0f*rDeltaTime;			// gravity
-
-	// check racket collide
-	hgeVector vRacketCenter(rPosX, rCharRacketY);
-	hgeVector vDiff =vBallPos-vRacketCenter;
-	if (vDiff.Length()<rRacketLen)
-	{
-		vBallSpeed =-vBallSpeed;
-	}
-
-	// Collision GND
-	if (vBallPos.y>(_nScreenSizeY-rGroundY))
-	{
-		if (vBallSpeed.y<500)
-		{
-			//reset
-			vBallPos =hgeVector(_nScreenSizeX/2.0f, _nScreenSizeY/2.0f);
-		}
-		else
-		{
-			vBallPos.y =(_nScreenSizeY-rGroundY);
-			vBallSpeed.y =-vBallSpeed.y*0.80f;
-		}
-	}
-	// Collision Walls
-	if (vBallPos.x>_nScreenSizeX || vBallPos.x<0)
-	{
-		vBallSpeed.x =-vBallSpeed.x;
-	}
 // 	par->MoveTo(vBallPos.x,vBallPos.y);
 // 	par->Update(rDeltaTime);
 
-	ApplyWorldTransform();
 
 	// Exit w/ Esc
 	if (hge->Input_GetKeyState(HGEK_ESCAPE)) return true;
@@ -157,37 +97,41 @@ bool FrameFunc()
 	return false;
 }
 
+/*
 void DrawInputs() 
 {
 	static float scale=-(0.1f/rSizeY);
-	fnt->SetScale(scale);
+	
+	_Game.GetResources()._pFont->SetScale(scale);
 
 	float rTextPosY=9;
 	for (int i=0; i<PcPadManager::PAD_MAX_ENTRIES; ++i)
 	{
-		fnt->SetColor(0xFFFFA000);
-		fnt->printf(-9, rTextPosY, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(PcPadManager::CtrlIdx, i)+4);
+		_Game.GetResources()._pFont->SetColor(0xFFFFA000);
+		_Game.GetResources()._pFont->printf(-9, rTextPosY, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(PcPadManager::CtrlIdx, i)+4);
 
-		fnt->SetColor(0xFFFF00A0);
+		_Game.GetResources()._pFont->SetColor(0xFFFF00A0);
 		PcPadManager::CtrlStatus status =PadManager.GetCtrlState((PcPadManager::CtrlIdx)i);
-		fnt->printf(-5, rTextPosY, HGETEXT_LEFT, "%d", status);
+		_Game.GetResources()._pFont->printf(-5, rTextPosY, HGETEXT_LEFT, "%d", status);
 		rTextPosY-=0.3f;
 	}
 }
+*/
 
 bool RenderFunc()
 {
+	ApplyWorldTransform();
+
 	// Render graphics
 	hge->Gfx_BeginScene();
 	hge->Gfx_Clear(0);
 
-
 	_Game.Render();
 
-	//DrawInputs();
+//	DrawInputs();
 
 	/*
-	fnt->printf(10, 40.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
+	_Game.GetResources()._pFont->printf(10, 40.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
 
 	// gnd
 	hge->Gfx_RenderLine(0, _nScreenSizeY-rGroundY, _nScreenSizeX, _nScreenSizeY-rGroundY, 0xFFFFFFFF);
@@ -198,9 +142,6 @@ bool RenderFunc()
 	// racket
 	float rRacketY =_nScreenSizeY-(rGroundY+rCharRacketY);
 	hge->Gfx_RenderLine(rPosX, rRacketY, rPosX+vRacketDir.x*rRacketLen, rRacketY+vRacketDir.y*rRacketLen, 0xFF60FF60);
-
-	// ball
-	hge->Gfx_RenderBox(vBallPos.x-5, vBallPos.y-5, vBallPos.x+5, vBallPos.y+5, 0xFFFFFF00);
 	*/
 
 //	par->Render();
@@ -227,13 +168,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// and more specific description of what have happened can be read with System_GetErrorMessage().
 	if (hge->System_Initiate())
 	{
-		HWND hwnd =hge->System_GetState(HGE_HWND);
-		PadManager.Init(hwnd);
+		_Game.Init();
 
 		// Load a font
-		fnt=new hgeFont("Data/font1.fnt");
-		fnt->SetScale(-(1.0f/rGlobalScale));
-		fnt->SetProportion(-1);
+		_Game.GetResources()._pFont->SetScale(-(1.0f/rGlobalScale));
+		_Game.GetResources()._pFont->SetProportion(-1);
 
 		// Create and set up a particle system
 // 		tex=hge->Texture_Load("Data/particles.png");
@@ -249,9 +188,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		// end of game
 // 		delete par;
 // 		delete spt;
-		delete fnt;
 
-		PadManager.Kill();
+		_Game.Kill();
 	}
 	else
 	{	

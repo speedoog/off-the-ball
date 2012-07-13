@@ -146,17 +146,17 @@ void PcPadManager::Update(void)
 	_AxisLeft.x =float(_JoyState.lX&0xFF)/128.0f-1.0f;
 	_AxisLeft.y =float(255-(_JoyState.lX&0xFF))/128.0f-1.0f;
 	// deadzone
-	if (fabsf(_AxisLeft.x)<0.15f)	_AxisLeft.x =0;
-	if (fabsf(_AxisLeft.y)<0.15f)	_AxisLeft.y =0;
+// 	if (fabsf(_AxisLeft.x)<0.15f)	_AxisLeft.x =0;
+// 	if (fabsf(_AxisLeft.y)<0.15f)	_AxisLeft.y =0;
 
 	// Update Right
 	_AxisRight.x =float(_JoyState.lRx&0xFF)/128.0f-1.0f;
 	_AxisRight.y =float(255-(_JoyState.lRy&0xFF))/128.0f-1.0f;
-	if (_AxisRight.Length()<0.3f)
-	{
-		_AxisRight.x =0;
-		_AxisRight.y =0;
-	}
+// 	if (_AxisRight.Length()<0.3f)
+// 	{
+// 		_AxisRight.x =0;
+// 		_AxisRight.y =0;
+// 	}
 }
 
 // ********************************************
