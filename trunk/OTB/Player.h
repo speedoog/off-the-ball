@@ -21,11 +21,12 @@
 #pragma once
 
 #include "base.h"
+class Game;
 
 class Player
 {
 public:
-					Player();
+					Player(Game* pGame);
 					~Player();
 
 	inline	void	SetPosition(hgeVector& vPos) { _vPos =vPos; }
@@ -34,6 +35,7 @@ public:
 			void	Render();
 protected:
 	hgeVector	_vPos;
+	Game*		_pGame;
 };
 
 #endif	//__PLAYER_H__

@@ -22,6 +22,8 @@
 //	Ctor
 // ********************************************
 Game::Game()
+: _Player1(this)
+, _Player2(this)
 {
 	_Player1.SetPosition(hgeVector(-5,0));
 	_Player2.SetPosition(hgeVector( 5,0));
@@ -36,10 +38,33 @@ Game::~Game()
 }
 
 // ********************************************
+//	Init
+// ********************************************
+void Game::Init()
+{
+	HWND hwnd =hge->System_GetState(HGE_HWND);
+	_PadManager.Init(hwnd);
+
+	_Resources.Init();
+}
+
+// ********************************************
+//	Kill
+// ********************************************
+void Game::Kill()
+{
+	_Resources.Kill();
+
+	_PadManager.Kill();
+}
+
+// ********************************************
 //	Update
 // ********************************************
 void Game::Update(const float rDeltaTime)
 {
+	_PadManager.Update();
+
 	_Level.Update(rDeltaTime);
 	_Ball.Update(rDeltaTime);
 	_Player1.Update(rDeltaTime);

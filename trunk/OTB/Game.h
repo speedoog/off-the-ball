@@ -24,21 +24,28 @@
 #include "Level.h"
 #include "Player.h"
 #include "Ball.h"
+#include "Resources.h"
+#include "PcPad.h"
 
 class Game
 {
 public:
-			Game();
-			~Game();
+							Game();
+							~Game();
+			void			Init();
+			void			Kill();
 
-	void	Update(const float rDeltaTime);
-	void	Render();
+			void			Update(const float rDeltaTime);
+			void			Render();
+	inline	Resources&		GetResources()		{ return _Resources;  }
+	inline	PcPadManager&	GetPadManager()		{ return _PadManager; }
 
 protected:
-	Level	_Level;
-	Player	_Player1, _Player2;
-	Ball	_Ball;
+	Level			_Level;
+	Player			_Player1, _Player2;
+	Ball			_Ball;
+	Resources		_Resources;
+	PcPadManager	_PadManager;
 };
-
 
 #endif	//__GAME_H__

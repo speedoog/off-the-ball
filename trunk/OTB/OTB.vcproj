@@ -188,7 +188,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Resource.h"
+				RelativePath=".\Win32Resource.h"
 				>
 			</File>
 		</Filter>
@@ -239,6 +239,10 @@
 				RelativePath=".\Base.h"
 				>
 			</File>
+			<File
+				RelativePath=".\SmartEnum.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\Ball.cpp"
@@ -278,6 +282,14 @@
 		</File>
 		<File
 			RelativePath=".\Player.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Resources.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Resources.h"
 			>
 		</File>
 	</Files>
