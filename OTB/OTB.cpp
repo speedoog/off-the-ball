@@ -19,8 +19,9 @@
 #include "..\HGE\hge.h"
 #include "..\HGE\hgeparticle.h"
 #include "Game.h"
+#include "xml/XMLParser.h"
 
-HGE*				hge =0;
+HGE*			hge =0;
 // hgeSprite*			spt =0;
 // hgeParticleSystem*	par =0;
 // HTEXTURE			tex;
@@ -44,36 +45,18 @@ bool _bWindowed    =true;
 
 static float rTop	=10.0f;
 static float rBottom=-1.0f;
-static float rRatio =16.0f/10.0f;
 float rSizeY =rTop-rBottom;
-float rScreenRatio =float(_nScreenSizeX)/float(_nScreenSizeY);
-float rGlobalScale =float(_nScreenSizeY)/rSizeY;
-
-float	rPosX		 =_nScreenSizeX/10.0f;
-// float	rCharSizeY	 =_nScreenSizeY/4.0f;
-// float	rCharSizeX	 =rCharSizeY/5.0f;
-
-//float	rCharSpeed	 =_nScreenSizeX/2.0f;
 
 void ApplyWorldTransform() 
 {
-/*
-	static float rCenterX 	=0;			// center of scale & rotation
-	static float rCenterY 	=float(_nScreenSizeY)/2.0f;
-	static float rCenterDx	=0;			// post-offset
-	static float rCenterDy	=0;
-	static float rRotation	=0;			// rotation in radians
-	static float rScaleX	=1;
-	static float rScaleY	=-1;
-	hge->Gfx_SetTransform(rCenterX, rCenterY, rCenterDx, rCenterDy, rRotation, rScaleX, rScaleY);
-*/
-
 	static float rCenterX 	=0;			// center of scale & rotation
 	static float rCenterY 	=rBottom+(rSizeY/2.0f);
 	static float rCenterDx	=float(_nScreenSizeX)/2.0f;
 	static float rCenterDy	=float(_nScreenSizeY)/2.0f;
 	static float rRotation	=0;
 //	rRotation+=0.02f;
+
+	float rGlobalScale =float(_nScreenSizeY)/rSizeY;
 
 	// Transformations are applied in this order: first scaling, then rotation and finally displacement. 
 	hge->Gfx_SetTransform(rCenterX, rCenterY, rCenterDx, rCenterDy, rRotation, rGlobalScale, -rGlobalScale);
@@ -85,38 +68,29 @@ bool FrameFunc()
 
 	_Game.Update(rDeltaTime);
 
-
-// 	par->MoveTo(vBallPos.x,vBallPos.y);
-// 	par->Update(rDeltaTime);
-
-
 	// Exit w/ Esc
-	if (hge->Input_GetKeyState(HGEK_ESCAPE)) return true;
-
-	// Continue execution
-	return false;
+	return (hge->Input_GetKeyState(HGEK_ESCAPE));
 }
 
-/*
+
 void DrawInputs() 
 {
-	static float scale=-(0.1f/rSizeY);
-	
-	_Game.GetResources()._pFont->SetScale(scale);
+	PcPadManager& PadManager =_Game.GetPadManager();
+	hgeFont*	  pFont		 =_Game.GetResources()._pFont;
 
 	float rTextPosY=9;
 	for (int i=0; i<PcPadManager::PAD_MAX_ENTRIES; ++i)
 	{
-		_Game.GetResources()._pFont->SetColor(0xFFFFA000);
-		_Game.GetResources()._pFont->printf(-9, rTextPosY, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(PcPadManager::CtrlIdx, i)+4);
+		pFont->SetColor(0xFFFFA000);
+		pFont->printf(-9, rTextPosY, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(PcPadManager::CtrlIdx, i)+4);
 
-		_Game.GetResources()._pFont->SetColor(0xFFFF00A0);
+		pFont->SetColor(0xFFFF00A0);
 		PcPadManager::CtrlStatus status =PadManager.GetCtrlState((PcPadManager::CtrlIdx)i);
-		_Game.GetResources()._pFont->printf(-5, rTextPosY, HGETEXT_LEFT, "%d", status);
+		pFont->printf(-5, rTextPosY, HGETEXT_LEFT, "%d", status);
 		rTextPosY-=0.3f;
 	}
 }
-*/
+
 
 bool RenderFunc()
 {
@@ -128,22 +102,9 @@ bool RenderFunc()
 
 	_Game.Render();
 
-//	DrawInputs();
+	_Game.GetResources()._pFont->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
 
-	/*
-	_Game.GetResources()._pFont->printf(10, 40.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
-
-	// gnd
-	hge->Gfx_RenderLine(0, _nScreenSizeY-rGroundY, _nScreenSizeX, _nScreenSizeY-rGroundY, 0xFFFFFFFF);
-
-	// char
-	hge->Gfx_RenderBox(rPosX-rCharSizeX, _nScreenSizeY-(rGroundY+5), rPosX+rCharSizeX, _nScreenSizeY-(rGroundY+rCharSizeY), 0xFFFF0000);
-
-	// racket
-	float rRacketY =_nScreenSizeY-(rGroundY+rCharRacketY);
-	hge->Gfx_RenderLine(rPosX, rRacketY, rPosX+vRacketDir.x*rRacketLen, rRacketY+vRacketDir.y*rRacketLen, 0xFF60FF60);
-	*/
-
+	DrawInputs();
 //	par->Render();
 
 	hge->Gfx_EndScene();
@@ -151,11 +112,47 @@ bool RenderFunc()
 	return false;
 }
 
+const char* XML_SECTION_VIDEO			="Video";
+const char* XML_ATTRIB_VIDEO_SCREENX	="ScreenSizeX";
+const char* XML_ATTRIB_VIDEO_SCREENY	="ScreenSizeY";
+const char* XML_ATTRIB_VIDEO_WINDOWED	="Windowed";
+
+const int  DEFAULT_SCREENSIZEX 		=1280;
+const int  DEFAULT_SCREENSIZEY 		=720;
+const bool DEFAULT_SCREENWINDOWED   =true;
+
+void LoadSettings()
+{
+	XML_PARSER Parser;
+	XML_PARSER::XMLRC rc =Parser.LoadFromFile("OTB.xml");
+	if (rc==XML_PARSER::XP_NO_ERROR)
+	{
+		XML_ELEMENT* pRoot =Parser.GetRoot();
+
+		// Read Video
+		{
+			XML_ELEMENT* pXmlVideo =pRoot->FindElement(XML_SECTION_VIDEO, false);
+			if (pXmlVideo)
+			{
+				_nScreenSizeX =pXmlVideo->GetAttribute(XML_ATTRIB_VIDEO_SCREENX,  DEFAULT_SCREENSIZEX);
+				_nScreenSizeY =pXmlVideo->GetAttribute(XML_ATTRIB_VIDEO_SCREENY,  DEFAULT_SCREENSIZEY);
+				_bWindowed	  =pXmlVideo->GetAttribute(XML_ATTRIB_VIDEO_WINDOWED, DEFAULT_SCREENWINDOWED)!=0;
+			}
+		}
+	}
+	else
+	{
+		MessageBox(NULL, "Failed to load OTB.xml", "Error", MB_OK | MB_ICONERROR | MB_APPLMODAL);
+	}
+}
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
+	LoadSettings();
+
 	hge = hgeCreate(HGE_VERSION);
 
-	// init
+	// Init HGE
 	hge->System_SetState(HGE_FRAMEFUNC,		FrameFunc);
 	hge->System_SetState(HGE_RENDERFUNC,	RenderFunc);
 	hge->System_SetState(HGE_SHOWSPLASH,	false);
@@ -164,30 +161,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	hge->System_SetState(HGE_TITLE,			"Off the Ball");
 	hge->System_SetState(HGE_WINDOWED,		_bWindowed);
 
-	// Tries to initiate HGE with the states set. If something goes wrong, "false" is returned
-	// and more specific description of what have happened can be read with System_GetErrorMessage().
+	// Tries to initiate HGE
 	if (hge->System_Initiate())
 	{
 		_Game.Init();
 
-		// Load a font
-		_Game.GetResources()._pFont->SetScale(-(1.0f/rGlobalScale));
-		_Game.GetResources()._pFont->SetProportion(-1);
-
-		// Create and set up a particle system
-// 		tex=hge->Texture_Load("Data/particles.png");
-// 		spt=new hgeSprite(tex, 32, 32, 32, 32);
-// 		spt->SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE);
-// 		spt->SetHotSpot(16,16);
-// 		par=new hgeParticleSystem("Data/ParticleRed.psi",spt);
-// 		par->Fire();
-
-
 		hge->System_Start();
-
-		// end of game
-// 		delete par;
-// 		delete spt;
 
 		_Game.Kill();
 	}
@@ -198,9 +177,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	}
 
 
-	// Now ESC has been pressed or the user
-	// has closed the window by other means.
-
+	// Now ESC has been pressed or the user has closed the window by other means.
 	// Restore video mode and free all allocated resources
 	hge->System_Shutdown();
 

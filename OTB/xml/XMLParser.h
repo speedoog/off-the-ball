@@ -50,8 +50,8 @@ class XML_ELEMENT : public QDT_LIST_ELEMENT
 		inline	DYNAMIC_BUFFER&	GetTextBuffer(void)						{ return _sText; }
 		inline	void			SetText(char* pText)					{ _sText.Release(); _sText.AppendStringNull(pText); }
 
-				XML_ATTRIBUTE	*FindAttribute(char *pAttribName);
-				XML_ELEMENT		*FindElement(char *pName, int bRecursiveSearch=true);
+				XML_ATTRIBUTE	*FindAttribute(const char *pAttribName);
+				XML_ELEMENT		*FindElement(const char *pName, int bRecursiveSearch=true);
 				XML_ELEMENT		*FindElementEx(char *pName, char *pAttributeMatch, char *pMatch);
 
 		inline	XML_ATTRIBUTE	*CreateAttribute(char *pName, unsigned int nValue)	{ return CreateAttribute(pName, (int)nValue); }
@@ -62,13 +62,13 @@ class XML_ELEMENT : public QDT_LIST_ELEMENT
 		inline	XML_ATTRIBUTE	*CreateAttribute(char *pName, DYNAMIC_BUFFER *pBuffer)				{ return CreateAttribute(pName, (unsigned char*)pBuffer->GetBuffer(), pBuffer->GetSize()); }
 				XML_ELEMENT		*CreateChildElement(char *pName);
 
-				char			*GetAttribute(char *pAttrib, char *pDef);
-				int				GetAttribute(char *pAttrib, int nDef);
-				float			GetAttribute(char *pAttrib, float fDef);
-				int				GetAttributeAsChar(char *pAttrib, char *Destination, char *pDefaultValue);
-				int				GetAttributeAsInt(char *pAttrib, int &Destination, int DefaultValue);
-				int				GetAttributeAsData(char *pAttrib, unsigned char *Destination);
-				int				GetAttributeAsData(char *pAttrib, DYNAMIC_BUFFER &Destination);
+				char			*GetAttribute(const char *pAttrib, char *pDef);
+				int				GetAttribute(const char *pAttrib, int nDef);
+				float			GetAttribute(const char *pAttrib, float fDef);
+				int				GetAttributeAsChar(const char *pAttrib, char *Destination, char *pDefaultValue);
+				int				GetAttributeAsInt(const char *pAttrib, int &Destination, int DefaultValue);
+				int				GetAttributeAsData(const char *pAttrib, unsigned char *Destination);
+				int				GetAttributeAsData(const char *pAttrib, DYNAMIC_BUFFER &Destination);
 
 	protected:
 		XML_ELEMENT			*_pFather;
