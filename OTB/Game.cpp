@@ -42,8 +42,11 @@ void Game::Init()
 	_PadManager.Init(hwnd);
 
 	_Resources.Init();
-	_Level.Init(hgeVector(9.0f,9.0f), 1.0f);
-	NewBall();
+
+	_Level.Init(hgeVector(7.0f,7.5f), 1.0f);
+	_Players[0].Init(this, 0);
+	_Players[1].Init(this, 1);
+	_Ball.Init(this);
 }
 
 // ********************************************
@@ -51,6 +54,10 @@ void Game::Init()
 // ********************************************
 void Game::NewBall()
 {
+	int nSide =_Ball.GetSide();
+	_Players[1-nSide].IncScore();
+
+	_Level.Init(hgeVector(7.0f,7.5f), 1.0f);
 	_Players[0].Init(this, 0);
 	_Players[1].Init(this, 1);
 	_Ball.Init(this);
@@ -93,4 +100,10 @@ void Game::Render()
 	_Ball.Render();
 	_Players[0].Render();
 	_Players[1].Render();
+
+	// render score (move it in another class ?)
+	hgeVector vLvlSize =_Level.GetSize();
+	hgeFont* pFont =GetResources()._pFontScore;
+	pFont->printf(vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_RIGHT, "%d", _Players[0].GetScore());
+	pFont->printf(-vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_LEFT, "%d", _Players[1].GetScore());
 }

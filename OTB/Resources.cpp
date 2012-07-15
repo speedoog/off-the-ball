@@ -34,16 +34,27 @@ Resources::~Resources()
 }
 
 // ********************************************
+//	LoadFont
+// ********************************************
+hgeFont* Resources::LoadFont(const char* filename)
+{
+	hgeFont* pFont;
+	pFont =new hgeFont(filename);
+	pFont->SetProportion(-1);
+
+	float scale =-0.01f;
+	pFont->SetScale(scale);
+	return pFont;
+}
+
+// ********************************************
 //	Init
 // ********************************************
 void Resources::Init()
 {
 	// load all
-	_pFont =new hgeFont("Data/font1.fnt");
-	_pFont->SetProportion(-1);
-
-	float scale =-0.01f;
-	_pFont->SetScale(scale);
+	_pFont =LoadFont("Data/font1.fnt");
+	_pFontScore =LoadFont("Data/FontScore.fnt");
 }
 
 // ********************************************

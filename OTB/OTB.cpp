@@ -43,8 +43,8 @@ bool _bWindowed    =true;
 // int  _nScreenSizeY =600;
 // bool _bWindowed    =false;
 
-static float rTop	=10.0f;
-static float rBottom=-1.0f;
+static float rTop	=8.0f;
+static float rBottom=-0.5f;
 float rSizeY =rTop-rBottom;
 
 void ApplyWorldTransform() 

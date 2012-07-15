@@ -21,7 +21,7 @@
 #include "Game.h"
 
 float rGravity	=-9.0f;
-float rRadius	=0.1f;
+float rRadius	=0.075f;
 float rTimescale=1.0f;
 
 // ********************************************
@@ -87,14 +87,14 @@ void Ball::Update(const float rDeltaTime)
 
 	// Collision Walls
 	Level& level=_pGame->GetLevel();
-	const float rWall =level.GetSize().y;
+	const float rWall =level.GetSize().x;
 	if ((_vPos.x>rWall) || (_vPos.x<-rWall))
 	{
 		_vVelocity.x =-_vVelocity.x;
 	}
 
 	// Collision Net
-	int nSide =(_vPos.x>0);
+	int nSide =(_vPos.x<0);
 
 	if (nSide!=_nSide)
 	{

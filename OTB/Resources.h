@@ -28,11 +28,15 @@ class Resources
 public:
 				Resources();
 				~Resources();
+
 	void		Init();
 	void		Kill();
 
 	hgeFont* _pFont;
+	hgeFont* _pFontScore;
+
 protected:
+	hgeFont* LoadFont(const char* filename);
 };
 
 #endif	//__RESOURCES_H__

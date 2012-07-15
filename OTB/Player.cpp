@@ -27,11 +27,12 @@
 // ********************************************
 Player::Player()
 {
-	_rCharSpeed 	=5.0f;
+	_rCharSpeedMax 	=5.0f;
 	_vCharSize 		=hgeVector(0.35f, 1.8f);
-	_rCharRacketY	=_vCharSize.y*0.7f;
-	_rRacketLen		=_vCharSize.y*0.7f;
+	_rCharRacketY	=_vCharSize.y*0.75f;
+	_rRacketLen		=_vCharSize.y*0.75f;
 	_vRacketDir 	=hgeVector(0, 1.0f);
+	_nScore			=0;
 }
 
 // ********************************************
@@ -65,7 +66,9 @@ void Player::Init(Game* pGame, const int nPlayerId)
 		vInitPos.x =rCenterX;
 	}
 
-	SetPosition(vInitPos);
+	_vPos		=vInitPos;
+	_vVelocity	=hgeVector(0,0);
+
 	_rCrossLast		=0.0f;
 	_rHitCooldown	=0.0f;
 }
@@ -109,18 +112,40 @@ void Player::Update(const float rDeltaTime)
 {
 	PcPadManager& Pad =_pGame->GetPadManager();
 
-	// Move char
+	// input char
+	const float rAcceleration =30.0f;
+	const float rDamping =4.0f;
 	hgeVector vAxisLeft =Pad.GetAxisLeft();
 	if (fabsf(vAxisLeft.x)>0.15f)						// deadzone
 	{
-		_vPos.x +=vAxisLeft.x*rDeltaTime*_rCharSpeed;
+		_vVelocity.x+=vAxisLeft.x*rDeltaTime*rAcceleration;
+		if (_vVelocity.x>_rCharSpeedMax)		_vVelocity.x =_rCharSpeedMax;
+		if (_vVelocity.x<-_rCharSpeedMax)		_vVelocity.x =-_rCharSpeedMax;
 	}
+	else
+	{
+//		_vVelocity *=0.99f;	// damping tout pouri
+		_vVelocity -=_vVelocity*rDeltaTime*rDamping;
+	}
+	// Move
+	_vPos +=_vVelocity*rDeltaTime;
 
 	// check wall/net collision
+	bool bHitWall =false;
 	if (_vPos.x<_rPosMin)
+	{
 		_vPos.x =_rPosMin;
+		bHitWall=true;
+	}
 	if (_vPos.x>_rPosMax)
+	{
 		_vPos.x =_rPosMax;
+		bHitWall =true;
+	}
+	if (bHitWall)
+	{
+		_vVelocity.x=-_vVelocity.x*0.3f;
+	}
 
 	// Rotate racket
 	const hgeVector& vAxisRight =Pad.GetAxisRight();
