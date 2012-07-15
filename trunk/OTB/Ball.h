@@ -22,19 +22,28 @@
 
 #include "base.h"
 
+class Game;
+
 class Ball
 {
 public:
-			Ball();
-			~Ball();
+						Ball();
+						~Ball();
+			void		Init(Game* pGame);
 
-	void	Reset();
-	void	Update(const float rDeltaTime);
-	void	Render();
+			void		Reset();
+			void		Update(const float rDeltaTime);
+			void		Render();
+			void		Hit(const hgeVector& vVelocity);
+
+	// inline
+	inline	hgeVector&	GetPos() { return _vPos; }
 
 protected:
+	Game*		_pGame;
 	hgeVector	_vPos, _vLastPos;
 	hgeVector	_vVelocity;
+	int			_nSide;				// 0 or 1
 };
 
 

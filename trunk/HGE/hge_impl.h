@@ -172,6 +172,7 @@ public:
 	virtual void		CALL	Gfx_Clear(DWORD color);
 	virtual void		CALL	Gfx_RenderLine(float x1, float y1, float x2, float y2, DWORD color=0xFFFFFFFF, float z=0.5f);
 	virtual void		CALL	Gfx_RenderBox(float x1, float y1, float x2, float y2, DWORD color=0xFFFFFFFF, float z=0.5f);
+	virtual void		CALL	Gfx_RenderCircle(float x, float y, float radius, DWORD color=0xFFFFFFFF, float z=0.5f);
 	virtual void		CALL	Gfx_RenderTriple(const hgeTriple *triple);
 	virtual void		CALL	Gfx_RenderQuad(const hgeQuad *quad);
 	virtual hgeVertex*	CALL	Gfx_StartBatch(int prim_type, HTEXTURE tex, int blend, int *max_prim);

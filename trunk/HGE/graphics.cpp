@@ -215,6 +215,25 @@ void CALL HGE_Impl::Gfx_RenderBox(float x1, float y1, float x2, float y2, DWORD 
 	Gfx_RenderLine(x2, y1, x1, y1, color, z);
 }
 
+void CALL HGE_Impl::Gfx_RenderCircle(float x, float y, float radius, DWORD color, float z)
+{
+	const int nSections=8;
+	float rAngleInc =(2*M_PI)/float(nSections);
+
+	float rAngle=0.0f;
+	float rX=radius*sinf(rAngle)+x;
+	float rY=radius*cosf(rAngle)+y;
+	for (int i=0; i<nSections; ++i)
+	{
+		rAngle+=rAngleInc;
+		float rX2=radius*sinf(rAngle)+x;
+		float rY2=radius*cosf(rAngle)+y;
+		Gfx_RenderLine(rX,rY, rX2,rY2, color, z);
+		rX =rX2;
+		rY =rY2;
+	}
+}
+
 void CALL HGE_Impl::Gfx_RenderTriple(const hgeTriple *triple)
 {
 	if(VertArray)

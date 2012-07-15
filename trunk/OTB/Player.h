@@ -26,16 +26,29 @@ class Game;
 class Player
 {
 public:
-					Player(Game* pGame);
+					Player();
 					~Player();
+			void	Init(Game* pGame, const int nPlayerId);
 
-	inline	void	SetPosition(hgeVector& vPos) { _vPos =vPos; }
+	inline	void	SetPosition(const hgeVector& vPos) { _vPos =vPos; }
 
 			void	Update(const float rDeltaTime);
 			void	Render();
 protected:
-	hgeVector	_vPos;
 	Game*		_pGame;
+	hgeVector	_vPos;
+
+	float 		_rCharSpeed;
+	hgeVector	_vCharSize;
+	float 		_rCharRacketY;
+	float 		_rRacketLen;
+	hgeVector	_vRacketDir;
+
+	float		_rCrossLast;
+	float		_rHitCooldown;
+
+	float		_rPosMin, _rPosMax;
+	int			_nPlayerId;
 };
 
 #endif	//__PLAYER_H__

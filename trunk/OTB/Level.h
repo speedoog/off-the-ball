@@ -25,13 +25,22 @@
 class Level
 {
 public:
-			Level();
-			~Level();
+								Level();
+								~Level();
 
-	void	Update(const float rDeltaTime);
-	void	Render();
+			void				Init(const hgeVector& vSize, const float rNetY);
+			void				Update(const float rDeltaTime);
+			void				Render();
+
+	// inlines
+	inline	const hgeVector&	GetSize()	{ return _vSize; }
+	inline	float				GetNetY()	{ return _rNetY; }
 
 protected:
+	hgeVector	_vSize;
+	float		_rNetY;
+	float		_rInitialNetY;
+	float		_rCounter;
 };
 
 

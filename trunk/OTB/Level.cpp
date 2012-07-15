@@ -24,7 +24,6 @@
 // ********************************************
 Level::Level()
 {
-
 }
 
 // ********************************************
@@ -36,11 +35,26 @@ Level::~Level()
 }
 
 // ********************************************
+//	Init
+// ********************************************
+void Level::Init(const hgeVector& vSize, const float rNetY)
+{
+	_vSize=vSize;
+	_rNetY=rNetY;
+	_rInitialNetY=rNetY;
+	_rCounter =0.0f;
+}			
+
+// ********************************************
 //	Update
 // ********************************************
 void Level::Update(const float rDeltaTime)
 {
-
+	_rCounter +=rDeltaTime;
+	if (_rCounter>5.0f)
+	{
+		_rNetY +=rDeltaTime*0.3f;
+	}
 }
 
 // ********************************************
@@ -48,9 +62,11 @@ void Level::Update(const float rDeltaTime)
 // ********************************************
 void Level::Render()
 {
-	hge->Gfx_RenderLine(-9, 0, 9, 0, 0xFFFF5000);	// gnd
-	hge->Gfx_RenderLine(-9, 9, 9, 9, 0xFF00FF00);	// top
-	hge->Gfx_RenderLine(-9, 0,-9, 9, 0xFF00FF00);	// left
-	hge->Gfx_RenderLine( 9, 0, 9, 9, 0xFF00FF00);	// right
-	hge->Gfx_RenderLine( 0, 0, 0, 1, 0xFFFFFF00);	// net
+	hge->Gfx_RenderLine(-_vSize.x, 0,			 _vSize.x, 0,			0xFFFF5000);	// gnd
+	hge->Gfx_RenderLine(-_vSize.x, _vSize.y,	 _vSize.x, _vSize.y,	0xFF00FF00);	// top
+	hge->Gfx_RenderLine(-_vSize.x, 0,			-_vSize.x, _vSize.y,	0xFF00FF00);	// left
+	hge->Gfx_RenderLine( _vSize.x, 0,			 _vSize.x, _vSize.y,	0xFF00FF00);	// right
+
+	hge->Gfx_RenderLine( 0, 0, 0, _rInitialNetY, 0xFFFFFF00);	// net
+	hge->Gfx_RenderLine( 0, _rInitialNetY, 0, _rNetY, 0xFFFF6000);	// net
 }
