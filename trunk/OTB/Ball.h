@@ -37,7 +37,8 @@ public:
 			void		Hit(const hgeVector& vVelocity);
 
 	// inline
-	inline	hgeVector&	GetPos() { return _vPos; }
+	inline	hgeVector&	GetPos() 	{ return _vPos; }
+	inline	int			GetSide()	{ return _nSide; }
 
 protected:
 	Game*		_pGame;
@@ -45,6 +46,5 @@ protected:
 	hgeVector	_vVelocity;
 	int			_nSide;				// 0 or 1
 };
-
 
 #endif	//__BALL_H__

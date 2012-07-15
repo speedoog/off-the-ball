@@ -43,7 +43,7 @@ void Level::Init(const hgeVector& vSize, const float rNetY)
 	_rNetY=rNetY;
 	_rInitialNetY=rNetY;
 	_rCounter =0.0f;
-}			
+}
 
 // ********************************************
 //	Update
@@ -51,9 +51,9 @@ void Level::Init(const hgeVector& vSize, const float rNetY)
 void Level::Update(const float rDeltaTime)
 {
 	_rCounter +=rDeltaTime;
-	if (_rCounter>5.0f)
+	if (_rCounter>15.0f)
 	{
-		_rNetY +=rDeltaTime*0.3f;
+		_rNetY +=rDeltaTime*0.15f;
 	}
 }
 

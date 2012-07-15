@@ -30,15 +30,19 @@ public:
 					~Player();
 			void	Init(Game* pGame, const int nPlayerId);
 
-	inline	void	SetPosition(const hgeVector& vPos) { _vPos =vPos; }
-
 			void	Update(const float rDeltaTime);
 			void	Render();
+
+	inline	void	SetPosition(const hgeVector& vPos)	{ _vPos =vPos;		}
+	inline	void	IncScore()							{ ++_nScore;		}
+	inline	int		GetScore()							{ return _nScore;	}
+
 protected:
 	Game*		_pGame;
 	hgeVector	_vPos;
+	hgeVector	_vVelocity;
 
-	float 		_rCharSpeed;
+	float 		_rCharSpeedMax;
 	hgeVector	_vCharSize;
 	float 		_rCharRacketY;
 	float 		_rRacketLen;
@@ -49,6 +53,8 @@ protected:
 
 	float		_rPosMin, _rPosMax;
 	int			_nPlayerId;
+
+	int			_nScore;
 };
 
 #endif	//__PLAYER_H__
