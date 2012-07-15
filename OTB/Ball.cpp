@@ -18,9 +18,11 @@
 
 
 #include "Ball.h"
+#include "Game.h"
 
 float rGravity	=-9.0f;
 float rRadius	=0.1f;
+float rTimescale=1.0f;
 
 // ********************************************
 //	Ctor
@@ -41,9 +43,19 @@ Ball::~Ball()
 // ********************************************
 //	Reset
 // ********************************************
+void Ball::Init(Game* pGame)
+{
+	_pGame =pGame;
+	Reset();
+}
+
+// ********************************************
+//	Reset
+// ********************************************
 void Ball::Reset()
 {
 	_vPos		=hgeVector(-5,5);
+	_nSide		=0;
 	_vLastPos	=_vPos;
 	_vVelocity	=hgeVector(3,1);
 }
@@ -53,7 +65,7 @@ void Ball::Reset()
 // ********************************************
 void Ball::Update(const float rDeltaTime)
 {
-	float rNewDT =rDeltaTime*1.1f;
+	float rNewDT =rDeltaTime*rTimescale;
 	_vLastPos	=_vPos;
 	_vPos		+=_vVelocity*rNewDT;
 	_vVelocity.y+=rGravity*rNewDT;
@@ -63,19 +75,47 @@ void Ball::Update(const float rDeltaTime)
 	{
 		if (_vVelocity.y>(-5.f))
 		{
-			Reset();
+			_pGame->NewBall();
+			return;
 		}
 		else
 		{
 			_vPos.y =0;
-			_vVelocity.y =-_vVelocity.y*0.80f;
+			_vVelocity.y =-_vVelocity.y*0.80f;		// ground restitution
 		}
 	}
+
 	// Collision Walls
-	if ((_vPos.x>9) || (_vPos.x<-9))
+	Level& level=_pGame->GetLevel();
+	const float rWall =level.GetSize().y;
+	if ((_vPos.x>rWall) || (_vPos.x<-rWall))
 	{
 		_vVelocity.x =-_vVelocity.x;
 	}
+
+	// Collision Net
+	int nSide =(_vPos.x>0);
+
+	if (nSide!=_nSide)
+	{
+		// ball change side
+		if (_vPos.y<level.GetNetY())
+		{
+			// hit net
+			_vVelocity.x *=-0.1f;
+			_vPos.x=0.0f;
+			nSide =_nSide;	// stay same side !
+		}
+	}
+	_nSide =nSide;
+}
+
+// ********************************************
+//	Render
+// ********************************************
+void Ball::Hit(const hgeVector& vVelocity)
+{
+	_vVelocity =vVelocity;
 }
 
 // ********************************************
@@ -83,5 +123,5 @@ void Ball::Update(const float rDeltaTime)
 // ********************************************
 void Ball::Render()
 {
-	hge->Gfx_RenderBox(_vPos.x-rRadius, _vPos.y-rRadius, _vPos.x+rRadius, _vPos.y+rRadius, 0xFFFFFF00);
+	hge->Gfx_RenderCircle(_vPos.x, _vPos.y, rRadius, 0xFFFFFF00);
 }

@@ -48,7 +48,7 @@ float hgeVector::Angle(const hgeVector *v) const
 		hgeVector s=*this, t=*v;
 
 		s.Normalize(); t.Normalize();
-		return acosf(s.Dot(&t));
+		return acosf(s.Dot(t));
 	}
 	else return atan2f(y, x);
 }

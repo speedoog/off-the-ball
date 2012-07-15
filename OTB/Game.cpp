@@ -22,11 +22,7 @@
 //	Ctor
 // ********************************************
 Game::Game()
-: _Player1(this)
-, _Player2(this)
 {
-	_Player1.SetPosition(hgeVector(-5,0));
-	_Player2.SetPosition(hgeVector( 5,0));
 }
 
 // ********************************************
@@ -46,6 +42,18 @@ void Game::Init()
 	_PadManager.Init(hwnd);
 
 	_Resources.Init();
+	_Level.Init(hgeVector(9.0f,9.0f), 1.0f);
+	NewBall();
+}
+
+// ********************************************
+//	Init
+// ********************************************
+void Game::NewBall()
+{
+	_Players[0].Init(this, 0);
+	_Players[1].Init(this, 1);
+	_Ball.Init(this);
 }
 
 // ********************************************
@@ -54,7 +62,6 @@ void Game::Init()
 void Game::Kill()
 {
 	_Resources.Kill();
-
 	_PadManager.Kill();
 }
 
@@ -67,8 +74,14 @@ void Game::Update(const float rDeltaTime)
 
 	_Level.Update(rDeltaTime);
 	_Ball.Update(rDeltaTime);
-	_Player1.Update(rDeltaTime);
-	_Player2.Update(rDeltaTime);
+	_Players[0].Update(rDeltaTime);
+	_Players[1].Update(rDeltaTime);
+
+	PcPadManager& Pad =GetPadManager();
+	if (Pad.GetCtrlState(PcPadManager::PAD_BTN_SELECT))
+	{
+		NewBall();
+	}
 }
 
 // ********************************************
@@ -78,6 +91,6 @@ void Game::Render()
 {
 	_Level.Render();
 	_Ball.Render();
-	_Player1.Render();
-	_Player2.Render();
+	_Players[0].Render();
+	_Players[1].Render();
 }

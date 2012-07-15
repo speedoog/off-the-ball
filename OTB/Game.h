@@ -35,14 +35,20 @@ public:
 			void			Init();
 			void			Kill();
 
+			void			NewBall();
 			void			Update(const float rDeltaTime);
 			void			Render();
-	inline	Resources&		GetResources()		{ return _Resources;  }
-	inline	PcPadManager&	GetPadManager()		{ return _PadManager; }
+
+	// Accessors
+	inline	Resources&		GetResources()		{ return _Resources;  	}
+	inline	PcPadManager&	GetPadManager()		{ return _PadManager; 	}
+	inline	Player&			GetPlayer(int i)	{ return _Players[i]; 	}
+	inline	Ball&			GetBall()			{ return _Ball;			}
+	inline	Level&			GetLevel()			{ return _Level;		}
 
 protected:
 	Level			_Level;
-	Player			_Player1, _Player2;
+	Player			_Players[2];
 	Ball			_Ball;
 	Resources		_Resources;
 	PcPadManager	_PadManager;

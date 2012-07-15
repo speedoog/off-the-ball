@@ -102,9 +102,9 @@ bool RenderFunc()
 
 	_Game.Render();
 
-	_Game.GetResources()._pFont->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
+//	_Game.GetResources()._pFont->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
 
-	DrawInputs();
+//	DrawInputs();
 //	par->Render();
 
 	hge->Gfx_EndScene();
