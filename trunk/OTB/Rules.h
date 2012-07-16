@@ -54,6 +54,7 @@ protected:
 	bool	_bRacketHit;
 	int		_nSide;
 	int		_nGroundTouch;
+	int		_nServicePlayer;
 };
 
 

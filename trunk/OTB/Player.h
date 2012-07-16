@@ -26,18 +26,19 @@ class Game;
 class Player
 {
 public:
-					Player();
-					~Player();
-			void	Init(Game* pGame, const int nPlayerId);
-			void	ResetPosition();
+								Player();
+								~Player();
+			void				Init(Game* pGame, const int nPlayerId);
+			void				ResetPosition();
 
-			void	Update(const float rDeltaTime);
-			void	Render();
+			void				Update(const float rDeltaTime);
+			void				Render();
 
-	inline	void	SetPosition(const hgeVector& vPos)	{ _vPos =vPos;		}
-	inline	void	ScoreInc()							{ ++_nScore;		}
-	inline	void	ScoreReset()						{ _nScore =0;		}
-	inline	int		ScoreGet()							{ return _nScore;	}
+	inline	void				SetPosition(const hgeVector& vPos)	{ _vPos =vPos;		}
+	inline	const hgeVector&	GetPosition() const					{ return _vPos;		}
+	inline	void				ScoreInc()							{ ++_nScore;		}
+	inline	void				ScoreReset()						{ _nScore =0;		}
+	inline	int					ScoreGet()							{ return _nScore;	}
 
 protected:
 	Game*		_pGame;

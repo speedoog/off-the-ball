@@ -82,6 +82,7 @@ void Rules::Render()
 // ********************************************
 void Rules::ActionStartGame(int nPlayerStart)
 {
+	_nServicePlayer =nPlayerStart;
 	_pGame->GetPlayer(0).ScoreReset();
 	_pGame->GetPlayer(1).ScoreReset();
 	ActionServiceStart(nPlayerStart);
@@ -111,7 +112,8 @@ void Rules::ActionFail()
 	int nOtherPlayer =1-_nSide;
 	_pGame->GetPlayer(nOtherPlayer).ScoreInc();		// other player gain a point
 
-	ActionServiceStart(nOtherPlayer);
+	_nServicePlayer =1-_nServicePlayer;				// change server
+	ActionServiceStart(_nServicePlayer);
 }
 
 // ********************************************
@@ -190,5 +192,9 @@ void Rules::EventBallHitNet()
 	if (_bServing)
 	{
 		ActionServiceFailed();
+	}
+	else
+	{
+		ActionFail();
 	}
 }
