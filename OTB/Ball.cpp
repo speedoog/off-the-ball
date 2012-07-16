@@ -56,13 +56,18 @@ void Ball::Init(Game* pGame)
 // ********************************************
 void Ball::Reset(int nPlayer)
 {
-	float rPosX =nPlayer==0?-5.0f:5.0f;
-	_vPos		=hgeVector(rPosX,5);
+	float rPosX =_pGame->GetPlayer(nPlayer).GetPosition().x;
+	if (rPosX<0)
+		rPosX-=0.2f;
+	else
+		rPosX+=0.2f;
+
+	_vPos		=hgeVector(rPosX,2.5);
 	_nSide		=nPlayer;
 	_vLastPos	=_vPos;
 
-	float rVelX =nPlayer==0?1.0f:-1.0f;
-	_vVelocity	=hgeVector(rVelX,3);
+	float rVelX =0.0f;//nPlayer==0?1.0f:-1.0f;
+	_vVelocity	=hgeVector(rVelX,5);
 }
 
 // ********************************************
