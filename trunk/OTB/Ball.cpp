@@ -20,9 +20,13 @@
 #include "Ball.h"
 #include "Game.h"
 
-float rGravity	=-9.0f;
-float rRadius	=0.075f;
-float rTimescale=1.0f;
+float rGravity			=-9.0f;
+float rRadius			=0.075f;
+float rTimescale		=1.0f;
+float rGroundResitution	=0.8f;
+float rWallResitution	=0.8f;
+float rCeilResitution	=0.8f;
+float rNetResitution	=0.1f;
 
 // ********************************************
 //	Ctor
@@ -81,16 +85,30 @@ void Ball::Update(const float rDeltaTime)
 		else
 		{
 			_vPos.y =0;
-			_vVelocity.y =-_vVelocity.y*0.80f;		// ground restitution
+			_vVelocity.y =-rGroundResitution*_vVelocity.y;
 		}
 	}
 
 	// Collision Walls
 	Level& level=_pGame->GetLevel();
 	const float rWall =level.GetSize().x;
-	if ((_vPos.x>rWall) || (_vPos.x<-rWall))
+	if (_vPos.x>rWall)
 	{
-		_vVelocity.x =-_vVelocity.x;
+		_vPos.x =rWall;
+		_vVelocity.x =-rWallResitution*_vVelocity.x;
+	}
+	if (_vPos.x<-rWall)
+	{
+		_vPos.x =-rWall;
+		_vVelocity.x =-rWallResitution*_vVelocity.x;
+	}
+
+	// Collision ceil
+	const float rCeil =level.GetSize().y;
+	if (_vPos.y>rCeil)
+	{
+		_vPos.y =rCeil;
+		_vVelocity.y =-rWallResitution*_vVelocity.y;
 	}
 
 	// Collision Net
@@ -102,7 +120,7 @@ void Ball::Update(const float rDeltaTime)
 		if (_vPos.y<level.GetNetY())
 		{
 			// hit net
-			_vVelocity.x *=-0.1f;
+			_vVelocity.x *=-rNetResitution;
 			_vPos.x=0.0f;
 			nSide =_nSide;	// stay same side !
 		}
