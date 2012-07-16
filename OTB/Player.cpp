@@ -182,8 +182,8 @@ void Player::Update(const float rDeltaTime)
 		{
 			hgeVector vHit =vProjection-vBall;
 			vHit.Normalize();
-			ball.Hit( vHit*10.0f );	// test
-			_rHitCooldown =1.0f;
+			ball.Hit( vHit*hge->Random_Float(5.0f,15.0f) );	// test
+			_rHitCooldown =0.5f;
 		}
 	}
 
