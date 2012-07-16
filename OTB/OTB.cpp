@@ -76,7 +76,7 @@ bool FrameFunc()
 void DrawInputs() 
 {
 	PcPadManager& PadManager =_Game.GetPadManager();
-	hgeFont*	  pFont		 =_Game.GetResources()._pFont;
+	hgeFont*	  pFont		 =_Game.GetResources()._pFontDebug;
 
 	float rTextPosY=9;
 	for (int i=0; i<PcPadManager::PAD_MAX_ENTRIES; ++i)

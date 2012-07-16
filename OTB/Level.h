@@ -28,7 +28,8 @@ public:
 								Level();
 								~Level();
 
-			void				Init(const hgeVector& vSize, const float rNetY);
+			void				Init(const hgeVector& vSize, const float rInitialNetY);
+			void				Reset();
 			void				Update(const float rDeltaTime);
 			void				Render();
 

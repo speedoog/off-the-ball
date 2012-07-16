@@ -47,21 +47,27 @@ void Game::Init()
 	_Players[0].Init(this, 0);
 	_Players[1].Init(this, 1);
 	_Ball.Init(this);
+	_Rules.Init(this);
+
+	_Rules.ActionStartGame(0);		// start w/ player[0]
 }
 
+/*
 // ********************************************
-//	Init
+//	NewBall
 // ********************************************
 void Game::NewBall()
 {
+	// temp: update score
 	int nSide =_Ball.GetSide();
 	_Players[1-nSide].IncScore();
 
-	_Level.Init(hgeVector(7.0f,7.5f), 1.0f);
-	_Players[0].Init(this, 0);
-	_Players[1].Init(this, 1);
+	_Level.Reset();
+	_Players[0].Reset();
+	_Players[1].Reset();
 	_Ball.Init(this);
 }
+*/
 
 // ********************************************
 //	Kill
@@ -87,7 +93,7 @@ void Game::Update(const float rDeltaTime)
 	PcPadManager& Pad =GetPadManager();
 	if (Pad.GetCtrlState(PcPadManager::PAD_BTN_SELECT))
 	{
-		NewBall();
+		_Rules.ActionServiceStart(0);
 	}
 }
 
@@ -104,6 +110,6 @@ void Game::Render()
 	// render score (move it in another class ?)
 	hgeVector vLvlSize =_Level.GetSize();
 	hgeFont* pFont =GetResources()._pFontScore;
-	pFont->printf(vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_RIGHT, "%d", _Players[0].GetScore());
-	pFont->printf(-vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_LEFT, "%d", _Players[1].GetScore());
+	pFont->printf(vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_RIGHT, "%d", _Players[0].ScoreGet());
+	pFont->printf(-vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_LEFT, "%d", _Players[1].ScoreGet());
 }

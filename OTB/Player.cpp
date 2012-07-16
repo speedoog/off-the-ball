@@ -33,6 +33,7 @@ Player::Player()
 	_rRacketLen		=_vCharSize.y*0.75f;
 	_vRacketDir 	=hgeVector(0, 1.0f);
 	_nScore			=0;
+	_vInitialPos	=hgeVector(0,0);
 }
 
 // ********************************************
@@ -44,7 +45,7 @@ Player::~Player()
 }
 
 // ********************************************
-//	Reset
+//	Init
 // ********************************************
 void Player::Init(Game* pGame, const int nPlayerId)
 {
@@ -52,10 +53,10 @@ void Player::Init(Game* pGame, const int nPlayerId)
 	_nPlayerId =nPlayerId;
 
 	float rCenterX =pGame->GetLevel().GetSize().y / 2.0f;
-	hgeVector vInitPos(0,0);
+	_vInitialPos =hgeVector(0,0);
 	if (nPlayerId==0)
 	{
-		vInitPos.x =-rCenterX;
+		_vInitialPos.x =-rCenterX;
 		_rPosMin =-pGame->GetLevel().GetSize().x+_rRacketLen;
 		_rPosMax =-_rRacketLen;
 	}
@@ -63,12 +64,19 @@ void Player::Init(Game* pGame, const int nPlayerId)
 	{
 		_rPosMin =_rRacketLen;
 		_rPosMax =pGame->GetLevel().GetSize().x-_rRacketLen;
-		vInitPos.x =rCenterX;
+		_vInitialPos.x =rCenterX;
 	}
 
-	_vPos		=vInitPos;
-	_vVelocity	=hgeVector(0,0);
+	Reset();
+}
 
+// ********************************************
+//	Reset
+// ********************************************
+void Player::Reset()
+{
+	_vPos			=_vInitialPos;
+	_vVelocity		=hgeVector(0,0);
 	_rCrossLast		=0.0f;
 	_rHitCooldown	=0.0f;
 }

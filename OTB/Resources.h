@@ -32,7 +32,7 @@ public:
 	void		Init();
 	void		Kill();
 
-	hgeFont* _pFont;
+	hgeFont* _pFontDebug;
 	hgeFont* _pFontScore;
 
 protected:
