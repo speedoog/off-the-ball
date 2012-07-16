@@ -1,4 +1,4 @@
-#Gameplay instruction
+#summary Gameplay instructions
 
 = Control =
   * Use Left stick to move player
