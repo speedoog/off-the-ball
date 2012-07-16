@@ -29,7 +29,7 @@ public:
 					Player();
 					~Player();
 			void	Init(Game* pGame, const int nPlayerId);
-			void	Reset();
+			void	ResetPosition();
 
 			void	Update(const float rDeltaTime);
 			void	Render();

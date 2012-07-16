@@ -107,9 +107,5 @@ void Game::Render()
 	_Players[0].Render();
 	_Players[1].Render();
 
-	// render score (move it in another class ?)
-	hgeVector vLvlSize =_Level.GetSize();
-	hgeFont* pFont =GetResources()._pFontScore;
-	pFont->printf(vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_RIGHT, "%d", _Players[0].ScoreGet());
-	pFont->printf(-vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_LEFT, "%d", _Players[1].ScoreGet());
+	_Rules.Render();
 }

@@ -54,6 +54,21 @@ void Rules::Update(const float rDeltaTime)
 // ********************************************
 void Rules::Render()
 {
+	Level&		level		=_pGame->GetLevel();
+	Resources&	resources	=_pGame->GetResources();
+
+	// render score (move it in another class ?)
+	hgeVector vLvlSize =level.GetSize();
+	hgeFont* pFontScore =resources._pFontScore;
+	pFontScore->printf(vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_RIGHT, "%d", _pGame->GetPlayer(0).ScoreGet());
+	pFontScore->printf(-vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_LEFT, "%d", _pGame->GetPlayer(1).ScoreGet());
+
+	hgeFont* pFontDebug =resources._pFontDebug;
+	float rPosY =_pGame->GetLevel().GetSize().y;
+	if (_bServing)
+	{
+		pFontDebug->printf(0.0f, rPosY,	HGETEXT_MIDDLE,	"Player %d Serve", _nSide+1);
+	}
 }
 
 // ..........................................................................................................
@@ -83,8 +98,8 @@ void Rules::ActionServiceStart(int nPlayerServe)
 	_nGroundTouch	=0;
 
 	_pGame->GetLevel().Reset();
-	_pGame->GetPlayer(0).Reset();
-	_pGame->GetPlayer(1).Reset();
+	_pGame->GetPlayer(0).ResetPosition();
+	_pGame->GetPlayer(1).ResetPosition();
 	_pGame->GetBall().Reset(nPlayerServe);
 }
 
@@ -143,7 +158,7 @@ void Rules::EventBallHitGround()
 		else
 		{
 			++_nGroundTouch;
-			if (_nGroundTouch>=2)			// 4 touch is a fail !
+			if (_nGroundTouch>=2)			// 2 touch is a fail !
 			{
 				ActionServiceFailed();
 			}
@@ -177,4 +192,3 @@ void Rules::EventBallHitNet()
 		ActionServiceFailed();
 	}
 }
-
