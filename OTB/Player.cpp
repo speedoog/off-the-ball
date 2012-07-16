@@ -67,13 +67,13 @@ void Player::Init(Game* pGame, const int nPlayerId)
 		_vInitialPos.x =rCenterX;
 	}
 
-	Reset();
+	ResetPosition();
 }
 
 // ********************************************
 //	Reset
 // ********************************************
-void Player::Reset()
+void Player::ResetPosition()
 {
 	_vPos			=_vInitialPos;
 	_vVelocity		=hgeVector(0,0);
