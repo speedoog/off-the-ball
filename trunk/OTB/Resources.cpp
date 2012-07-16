@@ -53,7 +53,7 @@ hgeFont* Resources::LoadFont(const char* filename)
 void Resources::Init()
 {
 	// load all
-	_pFont =LoadFont("Data/font1.fnt");
+	_pFontDebug =LoadFont("Data/font1.fnt");
 	_pFontScore =LoadFont("Data/FontScore.fnt");
 }
 
@@ -63,5 +63,5 @@ void Resources::Init()
 void Resources::Kill()
 {
 	// delete all
-	delete _pFont;
+	delete _pFontDebug;
 }

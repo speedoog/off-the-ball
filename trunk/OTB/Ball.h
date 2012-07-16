@@ -31,7 +31,7 @@ public:
 						~Ball();
 			void		Init(Game* pGame);
 
-			void		Reset();
+			void		Reset(int nPlayer);
 			void		Update(const float rDeltaTime);
 			void		Render();
 			void		Hit(const hgeVector& vVelocity);

@@ -16,44 +16,45 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __GAME_H__
-#define __GAME_H__
+#ifndef __RULES_H__
+#define __RULES_H__
 #pragma once
 
 #include "base.h"
-#include "Level.h"
-#include "Player.h"
-#include "Ball.h"
-#include "Resources.h"
-#include "PcPad.h"
-#include "Rules.h"
 
-class Game
+class Game;
+
+class Rules
 {
 public:
-							Game();
-							~Game();
-			void			Init();
-			void			Kill();
+						Rules();
+						~Rules();
 
-			void			Update(const float rDeltaTime);
-			void			Render();
+			void		Init(Game* pGame);
+			void		Update(const float rDeltaTime);
+			void		Render();
 
-	// Accessors
-	inline	Resources&		GetResources()		{ return _Resources;  	}
-	inline	PcPadManager&	GetPadManager()		{ return _PadManager; 	}
-	inline	Player&			GetPlayer(int i)	{ return _Players[i]; 	}
-	inline	Ball&			GetBall()			{ return _Ball;			}
-	inline	Level&			GetLevel()			{ return _Level;		}
-	inline	Rules&			GetRules()			{ return _Rules;		}
+	// Actions
+			void		ActionStartGame(int nPlayerStart);
+			void		ActionServiceStart(int nPlayerServe);
+			void		ActionFail();
+			void		ActionServiceFailed();
+
+	// Events
+			void		EventBallChangeSide(int nSide);
+			void		EventBallHitGround();
+			void		EventBallHitWall();
+			void		EventBallHitRacket();
+			void		EventBallHitNet();
 
 protected:
-	Level			_Level;
-	Player			_Players[2];
-	Ball			_Ball;
-	Resources		_Resources;
-	PcPadManager	_PadManager;
-	Rules			_Rules;
+	Game*	_pGame;
+
+	bool	_bServing;
+	bool	_bRacketHit;
+	int		_nSide;
+	int		_nGroundTouch;
 };
 
-#endif	//__GAME_H__
+
+#endif	//__RULES_H__

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="OTB"
 	ProjectGUID="{05A63F5E-44E1-48F5-9391-93E691757A78}"
 	RootNamespace="OTB"
@@ -290,6 +290,14 @@
 		</File>
 		<File
 			RelativePath=".\Resources.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Rules.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Rules.h"
 			>
 		</File>
 	</Files>

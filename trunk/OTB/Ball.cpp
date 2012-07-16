@@ -33,7 +33,6 @@ float rNetResitution	=0.1f;
 // ********************************************
 Ball::Ball()
 {
-	Reset();
 }
 
 // ********************************************
@@ -50,18 +49,20 @@ Ball::~Ball()
 void Ball::Init(Game* pGame)
 {
 	_pGame =pGame;
-	Reset();
 }
 
 // ********************************************
 //	Reset
 // ********************************************
-void Ball::Reset()
+void Ball::Reset(int nPlayer)
 {
-	_vPos		=hgeVector(-5,5);
-	_nSide		=0;
+	float rPosX =nPlayer==0?-5.0f:5.0f;
+	_vPos		=hgeVector(rPosX,5);
+	_nSide		=nPlayer;
 	_vLastPos	=_vPos;
-	_vVelocity	=hgeVector(3,1);
+
+	float rVelX =nPlayer==0?1.0f:-1.0f;
+	_vVelocity	=hgeVector(rVelX,3);
 }
 
 // ********************************************
@@ -77,16 +78,17 @@ void Ball::Update(const float rDeltaTime)
 	// Collision GND
 	if (_vPos.y<0)
 	{
-		if (_vVelocity.y>(-5.f))
-		{
-			_pGame->NewBall();
-			return;
-		}
-		else
+// 		if (_vVelocity.y>(-5.f))
+// 		{
+// 			_pGame->NewBall();
+// 			return;
+// 		}
+// 		else
 		{
 			_vPos.y =0;
 			_vVelocity.y =-rGroundResitution*_vVelocity.y;
 		}
+		_pGame->GetRules().EventBallHitGround();
 	}
 
 	// Collision Walls
@@ -96,11 +98,13 @@ void Ball::Update(const float rDeltaTime)
 	{
 		_vPos.x =rWall;
 		_vVelocity.x =-rWallResitution*_vVelocity.x;
+		_pGame->GetRules().EventBallHitWall();
 	}
 	if (_vPos.x<-rWall)
 	{
 		_vPos.x =-rWall;
 		_vVelocity.x =-rWallResitution*_vVelocity.x;
+		_pGame->GetRules().EventBallHitWall();
 	}
 
 	// Collision ceil
@@ -112,8 +116,7 @@ void Ball::Update(const float rDeltaTime)
 	}
 
 	// Collision Net
-	int nSide =(_vPos.x<0);
-
+	int nSide =(_vPos.x<0)?0:1;
 	if (nSide!=_nSide)
 	{
 		// ball change side
@@ -123,6 +126,11 @@ void Ball::Update(const float rDeltaTime)
 			_vVelocity.x *=-rNetResitution;
 			_vPos.x=0.0f;
 			nSide =_nSide;	// stay same side !
+			_pGame->GetRules().EventBallHitNet();
+		}
+		else
+		{
+			_pGame->GetRules().EventBallChangeSide(nSide);
 		}
 	}
 	_nSide =nSide;
@@ -134,6 +142,7 @@ void Ball::Update(const float rDeltaTime)
 void Ball::Hit(const hgeVector& vVelocity)
 {
 	_vVelocity =vVelocity;
+	_pGame->GetRules().EventBallHitRacket();
 }
 
 // ********************************************

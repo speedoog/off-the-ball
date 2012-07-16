@@ -37,11 +37,19 @@ Level::~Level()
 // ********************************************
 //	Init
 // ********************************************
-void Level::Init(const hgeVector& vSize, const float rNetY)
+void Level::Init(const hgeVector& vSize, const float rInitialNetY)
 {
-	_vSize=vSize;
-	_rNetY=rNetY;
-	_rInitialNetY=rNetY;
+	_vSize		  =vSize;
+	_rInitialNetY =rInitialNetY;
+	Reset();
+}
+
+// ********************************************
+//	Reset
+// ********************************************
+void Level::Reset()
+{
+	_rNetY	  =_rInitialNetY;
 	_rCounter =0.0f;
 }
 

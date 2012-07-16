@@ -29,17 +29,19 @@ public:
 					Player();
 					~Player();
 			void	Init(Game* pGame, const int nPlayerId);
+			void	Reset();
 
 			void	Update(const float rDeltaTime);
 			void	Render();
 
 	inline	void	SetPosition(const hgeVector& vPos)	{ _vPos =vPos;		}
-	inline	void	IncScore()							{ ++_nScore;		}
-	inline	int		GetScore()							{ return _nScore;	}
+	inline	void	ScoreInc()							{ ++_nScore;		}
+	inline	void	ScoreReset()						{ _nScore =0;		}
+	inline	int		ScoreGet()							{ return _nScore;	}
 
 protected:
 	Game*		_pGame;
-	hgeVector	_vPos;
+	hgeVector	_vPos, _vInitialPos;
 	hgeVector	_vVelocity;
 
 	float 		_rCharSpeedMax;
