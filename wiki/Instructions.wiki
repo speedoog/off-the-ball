@@ -1,0 +1,14 @@
+#Gameplay instruction
+
+= Control =
+  * Use Left stick to move player
+  * Use Right stick to swing racket
+
+= Scoring =
+  # Ball hit the net
+  # Ball hit into player
+  # Ball hit 4 times without crossing the net
+  # Ball hit the floor after a player shot
+  # Ball bounce on the floor twice withou crossing the net
+
+  # Ball hit into floor before crossing the net ????
