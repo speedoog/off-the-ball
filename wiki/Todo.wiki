@@ -11,7 +11,9 @@
   * ControllerKeyboardMouse
   * Prédiction de la trajectoire de la balle
   * ControllerCpu Easy (IA débile)
-  * Effets de particules (Impacts Wall, shoot, traînée balle)
+  * Effets de particules
+    * Impacts Wall, shoot
+    * traînée balle, racket
   * Sound Fx
 
 = Todo Plus tard =
