@@ -68,7 +68,7 @@ void Rules::Render()
 	if (_bServing)
 	{
 		pFontMessages->SetScale(-0.005f);
-		pFontMessages->printf(0.0f, rPosY,	HGETEXT_MIDDLE,	"Player %d Serve", _nSide+1);
+		pFontMessages->printf(0.0f, rPosY,	HGETEXT_CENTER,	"Player %d Serve", _nSide+1);
 	}
 }
 
