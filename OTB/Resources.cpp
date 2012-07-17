@@ -53,8 +53,9 @@ hgeFont* Resources::LoadFont(const char* filename)
 void Resources::Init()
 {
 	// load all
-	_pFontDebug =LoadFont("Data/font1.fnt");
-	_pFontScore =LoadFont("Data/FontScore.fnt");
+	_pFontDebug		=LoadFont("Data/font1.fnt");
+	_pFontScore		=LoadFont("Data/FontScore.fnt");
+	_pFontMessages	=LoadFont("Data/Lucida70.fnt");
 }
 
 // ********************************************

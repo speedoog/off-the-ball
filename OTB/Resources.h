@@ -34,6 +34,7 @@ public:
 
 	hgeFont* _pFontDebug;
 	hgeFont* _pFontScore;
+	hgeFont* _pFontMessages;
 
 protected:
 	hgeFont* LoadFont(const char* filename);
