@@ -16,49 +16,27 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __GAME_H__
-#define __GAME_H__
+#ifndef __COMMANDPAD_H__
+#define __COMMANDPAD_H__
 #pragma once
 
 #include "base.h"
-#include "Level.h"
-#include "Player.h"
-#include "Ball.h"
-#include "Resources.h"
-#include "PcPad.h"
-#include "Rules.h"
-#include "CommandPad.h"
+#include "CommandAbc.h"
 
-class Game
+class PcPadManager;
+
+class CommandPad : public CommandAbc
 {
 public:
-							Game();
-							~Game();
-			void			Init();
-			void			Kill();
-
-			void			Update(const float rDeltaTime);
-			void			Render();
-
-	// Accessors
-	inline	Resources&		GetResources()		{ return _Resources;  	}
-	inline	PcPadManager&	GetPadManager()		{ return _PadManager; 	}
-	inline	Player&			GetPlayer(int i)	{ return _Players[i]; 	}
-	inline	Ball&			GetBall()			{ return _Ball;			}
-	inline	Level&			GetLevel()			{ return _Level;		}
-	inline	Rules&			GetRules()			{ return _Rules;		}
+					CommandPad();
+					~CommandPad();
 
 protected:
-	Level			_Level;
-	Player			_Players[2];
-	Ball			_Ball;
-	Resources		_Resources;
-	PcPadManager	_PadManager;
-	Rules			_Rules;
+	virtual void	OnInit();
+	virtual void	OnUpdate(const float rDeltaTime);
 
-	// temp ...
-	CommandPad		_CmdPad0;
-	CommandPad		_CmdPad1;
+protected:
+	PcPadManager*	_pPadManager;
 };
 
-#endif	//__GAME_H__
+#endif	//__COMMANDPAD_H__

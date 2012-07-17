@@ -48,26 +48,11 @@ void Game::Init()
 	_Players[1].Init(this, 1);
 	_Ball.Init(this);
 	_Rules.Init(this);
+	_CmdPad0.Init(this, &_Players[0]);
+	_CmdPad1.Init(this, &_Players[1]);
 
 	_Rules.ActionStartGame(0);		// start w/ player[0]
 }
-
-/*
-// ********************************************
-//	NewBall
-// ********************************************
-void Game::NewBall()
-{
-	// temp: update score
-	int nSide =_Ball.GetSide();
-	_Players[1-nSide].IncScore();
-
-	_Level.Reset();
-	_Players[0].Reset();
-	_Players[1].Reset();
-	_Ball.Init(this);
-}
-*/
 
 // ********************************************
 //	Kill
@@ -84,6 +69,9 @@ void Game::Kill()
 void Game::Update(const float rDeltaTime)
 {
 	_PadManager.Update();
+
+	_CmdPad0.Update(rDeltaTime);
+	_CmdPad1.Update(rDeltaTime);
 
 	_Level.Update(rDeltaTime);
 	_Ball.Update(rDeltaTime);
