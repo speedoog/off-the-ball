@@ -3,23 +3,28 @@
 = Todo Important =
   * Interpolation orientation de la racket
   * Gestion correcte de la frappe
-  * Fin de la partie (P1 Wins etc ...)
-  * Double service
   * Pause entre les Fails avec affichage qui a scoré
+  * Fin de la partie (P1 Wins etc ...)
+  * Autoriser un Double service
+  * Effet de déformation de la balle en fonction de la vitesse
   * Collision Ball/Player
   * ControllerKeyboardMouse
+  * Prédiction de la trajectoire de la balle
+  * ControllerCpu Easy (IA débile)
+  * Effets de particules (Impacts Wall, shoot, traînée balle)
   * Sound Fx
-  * Music
-  * Tester avec un Jump en plus
-  * Power Shot
-  * Persos un peu plus sympa (yeux qui suivent la balle)
 
 = Todo Plus tard =
+  * Jump
+  * Power Shot
+  * Music
+  * ControllerCpu Medium
+  * Persos un peu plus sympa (yeux qui suivent la balle)
   * Menu Général
   * Menu Inputs
   * Menu Video
-  * ControllerCpu
   * ControllerNetwork
   * Box2D
   * Levels avec de la physique
+  * ControllerCpu Hard
   * IK pour les jambes des persos (anim déplacement procédurale
