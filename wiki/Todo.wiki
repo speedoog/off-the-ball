@@ -1,0 +1,25 @@
+#summary Todo list
+
+= Todo Important =
+  * Interpolation orientation de la racket
+  * Gestion correcte de la frappe
+  * Fin de la partie (P1 Wins etc ...)
+  * Double service
+  * Pause entre les Fails avec affichage qui a scoré
+  * Collision Ball/Player
+  * ControllerKeyboardMouse
+  * Sound Fx
+  * Music
+  * Tester avec un Jump en plus
+  * Power Shot
+  * Persos un peu plus sympa (yeux qui suivent la balle)
+
+= Todo Plus tard =
+  * Menu Général
+  * Menu Inputs
+  * Menu Video
+  * ControllerCpu
+  * ControllerNetwork
+  * Box2D
+  * Levels avec de la physique
+  * IK pour les jambes des persos (anim déplacement procédurale
