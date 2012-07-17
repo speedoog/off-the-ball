@@ -63,11 +63,12 @@ void Rules::Render()
 	pFontScore->printf(vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_RIGHT, "%d", _pGame->GetPlayer(0).ScoreGet());
 	pFontScore->printf(-vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_LEFT, "%d", _pGame->GetPlayer(1).ScoreGet());
 
-	hgeFont* pFontDebug =resources._pFontDebug;
+	hgeFont* pFontMessages =resources._pFontMessages;
 	float rPosY =_pGame->GetLevel().GetSize().y;
 	if (_bServing)
 	{
-		pFontDebug->printf(0.0f, rPosY,	HGETEXT_MIDDLE,	"Player %d Serve", _nSide+1);
+		pFontMessages->SetScale(-0.005f);
+		pFontMessages->printf(0.0f, rPosY,	HGETEXT_MIDDLE,	"Player %d Serve", _nSide+1);
 	}
 }
 
