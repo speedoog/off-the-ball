@@ -83,16 +83,9 @@ void Ball::Update(const float rDeltaTime)
 	// Collision GND
 	if (_vPos.y<0)
 	{
-// 		if (_vVelocity.y>(-5.f))
-// 		{
-// 			_pGame->NewBall();
-// 			return;
-// 		}
-// 		else
-		{
-			_vPos.y =0;
-			_vVelocity.y =-rGroundResitution*_vVelocity.y;
-		}
+		_vPos.y =0;
+		_vVelocity.y =-rGroundResitution*_vVelocity.y;
+
 		_pGame->GetRules().EventBallHitGround();
 	}
 

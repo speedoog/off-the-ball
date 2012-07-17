@@ -19,8 +19,6 @@
 #include "player.h"
 
 #include "Game.h"
-#include "PcPad.h"
-
 
 // ********************************************
 //	Ctor
@@ -79,6 +77,8 @@ void Player::ResetPosition()
 	_vVelocity		=hgeVector(0,0);
 	_rCrossLast		=0.0f;
 	_rHitCooldown	=0.0f;
+	_vInputMove		=hgeVector(0,0);
+	_vInputRacket	=hgeVector(0,0);
 }
 
 float SegmentDist(const hgeVector& v0, const hgeVector& v1, const hgeVector& p, hgeVector* pProj=NULL, float* pRatio=NULL)
@@ -118,15 +118,12 @@ float SegmentDist(const hgeVector& v0, const hgeVector& v1, const hgeVector& p, 
 // ********************************************
 void Player::Update(const float rDeltaTime)
 {
-	PcPadManager& Pad =_pGame->GetPadManager();
-
 	// input char
 	const float rAcceleration =30.0f;
 	const float rDamping =4.0f;
-	hgeVector vAxisLeft =Pad.GetAxisLeft();
-	if (fabsf(vAxisLeft.x)>0.15f)						// deadzone
+	if (fabsf(_vInputMove.x)>0.15f)						// deadzone
 	{
-		_vVelocity.x+=vAxisLeft.x*rDeltaTime*rAcceleration;
+		_vVelocity.x+=_vInputMove.x*rDeltaTime*rAcceleration;
 		if (_vVelocity.x>_rCharSpeedMax)		_vVelocity.x =_rCharSpeedMax;
 		if (_vVelocity.x<-_rCharSpeedMax)		_vVelocity.x =-_rCharSpeedMax;
 	}
@@ -156,10 +153,9 @@ void Player::Update(const float rDeltaTime)
 	}
 
 	// Rotate racket
-	const hgeVector& vAxisRight =Pad.GetAxisRight();
-	if (vAxisRight.Length()>0.3f)						// deadzone
+	if (_vInputRacket.Length()>0.3f)						// deadzone
 	{
-		hgeVector vAxisRightNorm(vAxisRight);
+		hgeVector vAxisRightNorm(_vInputRacket);
 		vAxisRightNorm.Normalize();
 		_vRacketDir =hgeVector(vAxisRightNorm.x, vAxisRightNorm.y);
 	}
@@ -205,22 +201,11 @@ void Player::Update(const float rDeltaTime)
 // ********************************************
 void Player::Render()
 {
-	// player
+	// Player
 	hge->Gfx_RenderBox(	_vPos.x-_vCharSize.x, _vPos.y,
 						_vPos.x+_vCharSize.x, _vPos.y+_vCharSize.y);
 
-// 	Ball& ball =_pGame->GetBall();
-// 	hgeVector vCenter =_vPos+hgeVector(0, _rCharRacketY);
-// 	hgeVector vBallDiff=vCenter-ball.GetPos();
-// 	if (vBallDiff.Length()<_rRacketLen)
-// 	{
-// 		hge->Gfx_RenderLine(_vPos.x, _rCharRacketY,
-// 			_vPos.x+_vRacketDir.x*_rRacketLen, _rCharRacketY+_vRacketDir.y*_rRacketLen, 0xFFFF0000);
-// 	}
-// 	else
-
-	// racket
+	// Racket
 	hge->Gfx_RenderLine(_vPos.x, _rCharRacketY,
 						_vPos.x+_vRacketDir.x*_rRacketLen, _rCharRacketY+_vRacketDir.y*_rRacketLen, 0xFF60FF60);
-
 }

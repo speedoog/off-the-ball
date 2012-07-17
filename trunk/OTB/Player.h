@@ -34,11 +34,18 @@ public:
 			void				Update(const float rDeltaTime);
 			void				Render();
 
-	inline	void				SetPosition(const hgeVector& vPos)	{ _vPos =vPos;		}
-	inline	const hgeVector&	GetPosition() const					{ return _vPos;		}
-	inline	void				ScoreInc()							{ ++_nScore;		}
-	inline	void				ScoreReset()						{ _nScore =0;		}
-	inline	int					ScoreGet()							{ return _nScore;	}
+	inline	void				SetPosition(const hgeVector& vPos)				{ _vPos =vPos;					}
+	inline	const hgeVector&	GetPosition() const								{ return _vPos;					}
+	inline	void				SetVelocity(const hgeVector& vVel)				{ _vVelocity=vVel;				}
+	inline	const hgeVector&	GetVelocity() const								{ return _vVelocity;			}
+
+	inline	void				ScoreInc()										{ ++_nScore;					}
+	inline	void				ScoreReset()									{ _nScore =0;					}
+	inline	int					ScoreGet()										{ return _nScore;				}
+
+	// inputs
+	inline	void				SetInputMove(const hgeVector& vInputMove)		{ _vInputMove	=vInputMove;	}
+	inline	void				SetInputRacket(const hgeVector& vInputRacket)	{ _vInputRacket =vInputRacket;	}
 
 protected:
 	Game*		_pGame;
@@ -58,6 +65,9 @@ protected:
 	int			_nPlayerId;
 
 	int			_nScore;
+
+	// Input
+	hgeVector	_vInputMove, _vInputRacket;
 };
 
 #endif	//__PLAYER_H__

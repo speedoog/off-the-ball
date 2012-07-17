@@ -244,6 +244,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="PlayerCommand"
+			>
+			<File
+				RelativePath=".\CommandAbc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CommandAbc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CommandPad.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CommandPad.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\Ball.cpp"
 			>
