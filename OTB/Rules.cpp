@@ -68,7 +68,7 @@ void Rules::Render()
 	if (_bServing)
 	{
 		pFontMessages->SetScale(-0.005f);
-		pFontMessages->printf(0.0f, rPosY,	HGETEXT_CENTER,	"Player %d Serve", _nSide+1);
+		pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Serve", _nSide+1);
 	}
 }
 
@@ -102,7 +102,8 @@ void Rules::ActionServiceStart(int nPlayerServe)
 	_pGame->GetLevel().Reset();
 	_pGame->GetPlayer(0).ResetPosition();
 	_pGame->GetPlayer(1).ResetPosition();
-	_pGame->GetBall().Reset(nPlayerServe);
+	Player* pPlayerServe =&_pGame->GetPlayer(nPlayerServe);
+	_pGame->GetBall().Reset(pPlayerServe);
 }
 
 // ********************************************
@@ -182,7 +183,14 @@ void Rules::EventBallHitWall()
 // ********************************************
 void Rules::EventBallHitRacket()
 {
-	_bRacketHit =true;
+	if (_bServing && _bRacketHit)			// double hit during service
+	{
+		ActionServiceFailed();
+	}
+	else
+	{
+		_bRacketHit =true;
+	}
 }
 
 // ********************************************

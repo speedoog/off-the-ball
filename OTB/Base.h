@@ -39,10 +39,11 @@ extern HGE* hge;
 #define RfxDeleteTab(_Tab)				if (_Tab) {delete [](_Tab);(_Tab)=NULL;}
 #define RfxRelease(p)					{ if(p) { (p)->Release(); (p)=NULL; } }
 
-template<typename T> inline void RfxClamp(T& _x, T _min_, T _max_)			{ _x = (_x<_min_  ? _min_ : _x<_max_ ? _x : _max_); }
-template<typename T> inline void RfxClipMin(T& _x, T _min_)					{	_x = ((_x)<(_min_) ? (_min_) : (_x));	}
-template<typename T> inline void RfxClipMax(T& _x, T _max_)					{ _x = ((_x)>(_max_) ? (_max_) : (_x));	}
-template<typename T> inline void RfxMinMax (const T& a, const T& b, T& min, T& max)	{ if (a<b) { min=a; max=b;} else { max=a;min=b;}}
+template<typename T> inline T		RfxClamp(const T& _x, const T& _min_, const T& _max_)	{ return (_x<_min_ ? _min_ : _x<_max_ ? _x : _max_);	}
+template<typename T> inline void 	RfxClip(T& _x, const T& _min_, const T& _max_)			{ _x = RfxClamp(_x, _min_, _max_);						}
+template<typename T> inline void 	RfxClipMin(T& _x, T _min_)								{ _x = ((_x)<(_min_) ? (_min_) : (_x));					}
+template<typename T> inline void 	RfxClipMax(T& _x, T _max_)								{ _x = ((_x)>(_max_) ? (_max_) : (_x));					}
+template<typename T> inline void 	RfxMinMax (const T& a, const T& b, T& min, T& max)	{ if (a<b) { min=a; max=b;} else { max=a;min=b;}}
 
 #ifdef WIN32
 	void	Win32OSReport(char*	string,...);

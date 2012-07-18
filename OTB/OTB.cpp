@@ -102,7 +102,7 @@ bool RenderFunc()
 
 	_Game.Render();
 
-//	_Game.GetResources()._pFont->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
+//	_Game.GetResources()._pFontDebug->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
 
 //	DrawInputs();
 //	par->Render();
@@ -160,6 +160,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	hge->System_SetState(HGE_SCREENHEIGHT,	_nScreenSizeY);
 	hge->System_SetState(HGE_TITLE,			"Off the Ball");
 	hge->System_SetState(HGE_WINDOWED,		_bWindowed);
+
+	hge->System_SetState(HGE_FPS,			HGEFPS_VSYNC);
+//	hge->System_SetState(HGE_FPS,			HGEFPS_UNLIMITED);
+//	hge->System_SetState(HGE_FPS,			60);
 
 	// Tries to initiate HGE
 	if (hge->System_Initiate())

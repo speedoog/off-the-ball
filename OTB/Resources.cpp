@@ -39,7 +39,7 @@ Resources::~Resources()
 hgeFont* Resources::LoadFont(const char* filename)
 {
 	hgeFont* pFont;
-	pFont =new hgeFont(filename);
+	pFont =new hgeFont(filename, true);
 	pFont->SetProportion(-1);
 
 	float scale =-0.01f;
