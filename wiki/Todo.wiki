@@ -1,6 +1,6 @@
 #summary Todo list
 
-= Todo Important =
+= Todo Immediatement, v1 Alpha Proto =
   * ~~Interpolation orientation de la racket~~
   * PcPadManager: gérer plusieurs pads
   * Gestion correcte de la frappe
@@ -9,6 +9,8 @@
   * Pause entre les Fails avec un affichage de qui a scoré
   * Fin de la partie (P1 Wins etc ...)
   * Autoriser un Double service
+
+= Todo Important, v2 Beta Proto =
   * Effet de déformation de la balle en fonction de la vitesse
   * Collision Ball/Player
   * Prédiction de la trajectoire de la balle
@@ -18,7 +20,7 @@
     * traînée balle, racket
   * Sound Fx
 
-= Todo Plus tard =
+= Todo Plus tard, v3 Demo =
   * Jump
   * Power Shot
   * Music
