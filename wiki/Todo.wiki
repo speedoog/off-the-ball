@@ -3,13 +3,14 @@
 = Todo Important =
   * Interpolation orientation de la racket
   * Gestion correcte de la frappe
-  * pcpad: gérer plusieurs pad (id dans xml) 
+  * ControllerKbdMouse
+  * PcPadManager: gérer plusieurs pads
+  * Load Controller config depuis OTB.xml ex: P1=Pad(0) P2=KbdMouse
   * Pause entre les Fails avec affichage qui a scoré
   * Fin de la partie (P1 Wins etc ...)
   * Autoriser un Double service
   * Effet de déformation de la balle en fonction de la vitesse
   * Collision Ball/Player
-  * ControllerKeyboardMouse
   * Prédiction de la trajectoire de la balle
   * ControllerCpu Easy (IA débile)
   * Effets de particules
