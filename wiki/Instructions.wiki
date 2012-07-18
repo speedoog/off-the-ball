@@ -1,8 +1,12 @@
 #summary Gameplay instructions
 
-= Control =
-  * Use Left stick to move player
-  * Use Right stick to swing racket
+= GamePad Control =
+  * Left stick to move player
+  * Right stick to swing racket
+
+= KeyboardMouse Control =
+  * Left/right keys to move player
+  * Mouse to swing racket
 
 = Scoring =
   # Ball hit the net
