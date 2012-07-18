@@ -54,20 +54,16 @@ void Ball::Init(Game* pGame)
 // ********************************************
 //	Reset
 // ********************************************
-void Ball::Reset(int nPlayer)
+void Ball::Reset(Player* pPlayer)
 {
-	float rPosX =_pGame->GetPlayer(nPlayer).GetPosition().x;
-	if (rPosX<0)
-		rPosX-=0.2f;
-	else
-		rPosX+=0.2f;
+	float rPosX =pPlayer->GetPosition().x + pPlayer->GetAt()*0.4f;
 
 	_vPos		=hgeVector(rPosX,2.5);
-	_nSide		=nPlayer;
+	_nSide		=pPlayer->GetPlayerId();
 	_vLastPos	=_vPos;
 
-	float rVelX =0.0f;//nPlayer==0?1.0f:-1.0f;
-	_vVelocity	=hgeVector(rVelX,5);
+	float rVelX =pPlayer->GetAt()*-1.0f;
+	_vVelocity	=hgeVector(rVelX,4);
 }
 
 // ********************************************
@@ -77,8 +73,9 @@ void Ball::Update(const float rDeltaTime)
 {
 	float rNewDT =rDeltaTime*rTimescale;
 	_vLastPos	=_vPos;
-	_vPos		+=_vVelocity*rNewDT;
+	hgeVector vOldVelocity =_vVelocity;
 	_vVelocity.y+=rGravity*rNewDT;
+	_vPos		+=(vOldVelocity+_vVelocity)*0.5f*rNewDT;
 
 	// Collision GND
 	if (_vPos.y<0)

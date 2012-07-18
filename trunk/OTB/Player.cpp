@@ -20,12 +20,14 @@
 
 #include "Game.h"
 
+const float rRacketRotationSpeedMax =8.0f*M_PI;
+
 // ********************************************
 //	Ctor
 // ********************************************
 Player::Player()
 {
-	_rCharSpeedMax 	=5.0f;
+	_rCharSpeedMax 	=7.0f;
 	_vCharSize 		=hgeVector(0.35f, 1.8f);
 	_rCharRacketY	=_vCharSize.y*0.75f;
 	_rRacketLen		=_vCharSize.y*0.75f;
@@ -155,9 +157,21 @@ void Player::Update(const float rDeltaTime)
 	// Rotate racket
 	if (_vInputRacket.Length()>0.3f)						// deadzone
 	{
-		hgeVector vAxisRightNorm(_vInputRacket);
-		vAxisRightNorm.Normalize();
-		_vRacketDir =hgeVector(vAxisRightNorm.x, vAxisRightNorm.y);
+		hgeVector vInputRacketNorm(_vInputRacket);
+		vInputRacketNorm.Normalize();
+		
+		float rAngleInput	=vInputRacketNorm.Angle();
+		float rAngleRacket	=_vRacketDir.Angle();
+		float rAngleDiff =rAngleInput-rAngleRacket;
+		if (rAngleDiff>(M_PI))		rAngleDiff-=2.0f*M_PI;
+		if (rAngleDiff<(-M_PI))		rAngleDiff+=2.0f*M_PI;
+
+		_rRacketRotationSpeed =rAngleDiff*rRacketRotationSpeedMax;
+		_vRacketDir.Rotate(_rRacketRotationSpeed*rDeltaTime);
+	}
+	else
+	{
+		_rRacketRotationSpeed =0.0f;
 	}
 
 	// check ball collide
@@ -186,7 +200,12 @@ void Player::Update(const float rDeltaTime)
 		{
 			hgeVector vHit =vProjection-vBall;
 			vHit.Normalize();
-			ball.Hit( vHit*10.0f);	// test
+	
+			// temp version
+			float rRacketSpeedAbs =fabsf(_rRacketRotationSpeed);
+			float rImpactSpeed =RfxClamp(rRacketSpeedAbs, 4.0f, 12.0f);
+
+			ball.Hit( vHit*rImpactSpeed);	// test
 			_rHitCooldown =0.5f;
 		}
 	}
@@ -203,7 +222,19 @@ void Player::Render()
 {
 	// Player
 	hge->Gfx_RenderBox(	_vPos.x-_vCharSize.x, _vPos.y,
-						_vPos.x+_vCharSize.x, _vPos.y+_vCharSize.y);
+						_vPos.x+_vCharSize.x, _vPos.y+_vCharSize.y, 0xFF39588E);
+
+	// Eye test
+	float rEyeRadius =_vCharSize.x*0.25f;
+	hgeVector vEyeCenter(_vPos.x+_vCharSize.x*0.75f*GetAt(), _vPos.y+_vCharSize.y*0.85f);
+	hge->Gfx_RenderCircle(vEyeCenter.x, vEyeCenter.y, rEyeRadius, 0xFFFFFFFF);
+
+// 	Ball& ball =_pGame->GetBall();
+// 	const hgeVector& vBallPos =ball.GetPos();
+// 	hgeVector vDiff =vBallPos-vEyeCenter;
+// 	vDiff.Normalize();
+// 	hgeVector vPosIris =vEyeCenter+rEyeRadius*0.666f*vDiff;
+// 	hge->Gfx_RenderCircle(vPosIris.x, vPosIris.y, rEyeRadius*0.3333f, 0xFFC20004);
 
 	// Racket
 	hge->Gfx_RenderLine(_vPos.x, _rCharRacketY,

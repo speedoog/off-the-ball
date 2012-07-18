@@ -23,6 +23,7 @@
 #include "base.h"
 
 class Game;
+class Player;
 
 class Ball
 {
@@ -31,7 +32,7 @@ public:
 						~Ball();
 			void		Init(Game* pGame);
 
-			void		Reset(int nPlayer);
+			void		Reset(Player* pPlayer);
 			void		Update(const float rDeltaTime);
 			void		Render();
 			void		Hit(const hgeVector& vVelocity);
