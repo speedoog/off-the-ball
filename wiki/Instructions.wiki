@@ -1,10 +1,10 @@
 #summary Gameplay instructions
 
-= GamePad Control =
+= Game Pad Control =
   * Left stick to move player
   * Right stick to swing racket
 
-= KeyboardMouse Control =
+= Keyboard/Mouse Control =
   * Left/right keys to move player
   * Mouse to swing racket
 
@@ -13,6 +13,4 @@
   # Ball hit into player
   # Ball hit 4 times without crossing the net
   # Ball hit the floor after a player shot
-  # Ball bounce on the floor twice withou crossing the net
-
-  # Ball hit into floor before crossing the net ????
+  # Ball bounce on the floor twice without crossing the net
