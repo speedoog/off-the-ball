@@ -3,6 +3,7 @@
 = Todo Important =
   * Interpolation orientation de la racket
   * Gestion correcte de la frappe
+  * pcpad: gérer plusieurs pad (id dans xml) 
   * Pause entre les Fails avec affichage qui a scoré
   * Fin de la partie (P1 Wins etc ...)
   * Autoriser un Double service
