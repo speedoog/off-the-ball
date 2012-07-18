@@ -1,7 +1,7 @@
 #summary Todo list
 
 = Todo Important =
-  * Interpolation orientation de la racket
+  * ~~Interpolation orientation de la racket~~
   * Gestion correcte de la frappe
   * ControllerKbdMouse
   * PcPadManager: gérer plusieurs pads
