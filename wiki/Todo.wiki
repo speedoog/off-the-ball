@@ -2,9 +2,9 @@
 
 = Todo Important =
   * ~~Interpolation orientation de la racket~~
+  * PcPadManager: gérer plusieurs pads
   * Gestion correcte de la frappe
   * ControllerKbdMouse
-  * PcPadManager: gérer plusieurs pads
   * Load Controller config depuis OTB.xml ex: P1=Pad(0) P2=KbdMouse
   * Pause entre les Fails avec un affichage de qui a scoré
   * Fin de la partie (P1 Wins etc ...)
