@@ -85,8 +85,14 @@ void DrawInputs()
 		pFont->printf(-7.4f, rTextPosY, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(PcPadManager::CtrlIdx, i)+4);
 
 		pFont->SetColor(0xFFFF00A0);
-		PcPadManager::CtrlStatus status =PadManager.GetCtrlState(2, (PcPadManager::CtrlIdx)i);
-		pFont->printf(-3, rTextPosY, HGETEXT_LEFT, "%d", status);
+		{
+			PcPadManager::CtrlStatus status =PadManager.GetCtrlState(0, (PcPadManager::CtrlIdx)i);
+			pFont->printf(-3, rTextPosY, HGETEXT_LEFT, "%d", status);
+		}
+		{
+			PcPadManager::CtrlStatus status =PadManager.GetCtrlState(1, (PcPadManager::CtrlIdx)i);
+			pFont->printf(0, rTextPosY, HGETEXT_LEFT, "%d", status);
+		}
 		rTextPosY-=0.3f;
 	}
 }
@@ -104,7 +110,7 @@ bool RenderFunc()
 
 //	_Game.GetResources()._pFontDebug->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
 
-	DrawInputs();
+	//DrawInputs();
 //	par->Render();
 
 	hge->Gfx_EndScene();
