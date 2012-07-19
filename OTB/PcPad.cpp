@@ -24,11 +24,9 @@
 // ********************************************
 PcPadManager::PcPadManager()
 {
-	_hWnd		=NULL;
-	_pDirectInput		=NULL;
-	_pDInputDevice	=NULL;
-	_bInited	=false;
-	memset(&_JoyState,0,sizeof(DIJOYSTATE2));
+	_hWnd			=NULL;
+	_pDirectInput	=NULL;
+	_bInited		=false;
 }
 
 // ********************************************
@@ -60,26 +58,39 @@ int	PcPadManager::Init(HWND	hWnd)
 	if (!_pDirectInput)		return	-1;
 	if (hr)					return	-2;
 	
+	_nPadCurrent =0;
+
 	// Look for a simple joystick we can use for this sample program.
 	hr =_pDirectInput->EnumDevices(DI8DEVCLASS_GAMECTRL,EnumJoysticksCallback,(void*)this,DIEDFL_ATTACHEDONLY);
 	RfxAssert(!hr);
 	if (hr)					return	-3;
 
-	// Make sure we got a joystick
-	RfxAssert(_pDInputDevice);
-	if (!_pDInputDevice)	return	-4;
+	_nPadCount =_nPadCurrent;
+	_nPadCurrent =0;
 
-	// Set the data format to "simple joystick" - a predefined data format 
-	hr =_pDInputDevice->SetDataFormat(&c_dfDIJoystick2);
-	RfxAssert(!hr);
+	for(PadIdx iPadIdx=0; iPadIdx<MAX_PAD_COUNT; ++iPadIdx)
+	{
+		PcPad& PadCurrent =_Pad[iPadIdx];
 
-	// Set the cooperative level to let DInput know how this device should interact with the system and with other DInput applications.
-	hr =_pDInputDevice->SetCooperativeLevel(hWnd, DISCL_EXCLUSIVE| DISCL_FOREGROUND);
-	RfxAssert(!hr);
+		if (PadCurrent._PadType!=PT_INVALID)
+		{
+			// Make sure we got a joystick
+			RfxAssert(PadCurrent._pDInputDevice);
+			if (!PadCurrent._pDInputDevice)	return	-4;
 
-	// Enumerate the joystick objects. The callback function enabled user interface elements for objects that are found, and sets the min/max values property for discovered axes.
-	hr =_pDInputDevice->EnumObjects(EnumObjectsCallback,(void*)this, DIDFT_ALL);
-	RfxAssert(!hr);
+			// Set the data format to "simple joystick" - a predefined data format 
+			hr =PadCurrent._pDInputDevice->SetDataFormat(&c_dfDIJoystick2);
+			RfxAssert(!hr);
+
+			// Set the cooperative level to let DInput know how this device should interact with the system and with other DInput applications.
+			hr =PadCurrent._pDInputDevice->SetCooperativeLevel(hWnd, DISCL_EXCLUSIVE| DISCL_FOREGROUND);
+			RfxAssert(!hr);
+
+			_nPadCurrent =iPadIdx;
+			hr =PadCurrent._pDInputDevice->EnumObjects(EnumObjectsCallback,(void*)this, DIDFT_ALL);						// Enumerate the joystick objects. The callback function enabled user interface elements for objects that are found, and sets the min/max values property for discovered axes.
+			RfxAssert(!hr);
+		}
+	}
 
 	_bInited =true;
 
@@ -93,14 +104,19 @@ void PcPadManager::Kill()
 {
 	RfxAssert(_bInited);
 
-	// Unacquire the device one last time just in case  the app tried to exit while the device is still acquired.
-	if (_pDInputDevice) 
+	for(PadIdx iPadIdx=0; iPadIdx<MAX_PAD_COUNT; ++iPadIdx)
 	{
-		_pDInputDevice->Unacquire();
+		PcPad& PadCurrent =_Pad[iPadIdx];
+		// Unacquire the device one last time just in case  the app tried to exit while the device is still acquired.
+		if (PadCurrent._pDInputDevice) 
+		{
+			PadCurrent._pDInputDevice->Unacquire();
+		}
+
+		// Release any DirectInput objects.
+		RfxRelease(PadCurrent._pDInputDevice);
 	}
 
-	// Release any DirectInput objects.
-	RfxRelease(_pDInputDevice);
 	RfxRelease(_pDirectInput);
 
 	_bInited =false;
@@ -113,85 +129,81 @@ void PcPadManager::Update(void)
 {
 	RfxAssert(_bInited);
 
-	HRESULT hr;
-	RfxAssert(_pDInputDevice);
-	if (!_pDInputDevice)		return;
-
-	// Poll the device to read the current state
-	hr = _pDInputDevice->Poll();
-	if (FAILED(hr))
+	for(PadIdx iPadIdx=0; iPadIdx<MAX_PAD_COUNT; ++iPadIdx)
 	{
-		// DInput is telling us that the input stream has been interrupted. We aren't tracking any state between polls, so
-		// we don't have any special reset that needs to be done. We just re-acquire and try again.
-		hr = _pDInputDevice->Acquire();
-		while( hr == DIERR_INPUTLOST ) 
+		PcPad& PadCurrent =_Pad[iPadIdx];
+		HRESULT hr;
+		RfxAssert(PadCurrent._pDInputDevice);
+		if (!PadCurrent._pDInputDevice)
+			continue;
+
+		// Poll the device to read the current state
+		hr = PadCurrent._pDInputDevice->Poll();
+		if (FAILED(hr))
 		{
-			hr = _pDInputDevice->Acquire();
+			hr = PadCurrent._pDInputDevice->Acquire();													// DInput is telling us that the input stream has been interrupted.
+			while( hr == DIERR_INPUTLOST )																// We aren't tracking any state between polls, 
+			{																							// so we don't have any special reset that needs to be done.
+				hr = PadCurrent._pDInputDevice->Acquire();												// We just re-acquire and try again.
+			}
+
+			hr = PadCurrent._pDInputDevice->Poll(); 
+			if (!FAILED(hr))
+			{
+				PadCurrent._pDInputDevice->GetDeviceState(sizeof(DIJOYSTATE2),&PadCurrent._JoyState);				// Get the input's device state
+			}
+
+			continue;
 		}
 
-		hr = _pDInputDevice->Poll(); 
-		if (!FAILED(hr))
-		{
-			// Get the input's device state
-			_pDInputDevice->GetDeviceState(sizeof(DIJOYSTATE2),&_JoyState);
-		}
+		// Get the input's device state
+		PadCurrent._pDInputDevice->GetDeviceState(sizeof(DIJOYSTATE2),&PadCurrent._JoyState);
 
-		return;
+		// Update Left
+		PadCurrent._vAxisLeft.x =float(PadCurrent._JoyState.lX&0xFF)/128.0f-1.0f;
+		PadCurrent._vAxisLeft.y =float(255-(PadCurrent._JoyState.lX&0xFF))/128.0f-1.0f;
+
+		// Update Right
+		PadCurrent._vAxisRight.x =float(PadCurrent._JoyState.lRx&0xFF)/128.0f-1.0f;
+		PadCurrent._vAxisRight.y =float(255-(PadCurrent._JoyState.lRy&0xFF))/128.0f-1.0f;
 	}
-
-	// Get the input's device state
-	_pDInputDevice->GetDeviceState(sizeof(DIJOYSTATE2),&_JoyState);
-
-	// Update Left
-	_AxisLeft.x =float(_JoyState.lX&0xFF)/128.0f-1.0f;
-	_AxisLeft.y =float(255-(_JoyState.lX&0xFF))/128.0f-1.0f;
-	// deadzone
-// 	if (fabsf(_AxisLeft.x)<0.15f)	_AxisLeft.x =0;
-// 	if (fabsf(_AxisLeft.y)<0.15f)	_AxisLeft.y =0;
-
-	// Update Right
-	_AxisRight.x =float(_JoyState.lRx&0xFF)/128.0f-1.0f;
-	_AxisRight.y =float(255-(_JoyState.lRy&0xFF))/128.0f-1.0f;
-// 	if (_AxisRight.Length()<0.3f)
-// 	{
-// 		_AxisRight.x =0;
-// 		_AxisRight.y =0;
-// 	}
 }
 
 // ********************************************
 //	GetCtrlState
 // ********************************************
-PcPadManager::CtrlStatus PcPadManager::GetCtrlState(CtrlIdx j)const
+PcPadManager::CtrlStatus PcPadManager::GetCtrlState(PadIdx iPadIdx, CtrlIdx iControl) const
 {
-	switch(j)
+	const PcPad& PadCurrent =_Pad[iPadIdx];
+
+	switch(iControl)
 	{
-	case	PAD_BTN_A:			return	(CtrlStatus)_JoyState.rgbButtons[0];
-	case	PAD_BTN_B:			return	(CtrlStatus)_JoyState.rgbButtons[1];
-	case	PAD_BTN_X:			return	(CtrlStatus)_JoyState.rgbButtons[2];
-	case	PAD_BTN_Y:			return	(CtrlStatus)_JoyState.rgbButtons[3];
+	case	PAD_BTN_A:			return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[0];
+	case	PAD_BTN_B:			return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[1];
+	case	PAD_BTN_X:			return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[2];
+	case	PAD_BTN_Y:			return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[3];
 
-	case	PAD_BTN_LEFT_BTN:	return	(CtrlStatus)_JoyState.rgbButtons[4];
-	case	PAD_BTN_RIGHT_BTN:	return	(CtrlStatus)_JoyState.rgbButtons[5];
+	case	PAD_BTN_LEFT_BTN:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[4];
+	case	PAD_BTN_RIGHT_BTN:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[5];
 
-	case	PAD_BTN_SELECT:		return	(CtrlStatus)_JoyState.rgbButtons[6];
-	case	PAD_BTN_START:		return	(CtrlStatus)_JoyState.rgbButtons[7];
-	case	PAD_BTN_THUMB_L:	return	(CtrlStatus)_JoyState.rgbButtons[8];
-	case	PAD_BTN_THUMB_R:	return	(CtrlStatus)_JoyState.rgbButtons[9];
+	case	PAD_BTN_SELECT:		return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[6];
+	case	PAD_BTN_START:		return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[7];
+	case	PAD_BTN_THUMB_L:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[8];
+	case	PAD_BTN_THUMB_R:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[9];
 
-	case	PAD_LEFTPAD_AXIS_X:	return	(CtrlStatus)(_JoyState.lX&0xFF);
-	case	PAD_LEFTPAD_AXIS_Y:	return	(CtrlStatus)(0xFF-(_JoyState.lY&0xFF));
+	case	PAD_LEFTPAD_AXIS_X:	return	(CtrlStatus)(PadCurrent._JoyState.lX&0xFF);
+	case	PAD_LEFTPAD_AXIS_Y:	return	(CtrlStatus)(0xFF-(PadCurrent._JoyState.lY&0xFF));
 
-	case	PAD_RIGHTPAD_AXIS_X:return	(CtrlStatus)(_JoyState.lRx&0xFF);
-	case	PAD_RIGHTPAD_AXIS_Y:return	(CtrlStatus)(0xFF-(_JoyState.lRy&0xFF));
+	case	PAD_RIGHTPAD_AXIS_X:return	(CtrlStatus)(PadCurrent._JoyState.lRx&0xFF);
+	case	PAD_RIGHTPAD_AXIS_Y:return	(CtrlStatus)(0xFF-(PadCurrent._JoyState.lRy&0xFF));
 
-	case	PAD_BTN_UP:			return	(CtrlStatus)(_JoyState.rgdwPOV[0]&0xFF);
-	case	PAD_BTN_DOWN:		return	(CtrlStatus)(_JoyState.rgdwPOV[1]&0xFF);
-	case	PAD_BTN_LEFT:		return	(CtrlStatus)(_JoyState.rgdwPOV[2]&0xFF);
-	case	PAD_BTN_RIGHT:		return	(CtrlStatus)(_JoyState.rgdwPOV[3]&0xFF);
-	case	PAD_BTN_OVER_AXIS1:	return	(CtrlStatus)_JoyState.rgbButtons[10];
-	case	PAD_BTN_OVER_AXIS2:	return	(CtrlStatus)_JoyState.rgbButtons[11];
-	case	PAD_AXIS_Z:			return	(CtrlStatus)(_JoyState.lZ&0xFF);
+	case	PAD_BTN_UP:			return	(CtrlStatus)(PadCurrent._JoyState.rgdwPOV[0]&0xFF);
+	case	PAD_BTN_DOWN:		return	(CtrlStatus)(PadCurrent._JoyState.rgdwPOV[1]&0xFF);
+	case	PAD_BTN_LEFT:		return	(CtrlStatus)(PadCurrent._JoyState.rgdwPOV[2]&0xFF);
+	case	PAD_BTN_RIGHT:		return	(CtrlStatus)(PadCurrent._JoyState.rgdwPOV[3]&0xFF);
+	case	PAD_BTN_OVER_AXIS1:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[10];
+	case	PAD_BTN_OVER_AXIS2:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[11];
+	case	PAD_AXIS_Z:			return	(CtrlStatus)(PadCurrent._JoyState.lZ&0xFF);
 	default:;
 	}
 	return	0;
@@ -201,7 +213,13 @@ bool IsXboxPad(const DIDEVICEINSTANCE* pCurrentDevice)
 {
 	const char* pName =pCurrentDevice->tszInstanceName;
 	const char* p=strstr(pName, "XBOX");
-	//bool bIsXBOXPad = (pName[0]=='X') && (pName[1]=='B') && (pName[2]=='O') && (pName[3]=='X');
+	return (p!=NULL);
+}
+
+bool IsPs3Pad(const DIDEVICEINSTANCE* pCurrentDevice)
+{
+	const char* pName =pCurrentDevice->tszInstanceName;
+	const char* p=strstr(pName, "PLAYSTATION");
 	return (p!=NULL);
 }
 
@@ -212,23 +230,37 @@ bool IsXboxPad(const DIDEVICEINSTANCE* pCurrentDevice)
 // ********************************************
 BOOL CALLBACK PcPadManager::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, void* pContext)
 {
-	if (IsXboxPad(pdidInstance)==false)
-	{
-		return DIENUM_CONTINUE;
-	}
-
 	PcPadManager* pthis =(PcPadManager*)pContext;
 
-	// Obtain an interface to the enumerated joystick.
-	HRESULT hr = pthis->_pDirectInput->CreateDevice(pdidInstance->guidInstance,&(pthis->_pDInputDevice),NULL);
-	if (FAILED(hr))
+	PcPad& PadCurrent =pthis->_Pad[pthis->_nPadCurrent];
+
+	if (IsPs3Pad(pdidInstance)==false)
 	{
-		// If it failed, then we can't use this joystick. (Maybe the user unplugged it while we were in the middle of enumerating it.)
-		return DIENUM_CONTINUE;
+		PadCurrent._PadType =PT_PS3;
+	}
+	else if (IsXboxPad(pdidInstance)==false)
+	{
+		PadCurrent._PadType =PT_XBOX;
+	}
+	else
+	{
+		PadCurrent._PadType =PT_OTHER;
 	}
 
-	// Stop enumeration. Note: we're just taking the first joystick we get. You could store all the enumerated joysticks and let the user pick.
-	return DIENUM_STOP;
+	// Obtain an interface to the enumerated joystick.
+	HRESULT hr = pthis->_pDirectInput->CreateDevice(pdidInstance->guidInstance,&(PadCurrent._pDInputDevice),NULL);
+	if (FAILED(hr))
+	{
+		return DIENUM_CONTINUE;										// If it failed, then we can't use this joystick. (Maybe the user unplugged it while we were in the middle of enumerating it.)
+	}
+
+	++pthis->_nPadCurrent;
+	if (pthis->_nPadCount>=MAX_PAD_COUNT)
+	{
+		return DIENUM_STOP;											// Stop enumeration. Note: we're just taking the first joystick we get. You could store all the enumerated joysticks and let the user pick.
+	}
+
+	return DIENUM_CONTINUE;
 }
 
 // ********************************************
@@ -240,6 +272,7 @@ BOOL CALLBACK PcPadManager::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidIn
 BOOL CALLBACK PcPadManager::EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, void* pContext)
 {
 	PcPadManager* pthis=(PcPadManager*)pContext;
+	PcPad& PadCurrent =pthis->_Pad[pthis->_nPadCurrent];
 
 	static int nSliderCount =0;		// Number of returned slider controls
 	static int nPOVCount	=0;		// Number of returned POV controls
@@ -256,7 +289,7 @@ BOOL CALLBACK PcPadManager::EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pd
 		diprg.lMax              =255;
 
 		// Set the range for the axis
-		pthis->_pDInputDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
+		PadCurrent._pDInputDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
 	}
 
 	return DIENUM_CONTINUE;

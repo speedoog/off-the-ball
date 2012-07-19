@@ -34,6 +34,35 @@ class PcPadManager
 public:
     typedef int PadIdx;
 
+	enum
+	{
+		MAX_PAD_COUNT =4
+	};
+
+	SMARTENUM_DECLARE(PadType,
+		PT_INVALID,
+		PT_XBOX,
+		PT_PS3,
+		PT_OTHER,
+		PT_MAX,
+		);
+
+	class PcPad
+	{
+	public:
+		PcPad()
+		{
+			_pDInputDevice =NULL;
+			_PadType =PT_INVALID;
+			memset(&_JoyState,0,sizeof(DIJOYSTATE2));
+		}
+
+		LPDIRECTINPUTDEVICE8	_pDInputDevice;				// DInput Joystick
+		DIJOYSTATE2				_JoyState;					// DInput joystick state
+		hgeVector				_vAxisLeft, _vAxisRight;
+		PadType					_PadType;
+	};
+
     SMARTENUM_DECLARE(CtrlIdx,
 		PAD_BTN_A,
 		PAD_BTN_B,
@@ -72,22 +101,20 @@ public:
 	int					Init(HWND hWnd);
 	void				Kill();
 	void				Update();
-	CtrlStatus  		GetCtrlState(CtrlIdx j) const;
-	const hgeVector&	GetAxisLeft() const		{ return _AxisLeft;  }
-	const hgeVector&	GetAxisRight() const	{ return _AxisRight; }
+	CtrlStatus  		GetCtrlState(PadIdx iPadIdx, CtrlIdx iControl) const;
+	const hgeVector&	GetAxisLeft(PadIdx iPadIdx) const		{ return _Pad[iPadIdx]._vAxisLeft;  }
+	const hgeVector&	GetAxisRight(PadIdx iPadIdx) const		{ return _Pad[iPadIdx]._vAxisRight; }
 
 private:
 	static	BOOL CALLBACK	EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, void* pContext);
 	static	BOOL CALLBACK	EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, void* pContext);
 
 private:
-	bool					_bInited;					// Has been inited ?
-	LPDIRECTINPUT8			_pDirectInput;				// DInput Device interface
-	LPDIRECTINPUTDEVICE8	_pDInputDevice;				// DInput Joystick
-	HWND					_hWnd;						// Main window hWnd
-	DIJOYSTATE2				_JoyState;					// DInput joystick state
-
-	hgeVector				_AxisLeft, _AxisRight;
+	bool			_bInited;					// Has been inited ?
+	LPDIRECTINPUT8	_pDirectInput;				// DInput Device interface
+	HWND			_hWnd;						// Main window hWnd
+	PcPad			_Pad[MAX_PAD_COUNT];
+	PadIdx			_nPadCurrent, _nPadCount;
 };
 
 #endif	//__PCPAD_H__

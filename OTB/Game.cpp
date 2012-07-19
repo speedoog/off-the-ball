@@ -53,11 +53,15 @@ void Game::Init()
 	_Ball.Init(this);
 	_Rules.Init(this);
 
+	// !!!!! read from XML !!!!!!!!!!!!!
 	_pCmd0 =new CommandPad();
 	_pCmd0->Init(this, &_Players[0]);
 
-	_pCmd1 =new CommandMouse();
+	_pCmd1 =new CommandPad();
 	_pCmd1->Init(this, &_Players[1]);
+
+// 	_pCmd1 =new CommandMouse();
+// 	_pCmd1->Init(this, &_Players[1]);
 
 	_Rules.ActionStartGame(0);		// start w/ player[0]
 }
@@ -87,7 +91,7 @@ void Game::Update(const float rDeltaTime)
 	_Players[1].Update(rDeltaTime);
 
 	PcPadManager& Pad =GetPadManager();
-	if (Pad.GetCtrlState(PcPadManager::PAD_BTN_SELECT))
+	if (Pad.GetCtrlState(0, PcPadManager::PAD_BTN_SELECT))
 	{
 		_Rules.ActionServiceStart(0);
 	}
