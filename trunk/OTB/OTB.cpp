@@ -85,7 +85,7 @@ void DrawInputs()
 		pFont->printf(-9, rTextPosY, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(PcPadManager::CtrlIdx, i)+4);
 
 		pFont->SetColor(0xFFFF00A0);
-		PcPadManager::CtrlStatus status =PadManager.GetCtrlState((PcPadManager::CtrlIdx)i);
+		PcPadManager::CtrlStatus status =PadManager.GetCtrlState(0, (PcPadManager::CtrlIdx)i);
 		pFont->printf(-5, rTextPosY, HGETEXT_LEFT, "%d", status);
 		rTextPosY-=0.3f;
 	}

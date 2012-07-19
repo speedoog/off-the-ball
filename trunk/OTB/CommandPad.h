@@ -37,6 +37,7 @@ protected:
 
 protected:
 	PcPadManager*	_pPadManager;
+	int				_nPadIdx;
 };
 
 #endif	//__COMMANDPAD_H__
