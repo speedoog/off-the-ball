@@ -58,6 +58,8 @@ void CommandMouse::OnUpdate(const float rDeltaTime)
 
 	hgeVector vDelta=vMousePos-_vLastMousePosition;
 	vDelta.y =-vDelta.y;
+	if (vDelta.Length()<5)
+		vDelta =hgeVector(0,0);
 	_pPlayer->SetInputRacket(vDelta);
 
 	_vLastMousePosition =vMousePos;
