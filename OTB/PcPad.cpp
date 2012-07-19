@@ -197,11 +197,11 @@ PcPadManager::CtrlStatus PcPadManager::GetCtrlState(PadIdx iPadIdx, CtrlIdx iCon
 	case	PAD_BTN_THUMB_L:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[8];
 	case	PAD_BTN_THUMB_R:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[9];
 
-	case	PAD_LEFTPAD_AXIS_X:	return	(CtrlStatus)(PadCurrent._JoyState.lX&0xFF);
-	case	PAD_LEFTPAD_AXIS_Y:	return	(CtrlStatus)(0xFF-(PadCurrent._JoyState.lY&0xFF));
-
-	case	PAD_RIGHTPAD_AXIS_X:return	(CtrlStatus)(PadCurrent._JoyState.lRx&0xFF);
-	case	PAD_RIGHTPAD_AXIS_Y:return	(CtrlStatus)(0xFF-(PadCurrent._JoyState.lRy&0xFF));
+// 	case	PAD_LEFTPAD_AXIS_X:	return	(CtrlStatus)(PadCurrent._JoyState.lX&0xFF);
+// 	case	PAD_LEFTPAD_AXIS_Y:	return	(CtrlStatus)(0xFF-(PadCurrent._JoyState.lY&0xFF));
+// 
+// 	case	PAD_RIGHTPAD_AXIS_X:return	(CtrlStatus)(PadCurrent._JoyState.lRx&0xFF);
+// 	case	PAD_RIGHTPAD_AXIS_Y:return	(CtrlStatus)(0xFF-(PadCurrent._JoyState.lRy&0xFF));
 
 	case	PAD_BTN_UP:			return	(CtrlStatus)(PadCurrent._JoyState.rgdwPOV[0]&0xFF);
 	case	PAD_BTN_DOWN:		return	(CtrlStatus)(PadCurrent._JoyState.rgdwPOV[1]&0xFF);
@@ -249,20 +249,20 @@ bool IsPs3Pad(const DIDEVICEINSTANCE* pCurrentDevice)
 BOOL CALLBACK PcPadManager::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, void* pContext)
 {
 	PcPadManager* pthis =(PcPadManager*)pContext;
-
 	PcPad& PadCurrent =pthis->_Pad[pthis->_nPadCurrent];
 
-	if (IsPs3Pad(pdidInstance)==false)
+	if (IsPs3Pad(pdidInstance))
 	{
 		PadCurrent._PadType =PT_PS3;
 	}
-	else if (IsXboxPad(pdidInstance)==false)
+	else if (IsXboxPad(pdidInstance))
 	{
 		PadCurrent._PadType =PT_XBOX;
 	}
 	else
 	{
 		PadCurrent._PadType =PT_OTHER;
+		return DIENUM_CONTINUE;
 	}
 
 	// Obtain an interface to the enumerated joystick.
