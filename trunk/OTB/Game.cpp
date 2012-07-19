@@ -57,11 +57,11 @@ void Game::Init()
 	_pCmd0 =new CommandPad();
 	_pCmd0->Init(this, &_Players[0]);
 
-	_pCmd1 =new CommandPad();
-	_pCmd1->Init(this, &_Players[1]);
-
-// 	_pCmd1 =new CommandMouse();
+// 	_pCmd1 =new CommandPad();
 // 	_pCmd1->Init(this, &_Players[1]);
+
+	_pCmd1 =new CommandMouse();
+	_pCmd1->Init(this, &_Players[1]);
 
 	_Rules.ActionStartGame(0);		// start w/ player[0]
 }
