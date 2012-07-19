@@ -71,11 +71,14 @@ void Ball::Reset(Player* pPlayer)
 // ********************************************
 void Ball::Update(const float rDeltaTime)
 {
-	float rNewDT =rDeltaTime*rTimescale;
-	_vLastPos	=_vPos;
-	hgeVector vOldVelocity =_vVelocity;
-	_vVelocity.y+=rGravity*rNewDT;
-	_vPos		+=(vOldVelocity+_vVelocity)*0.5f*rNewDT;
+	// update ball physic
+	{
+		float rBallPhysicDeltaTime =rDeltaTime*rTimescale;
+		_vLastPos	=_vPos;
+		hgeVector vOldVelocity =_vVelocity;
+		_vVelocity.y+=rGravity*rBallPhysicDeltaTime;
+		_vPos		+=(vOldVelocity+_vVelocity)*0.5f*rBallPhysicDeltaTime;
+	}
 
 	// Collision GND
 	if (_vPos.y<0)

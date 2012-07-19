@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="OTB"
 	ProjectGUID="{05A63F5E-44E1-48F5-9391-93E691757A78}"
 	RootNamespace="OTB"
@@ -253,6 +253,22 @@
 			</File>
 			<File
 				RelativePath=".\CommandAbc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CommandKbdMouse.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CommandKbdMouse.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CommandMouse.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CommandMouse.h"
 				>
 			</File>
 			<File

@@ -31,7 +31,6 @@ Player::Player()
 	_vCharSize 		=hgeVector(0.35f, 1.8f);
 	_rCharRacketY	=_vCharSize.y*0.75f;
 	_rRacketLen		=_vCharSize.y*0.75f;
-	_vRacketDir 	=hgeVector(0, 1.0f);
 	_nScore			=0;
 	_vInitialPos	=hgeVector(0,0);
 }
@@ -66,6 +65,8 @@ void Player::Init(Game* pGame, const int nPlayerId)
 		_rPosMax =pGame->GetLevel().GetSize().x-_rRacketLen;
 		_vInitialPos.x =rCenterX;
 	}
+
+	_vRacketDir =hgeVector(-GetAt(), 0);
 
 	ResetPosition();
 }
