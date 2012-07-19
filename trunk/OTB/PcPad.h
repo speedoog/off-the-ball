@@ -89,7 +89,16 @@ public:
 		PAD_BTN_RIGHT,
 		PAD_BTN_OVER_AXIS1,
 		PAD_BTN_OVER_AXIS2,
+
+		PAD_AXIS_X,
+		PAD_AXIS_Y,
 		PAD_AXIS_Z,
+		PAD_AXIS_RX,
+		PAD_AXIS_RY,
+		PAD_AXIS_RZ,
+
+		PAD_SLIDER0,
+		PAD_SLIDER1,
 
 		PAD_MAX_ENTRIES,
     );
@@ -114,7 +123,8 @@ private:
 	LPDIRECTINPUT8	_pDirectInput;				// DInput Device interface
 	HWND			_hWnd;						// Main window hWnd
 	PcPad			_Pad[MAX_PAD_COUNT];
-	PadIdx			_nPadCurrent, _nPadCount;
+	PadIdx			_nPadCount;					// Managed Pads
+	PadIdx			_nPadCurrent;				// used in enumeration
 };
 
 #endif	//__PCPAD_H__

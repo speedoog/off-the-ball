@@ -68,7 +68,7 @@ int	PcPadManager::Init(HWND	hWnd)
 	_nPadCount =_nPadCurrent;
 	_nPadCurrent =0;
 
-	for(PadIdx iPadIdx=0; iPadIdx<MAX_PAD_COUNT; ++iPadIdx)
+	for(PadIdx iPadIdx=0; iPadIdx<_nPadCount; ++iPadIdx)
 	{
 		PcPad& PadCurrent =_Pad[iPadIdx];
 
@@ -104,7 +104,7 @@ void PcPadManager::Kill()
 {
 	RfxAssert(_bInited);
 
-	for(PadIdx iPadIdx=0; iPadIdx<MAX_PAD_COUNT; ++iPadIdx)
+	for(PadIdx iPadIdx=0; iPadIdx<_nPadCount; ++iPadIdx)
 	{
 		PcPad& PadCurrent =_Pad[iPadIdx];
 		// Unacquire the device one last time just in case  the app tried to exit while the device is still acquired.
@@ -129,7 +129,7 @@ void PcPadManager::Update(void)
 {
 	RfxAssert(_bInited);
 
-	for(PadIdx iPadIdx=0; iPadIdx<MAX_PAD_COUNT; ++iPadIdx)
+	for(PadIdx iPadIdx=0; iPadIdx<_nPadCount; ++iPadIdx)
 	{
 		PcPad& PadCurrent =_Pad[iPadIdx];
 		HRESULT hr;
@@ -159,13 +159,19 @@ void PcPadManager::Update(void)
 		// Get the input's device state
 		PadCurrent._pDInputDevice->GetDeviceState(sizeof(DIJOYSTATE2),&PadCurrent._JoyState);
 
-		// Update Left
 		PadCurrent._vAxisLeft.x =float(PadCurrent._JoyState.lX&0xFF)/128.0f-1.0f;
-		PadCurrent._vAxisLeft.y =float(255-(PadCurrent._JoyState.lX&0xFF))/128.0f-1.0f;
+		PadCurrent._vAxisLeft.y =float(255-(PadCurrent._JoyState.lY&0xFF))/128.0f-1.0f;
 
-		// Update Right
-		PadCurrent._vAxisRight.x =float(PadCurrent._JoyState.lRx&0xFF)/128.0f-1.0f;
-		PadCurrent._vAxisRight.y =float(255-(PadCurrent._JoyState.lRy&0xFF))/128.0f-1.0f;
+		if (PadCurrent._PadType==PT_XBOX)
+		{
+			PadCurrent._vAxisRight.x =float(PadCurrent._JoyState.lRx&0xFF)/128.0f-1.0f;
+			PadCurrent._vAxisRight.y =float(255-(PadCurrent._JoyState.lRy&0xFF))/128.0f-1.0f;
+		}
+		else if (PadCurrent._PadType==PT_PS3)
+		{
+			PadCurrent._vAxisRight.x =float(PadCurrent._JoyState.lZ&0xFF)/128.0f-1.0f;
+			PadCurrent._vAxisRight.y =float(255-(PadCurrent._JoyState.lRz&0xFF))/128.0f-1.0f;
+		}
 	}
 }
 
@@ -203,7 +209,19 @@ PcPadManager::CtrlStatus PcPadManager::GetCtrlState(PadIdx iPadIdx, CtrlIdx iCon
 	case	PAD_BTN_RIGHT:		return	(CtrlStatus)(PadCurrent._JoyState.rgdwPOV[3]&0xFF);
 	case	PAD_BTN_OVER_AXIS1:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[10];
 	case	PAD_BTN_OVER_AXIS2:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[11];
+
+	// raw axis
+	case	PAD_AXIS_X:			return	(CtrlStatus)(PadCurrent._JoyState.lX&0xFF);
+	case	PAD_AXIS_Y:			return	(CtrlStatus)(PadCurrent._JoyState.lY&0xFF);
 	case	PAD_AXIS_Z:			return	(CtrlStatus)(PadCurrent._JoyState.lZ&0xFF);
+	case	PAD_AXIS_RX:		return	(CtrlStatus)(PadCurrent._JoyState.lRx&0xFF);
+	case	PAD_AXIS_RY:		return	(CtrlStatus)(PadCurrent._JoyState.lRy&0xFF);
+	case	PAD_AXIS_RZ:		return	(CtrlStatus)(PadCurrent._JoyState.lRz&0xFF);
+
+	// sliders
+	case	PAD_SLIDER0:		return	(CtrlStatus)(PadCurrent._JoyState.rglSlider[0]&0xFF);
+	case	PAD_SLIDER1:		return	(CtrlStatus)(PadCurrent._JoyState.rglSlider[1]&0xFF);
+
 	default:;
 	}
 	return	0;
@@ -284,12 +302,11 @@ BOOL CALLBACK PcPadManager::EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pd
 		diprg.diph.dwSize       =sizeof(DIPROPRANGE); 
 		diprg.diph.dwHeaderSize =sizeof(DIPROPHEADER); 
 		diprg.diph.dwHow        =DIPH_BYID; 
-		diprg.diph.dwObj        =pdidoi->dwType; // Specify the enumerated axis
+		diprg.diph.dwObj        =pdidoi->dwType;										// Specify the enumerated axis
 		diprg.lMin              =0; 
 		diprg.lMax              =255;
 
-		// Set the range for the axis
-		PadCurrent._pDInputDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
+		PadCurrent._pDInputDevice->SetProperty(DIPROP_RANGE, &diprg.diph);				// Set the range for the axis
 	}
 
 	return DIENUM_CONTINUE;
