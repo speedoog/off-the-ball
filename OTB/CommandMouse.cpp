@@ -16,92 +16,49 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#include "Game.h"
 
-#include "CommandPad.h"
-#include "CommandKbdMouse.h"
 #include "CommandMouse.h"
+#include "Game.h"
 
 // ********************************************
 //	Ctor
 // ********************************************
-Game::Game()
+CommandMouse::CommandMouse()
 {
 }
 
 // ********************************************
 //	Dtor
 // ********************************************
-Game::~Game()
+CommandMouse::~CommandMouse()
 {
-
 }
 
 // ********************************************
-//	Init
+//	OnInit
 // ********************************************
-void Game::Init()
+void CommandMouse::OnInit()
 {
-	HWND hwnd =hge->System_GetState(HGE_HWND);
-	_PadManager.Init(hwnd);
-
-	_Resources.Init();
-
-	_Level.Init(hgeVector(7.0f,7.5f), 1.0f);
-	_Players[0].Init(this, 0);
-	_Players[1].Init(this, 1);
-	_Ball.Init(this);
-	_Rules.Init(this);
-
-	_pCmd0 =new CommandPad();
-	_pCmd0->Init(this, &_Players[0]);
-
-	_pCmd1 =new CommandMouse();
-	_pCmd1->Init(this, &_Players[1]);
-
-	_Rules.ActionStartGame(0);		// start w/ player[0]
+	hge->Input_GetMousePos(&_vLastMousePosition.x, &_vLastMousePosition.y);
 }
 
 // ********************************************
-//	Kill
+//	OnUpdate
 // ********************************************
-void Game::Kill()
+void CommandMouse::OnUpdate(const float rDeltaTime)
 {
-	_Resources.Kill();
-	_PadManager.Kill();
-}
+	float rLeft =hge->Input_GetKeyState(HGEK_LBUTTON)?1.0f:0.0f;
+	float rRight=hge->Input_GetKeyState(HGEK_RBUTTON)?1.0f:0.0f;
 
-// ********************************************
-//	Update
-// ********************************************
-void Game::Update(const float rDeltaTime)
-{
-	_PadManager.Update();
+	float rMove =rRight-rLeft;
+	_pPlayer->SetInputMove(hgeVector(rMove,0));
 
-	_pCmd0->Update(rDeltaTime);
-	_pCmd1->Update(rDeltaTime);
+	hgeVector vMousePos;
+	hge->Input_GetMousePos(&vMousePos.x, &vMousePos.y);
 
-	_Level.Update(rDeltaTime);
-	_Ball.Update(rDeltaTime);
-	_Players[0].Update(rDeltaTime);
-	_Players[1].Update(rDeltaTime);
+	hgeVector vDelta=vMousePos-_vLastMousePosition;
+	vDelta.y =-vDelta.y;
+	_pPlayer->SetInputRacket(vDelta);
 
-	PcPadManager& Pad =GetPadManager();
-	if (Pad.GetCtrlState(PcPadManager::PAD_BTN_SELECT))
-	{
-		_Rules.ActionServiceStart(0);
-	}
-}
-
-// ********************************************
-//	Render
-// ********************************************
-void Game::Render()
-{
-	_Level.Render();
-	_Ball.Render();
-	_Players[0].Render();
-	_Players[1].Render();
-
-	_Rules.Render();
+	_vLastMousePosition =vMousePos;
 }
