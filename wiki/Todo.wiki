@@ -2,7 +2,7 @@
 
 = Todo Immediatement, v1 Alpha Proto =
   * ~~Interpolation orientation de la racket~~
-  * PcPadManager: gérer plusieurs pads
+  * ~~PcPadManager: gérer plusieurs pads~~
   * Gestion correcte de la frappe
   * ~~ControllerKbdMouse~~
   * Load Controller config depuis OTB.xml ex: P1=Pad(0) P2=KbdMouse
