@@ -29,12 +29,14 @@
 #include "Rules.h"
 #include "CommandAbc.h"
 
+class XML_PARSER;
+
 class Game
 {
 public:
 							Game();
 							~Game();
-			void			Init();
+			void			Init(XML_PARSER* pXml=NULL);
 			void			Kill();
 
 			void			Update(const float rDeltaTime);
