@@ -21,6 +21,7 @@
 #pragma once
 
 #include "base.h"
+#include "SmartEnum.h"
 
 class Game;
 class Player;
@@ -28,6 +29,12 @@ class Player;
 class CommandAbc
 {
 public:
+	SMARTENUM_DECLARE(CmdType
+			, CMD_PAD
+			, CMD_KBDMOUSE
+			, CMD_TRACKPAD
+			);
+
 					CommandAbc();
 					~CommandAbc();
 

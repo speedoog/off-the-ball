@@ -51,6 +51,7 @@ protected:
 	Game*	_pGame;
 
 	bool	_bServing;
+	bool	_bSecondServe;
 	bool	_bRacketHit;
 	int		_nSide;
 	int		_nGroundTouch;

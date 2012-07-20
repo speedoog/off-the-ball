@@ -83,6 +83,7 @@ void Rules::Render()
 // ********************************************
 void Rules::ActionStartGame(int nPlayerStart)
 {
+	_bSecondServe	=false;
 	_nServicePlayer =nPlayerStart;
 	_pGame->GetPlayer(0).ScoreReset();
 	_pGame->GetPlayer(1).ScoreReset();
@@ -111,6 +112,7 @@ void Rules::ActionServiceStart(int nPlayerServe)
 // ********************************************
 void Rules::ActionFail()
 {
+	// update score
 	int nOtherPlayer =1-_nSide;
 	_pGame->GetPlayer(nOtherPlayer).ScoreInc();		// other player gain a point
 
@@ -123,8 +125,17 @@ void Rules::ActionFail()
 // ********************************************
 void Rules::ActionServiceFailed()
 {
-	//... try second service ??
-	ActionFail();
+	if (_bSecondServe)
+	{
+		_bSecondServe =false;
+		ActionFail();
+	}
+	else
+	{
+		// Second serve allowed, same player
+		_bSecondServe =true;
+		ActionServiceStart(_nServicePlayer);
+	}
 }
 
 // ..........................................................................................................

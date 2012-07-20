@@ -137,7 +137,7 @@ float XML_ELEMENT::GetAttribute(const char *pAttrib, float fDef)
 }
 
 //-------------------------------------------------------------------------------
-char *XML_ELEMENT::GetAttribute(const char *pAttrib, char *pDef)
+const char *XML_ELEMENT::GetAttribute(const char *pAttrib, const char *pDef)
 {
 	XML_ATTRIBUTE *pAtt = FindAttribute(pAttrib);
 

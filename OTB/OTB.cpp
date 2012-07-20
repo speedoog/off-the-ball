@@ -127,13 +127,14 @@ const int  DEFAULT_SCREENSIZEX 		=1280;
 const int  DEFAULT_SCREENSIZEY 		=720;
 const bool DEFAULT_SCREENWINDOWED   =true;
 
+XML_PARSER XmlParser;
+
 void LoadSettings()
 {
-	XML_PARSER Parser;
-	XML_PARSER::XMLRC rc =Parser.LoadFromFile("OTB.xml");
+	XML_PARSER::XMLRC rc =XmlParser.LoadFromFile("OTB.xml");
 	if (rc==XML_PARSER::XP_NO_ERROR)
 	{
-		XML_ELEMENT* pRoot =Parser.GetRoot();
+		XML_ELEMENT* pRoot =XmlParser.GetRoot();
 
 		// Read Video
 		{
@@ -174,7 +175,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// Tries to initiate HGE
 	if (hge->System_Initiate())
 	{
-		_Game.Init();
+		_Game.Init(&XmlParser);
 
 		hge->System_Start();
 

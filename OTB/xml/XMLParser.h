@@ -62,7 +62,7 @@ class XML_ELEMENT : public QDT_LIST_ELEMENT
 		inline	XML_ATTRIBUTE	*CreateAttribute(char *pName, DYNAMIC_BUFFER *pBuffer)				{ return CreateAttribute(pName, (unsigned char*)pBuffer->GetBuffer(), pBuffer->GetSize()); }
 				XML_ELEMENT		*CreateChildElement(char *pName);
 
-				char			*GetAttribute(const char *pAttrib, char *pDef);
+				const char*		GetAttribute(const char *pAttrib, const char *pDef);
 				int				GetAttribute(const char *pAttrib, int nDef);
 				float			GetAttribute(const char *pAttrib, float fDef);
 				int				GetAttributeAsChar(const char *pAttrib, char *Destination, char *pDefaultValue);

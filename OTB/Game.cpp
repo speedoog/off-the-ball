@@ -21,6 +21,11 @@
 #include "CommandPad.h"
 #include "CommandKbdMouse.h"
 #include "CommandMouse.h"
+#include "xml/XMLParser.h"
+
+const char* XML_SECTION_GAME			="Game";
+const char* XML_ATTRIB_GAME_P1CMD		="P1Cmd";
+const char* XML_ATTRIB_GAME_P2CMD		="P2Cmd";
 
 // ********************************************
 //	Ctor
@@ -37,10 +42,24 @@ Game::~Game()
 
 }
 
+CommandAbc* CreateCommand(const CommandAbc::CmdType cmd)
+{
+	switch(cmd)
+	{
+	default:
+	case CommandAbc::CMD_PAD:
+		return new CommandPad();
+	case CommandAbc::CMD_KBDMOUSE:
+		return new CommandKbdMouse();
+	case CommandAbc::CMD_TRACKPAD:
+		return new CommandMouse();
+	}
+}
+
 // ********************************************
 //	Init
 // ********************************************
-void Game::Init()
+void Game::Init(XML_PARSER* pXml)
 {
 	HWND hwnd =hge->System_GetState(HGE_HWND);
 	_PadManager.Init(hwnd);
@@ -53,14 +72,33 @@ void Game::Init()
 	_Ball.Init(this);
 	_Rules.Init(this);
 
-	// !!!!! read from XML !!!!!!!!!!!!!
-	_pCmd0 =new CommandPad();
+	const int nOffset =4;
+	const char* pCmd1Default =SMARTENUM_GET_STRING(CommandAbc::CmdType, CommandAbc::CMD_PAD)+nOffset;
+	const char* pCmd2Default =SMARTENUM_GET_STRING(CommandAbc::CmdType, CommandAbc::CMD_KBDMOUSE)+nOffset;
+	const char* pCmd1 =pCmd1Default;
+	const char* pCmd2 =pCmd2Default;
+	if (pXml)
+	{
+		XML_ELEMENT* pRoot =pXml->GetRoot();
+		// Read Game
+		{
+			XML_ELEMENT* pXmlGame =pRoot->FindElement(XML_SECTION_GAME, false);
+			if (pXmlGame)
+			{
+				pCmd1 =pXmlGame->GetAttribute(XML_ATTRIB_GAME_P1CMD, pCmd1Default);
+				pCmd2 =pXmlGame->GetAttribute(XML_ATTRIB_GAME_P2CMD, pCmd1Default);
+			}
+		}
+	}
+
+	// P1 Init
+	CommandAbc::CmdType cmd1 =SMARTENUM_FIND(CommandAbc::CmdType, pCmd1, nOffset);
+	_pCmd0 =CreateCommand(cmd1);
 	_pCmd0->Init(this, &_Players[0]);
 
-// 	_pCmd1 =new CommandPad();
-// 	_pCmd1->Init(this, &_Players[1]);
-
-	_pCmd1 =new CommandMouse();
+	// P2 Init
+	CommandAbc::CmdType cmd2 =SMARTENUM_FIND(CommandAbc::CmdType, pCmd2, nOffset);
+	_pCmd1 =CreateCommand(cmd2);
 	_pCmd1->Init(this, &_Players[1]);
 
 	_Rules.ActionStartGame(0);		// start w/ player[0]
