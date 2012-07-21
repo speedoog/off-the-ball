@@ -40,6 +40,7 @@ CommandMouse::~CommandMouse()
 void CommandMouse::OnInit()
 {
 	hge->Input_GetMousePos(&_vLastMousePosition.x, &_vLastMousePosition.y);
+	_vCirclePos =hgeVector(0,0);
 }
 
 // ********************************************
@@ -48,19 +49,23 @@ void CommandMouse::OnInit()
 void CommandMouse::OnUpdate(const float rDeltaTime)
 {
 	float rLeft =hge->Input_GetKeyState(HGEK_LBUTTON)?1.0f:0.0f;
-	float rRight=hge->Input_GetKeyState(HGEK_RBUTTON)?1.0f:0.0f;
-
-	float rMove =rRight-rLeft;
-	_pPlayer->SetInputMove(hgeVector(rMove,0));
+	float rRight=hge->Input_GetKeyState(HGEK_LBUTTON)?1.0f:0.0f;
+	float rUp	=hge->Input_GetKeyState(HGEK_SPACE)?1.0f:0.0f;
+	_pPlayer->SetInputMove(hgeVector(rRight-rLeft, rUp));
 
 	hgeVector vMousePos;
 	hge->Input_GetMousePos(&vMousePos.x, &vMousePos.y);
-
 	hgeVector vDelta=vMousePos-_vLastMousePosition;
 	vDelta.y =-vDelta.y;
-	if (vDelta.Length()<5)
-		vDelta =hgeVector(0,0);
-	_pPlayer->SetInputRacket(vDelta);
-
 	_vLastMousePosition =vMousePos;
+
+	_vCirclePos+=vDelta/30.0f;
+	if (_vCirclePos.Length()!=0.0f)
+	{
+		if (_vCirclePos.Length()>1.0f)
+		{
+			_vCirclePos.Normalize();
+		}
+		_pPlayer->SetInputRacket(_vCirclePos);
+	}
 }

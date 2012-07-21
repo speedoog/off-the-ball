@@ -35,6 +35,7 @@ protected:
 
 protected:
 	hgeVector	_vLastMousePosition;
+	hgeVector	_vCirclePos;
 };
 
 #endif	//__COMMANDMOUSE_H__
