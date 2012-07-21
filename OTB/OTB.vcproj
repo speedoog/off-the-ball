@@ -272,10 +272,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CommandPad.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\CommandPad.h"
 				>
 			</File>
@@ -286,6 +282,10 @@
 		</File>
 		<File
 			RelativePath=".\Ball.h"
+			>
+		</File>
+		<File
+			RelativePath=".\CommandPad.cpp"
 			>
 		</File>
 		<File

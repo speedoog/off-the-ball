@@ -46,12 +46,16 @@ public:
 			void		EventBallHitWall();
 			void		EventBallHitRacket();
 			void		EventBallHitNet();
+			void		EventServeStart();
+
+	inline	bool		IsWaitingToServe(int nPlayerId)	{ return _nServicePlayer==nPlayerId && _bWaitServe; }
 
 protected:
 	Game*	_pGame;
 
 	bool	_bServing;
 	bool	_bSecondServe;
+	bool	_bWaitServe;
 	bool	_bRacketHit;
 	int		_nSide;
 	int		_nGroundTouch;

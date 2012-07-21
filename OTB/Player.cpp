@@ -132,7 +132,6 @@ void Player::Update(const float rDeltaTime)
 	}
 	else
 	{
-//		_vVelocity *=0.99f;	// damping tout pouri
 		_vVelocity -=_vVelocity*rDeltaTime*rDamping;
 	}
 	// Move
@@ -175,45 +174,56 @@ void Player::Update(const float rDeltaTime)
 		_rRacketRotationSpeed =0.0f;
 	}
 
-	// check ball collide
+	// wait Serve
 	Ball& ball =_pGame->GetBall();
-	hgeVector vBall		=ball.GetPos();
-	hgeVector vRacket0 	=_vPos+hgeVector(0, _rCharRacketY);
-	hgeVector vRacket1 	=vRacket0+_vRacketDir*_rRacketLen;
-
-	hgeVector vBallDiff=vRacket0-vBall;
-	float rCross =0.0f;
-	if (vBallDiff.Length()<_rRacketLen)
+	Rules* pRules =&_pGame->GetRules();
+	if (pRules->IsWaitingToServe(_nPlayerId))
 	{
-		hgeVector vRacketD	=vRacket1-vRacket0;
-		hgeVector vRacketB	=vBall-vRacket0;
-		rCross =vRacketD.Cross(vRacketB);
-	}
-	
-	float rCrossMul =_rCrossLast*rCross;
-
-	if (rCrossMul<0 && _rHitCooldown<=0.0f)
-	{
-		hgeVector vProjection;
-		float rRatio;
-		SegmentDist(vRacket0, vRacket1, vBall, &vProjection, &rRatio);
-		if (rRatio>0 && rRatio<1)
+		ball.Reset(this);				// sync ball
+		if (_vInputMove.y>0.15f)						// deadzone
 		{
-			hgeVector vHit =vProjection-vBall;
-			vHit.Normalize();
-	
-			// temp version
-			float rRacketSpeedAbs =fabsf(_rRacketRotationSpeed);
-			float rImpactSpeed =RfxClamp(rRacketSpeedAbs, 4.0f, 12.0f);
-
-			ball.Hit( vHit*rImpactSpeed);	// test
-			_rHitCooldown =0.5f;
+			pRules->EventServeStart();
 		}
 	}
+	else
+	{
+		// check ball collide
+		hgeVector vBall		=ball.GetPos();
+		hgeVector vRacket0 	=_vPos+hgeVector(0, _rCharRacketY);
+		hgeVector vRacket1 	=vRacket0+_vRacketDir*_rRacketLen;
 
-	_rHitCooldown -=rDeltaTime;
+		hgeVector vBallDiff=vRacket0-vBall;
+		float rCross =0.0f;
+		if (vBallDiff.Length()<_rRacketLen)
+		{
+			hgeVector vRacketD	=vRacket1-vRacket0;
+			hgeVector vRacketB	=vBall-vRacket0;
+			rCross =vRacketD.Cross(vRacketB);
+		}
 
-	_rCrossLast =rCross;
+		float rCrossMul =_rCrossLast*rCross;
+		_rCrossLast =rCross;
+		if (rCrossMul<0 && _rHitCooldown<=0.0f)
+		{
+			hgeVector vProjection;
+			float rRatio;
+			SegmentDist(vRacket0, vRacket1, vBall, &vProjection, &rRatio);
+			if (rRatio>0 && rRatio<1)
+			{
+				hgeVector vHit =vProjection-vBall;
+				vHit.Normalize();
+
+				// temp version
+				float rRacketSpeedAbs =fabsf(_rRacketRotationSpeed);
+				float rImpactSpeed =RfxClamp(rRacketSpeedAbs, 4.0f, 12.0f);
+
+				ball.Hit( vHit*rImpactSpeed);	// test
+				_rHitCooldown =0.5f;
+			}
+		}
+		_rHitCooldown -=rDeltaTime;
+	}
+
 }
 
 // ********************************************
