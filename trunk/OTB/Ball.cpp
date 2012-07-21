@@ -32,6 +32,9 @@ float rNetResitution	=0.1f;
 //	Ctor
 // ********************************************
 Ball::Ball()
+: _nSide	(0)
+, _bPaused	(false)
+, _vVelocity(0,0)
 {
 }
 
@@ -71,6 +74,9 @@ void Ball::Reset(Player* pPlayer)
 // ********************************************
 void Ball::Update(const float rDeltaTime)
 {
+	if (_bPaused)
+		return;
+
 	// update ball physic
 	{
 		float rBallPhysicDeltaTime =rDeltaTime*rTimescale;

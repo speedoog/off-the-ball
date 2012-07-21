@@ -38,14 +38,16 @@ public:
 			void		Hit(const hgeVector& vVelocity);
 
 	// inline
-	inline	hgeVector&	GetPos() 	{ return _vPos; }
-	inline	int			GetSide()	{ return _nSide; }
+	inline	hgeVector&	GetPos() 						{ return _vPos;			}
+	inline	int			GetSide()						{ return _nSide;		}
+	inline	void		SetPaused(const bool bPaused)	{ _bPaused =bPaused;	}
 
 protected:
 	Game*		_pGame;
 	hgeVector	_vPos, _vLastPos;
 	hgeVector	_vVelocity;
 	int			_nSide;				// 0 or 1
+	bool		_bPaused;
 };
 
 #endif	//__BALL_H__

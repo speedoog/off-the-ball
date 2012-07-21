@@ -40,6 +40,7 @@ CommandKbdMouse::~CommandKbdMouse()
 void CommandKbdMouse::OnInit()
 {
 	hge->Input_GetMousePos(&_vLastMousePosition.x, &_vLastMousePosition.y);
+	_vCirclePos =hgeVector(0,0);
 }
 
 // ********************************************
@@ -49,16 +50,23 @@ void CommandKbdMouse::OnUpdate(const float rDeltaTime)
 {
 	float rLeft =hge->Input_GetKeyState(HGEK_LEFT)?1.0f:0.0f;
 	float rRight=hge->Input_GetKeyState(HGEK_RIGHT)?1.0f:0.0f;
-
-	float rMove =rRight-rLeft;
-	_pPlayer->SetInputMove(hgeVector(rMove,0));
+	float rUp	=hge->Input_GetKeyState(HGEK_UP)?1.0f:0.0f;
+	float rDown	=hge->Input_GetKeyState(HGEK_DOWN)?1.0f:0.0f;
+	_pPlayer->SetInputMove(hgeVector(rRight-rLeft, rUp-rDown));
 
 	hgeVector vMousePos;
 	hge->Input_GetMousePos(&vMousePos.x, &vMousePos.y);
-
 	hgeVector vDelta=vMousePos-_vLastMousePosition;
 	vDelta.y =-vDelta.y;
-	_pPlayer->SetInputRacket(vDelta);
-
 	_vLastMousePosition =vMousePos;
+
+	_vCirclePos+=vDelta/30.0f;
+	if (_vCirclePos.Length()!=0.0f)
+	{
+		if (_vCirclePos.Length()>1.0f)
+		{
+			_vCirclePos.Normalize();
+		}
+		_pPlayer->SetInputRacket(_vCirclePos);
+	}
 }

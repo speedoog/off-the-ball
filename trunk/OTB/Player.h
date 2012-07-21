@@ -51,22 +51,24 @@ public:
 
 protected:
 	Game*		_pGame;
+
+	// Physic
 	hgeVector	_vPos, _vInitialPos;
 	hgeVector	_vVelocity;
 	float		_rRacketRotationSpeed;
 
+	// Settings
 	float 		_rCharSpeedMax;
 	hgeVector	_vCharSize;
 	float 		_rCharRacketY;
 	float 		_rRacketLen;
 	hgeVector	_vRacketDir;
-
-	float		_rCrossLast;
-	float		_rHitCooldown;
-
 	float		_rPosMin, _rPosMax;
 	int			_nPlayerId;
 
+	// runtime values
+	float		_rCrossLast;
+	float		_rHitCooldown;
 	int			_nScore;
 
 	// Input

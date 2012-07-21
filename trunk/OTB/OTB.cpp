@@ -110,7 +110,7 @@ bool RenderFunc()
 
 //	_Game.GetResources()._pFontDebug->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
 
-	//DrawInputs();
+//	DrawInputs();
 //	par->Render();
 
 	hge->Gfx_EndScene();

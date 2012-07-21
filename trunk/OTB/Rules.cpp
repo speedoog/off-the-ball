@@ -64,11 +64,25 @@ void Rules::Render()
 	pFontScore->printf(-vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_LEFT, "%d", _pGame->GetPlayer(1).ScoreGet());
 
 	hgeFont* pFontMessages =resources._pFontMessages;
+	pFontMessages->SetScale(-0.005f);
 	float rPosY =_pGame->GetLevel().GetSize().y;
 	if (_bServing)
 	{
-		pFontMessages->SetScale(-0.005f);
-		pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Serve", _nSide+1);
+		if (_bWaitServe)
+		{
+			pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Waiting for serve", _nSide+1);
+		}
+		else
+		{
+			if (_bSecondServe)
+			{
+				pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Second Serve", _nSide+1);
+			}
+			else
+			{
+				pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Serve", _nSide+1);
+			}
+		}
 	}
 }
 
@@ -104,7 +118,10 @@ void Rules::ActionServiceStart(int nPlayerServe)
 	_pGame->GetPlayer(0).ResetPosition();
 	_pGame->GetPlayer(1).ResetPosition();
 	Player* pPlayerServe =&_pGame->GetPlayer(nPlayerServe);
-	_pGame->GetBall().Reset(pPlayerServe);
+	Ball*	pBall		 =&_pGame->GetBall();
+	pBall->Reset(pPlayerServe);
+	pBall->SetPaused(true);
+	_bWaitServe =true;
 }
 
 // ********************************************
@@ -217,4 +234,13 @@ void Rules::EventBallHitNet()
 	{
 		ActionFail();
 	}
+}
+
+// ********************************************
+//	EventServeStart
+// ********************************************
+void Rules::EventServeStart()
+{
+	_pGame->GetBall().SetPaused(false);
+	_bWaitServe =false;
 }
