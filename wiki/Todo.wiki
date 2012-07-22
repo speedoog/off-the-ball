@@ -8,7 +8,7 @@
   * Load Controller config depuis OTB.xml ex: P1=Pad(0) P2=KbdMouse
   * Pause entre les Fails avec un affichage de qui a scoré
   * Fin de la partie (P1 Wins etc ...)
-  * Autoriser un Double service
+  * ~~Autoriser un Double service~~
 
 = Todo Important, v2 Beta Proto =
   * Effet de déformation de la balle en fonction de la vitesse
