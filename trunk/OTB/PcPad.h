@@ -23,7 +23,7 @@
 #include <windows.h>
 #include <basetsd.h>
 
-#include "DirectX9Sdk/Include/dinput.h"            //DirectInput header (NEW)
+#include "DirectX10Sdk/Include/dinput.h"            //DirectInput header (NEW)
 #include "Base.h"
 #include "SmartEnum.h"
 #include "../hge/hgevector.h"
