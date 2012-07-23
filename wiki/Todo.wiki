@@ -34,7 +34,3 @@
   * Levels avec de la physique
   * ControllerCpu Hard
   * IK pour les jambes des persos (anim déplacement procédurale
-
-
-doc integration physique:
-http://lol.zoy.org/blog/2011/12/14/understanding-motion-in-games
