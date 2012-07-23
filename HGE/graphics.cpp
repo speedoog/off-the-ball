@@ -8,8 +8,8 @@
 
 
 #include "hge_impl.h"
-#include "DirectX9Sdk/Include/d3d9.h"
-#include "DirectX9Sdk/Include/d3dx9.h"
+#include "DirectX10Sdk/Include/d3d9.h"
+#include "DirectX10Sdk/Include/d3dx9.h"
 
 void CALL HGE_Impl::Gfx_Clear(DWORD color)
 {

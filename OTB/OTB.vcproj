@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="OTB"
 	ProjectGUID="{05A63F5E-44E1-48F5-9391-93E691757A78}"
 	RootNamespace="OTB"
@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(SolutionDir)DirectX9Sdk\Lib\X86\d3d9.lib $(SolutionDir)DirectX9Sdk\Lib\X86\d3dx9.lib $(SolutionDir)DirectX9Sdk\Lib\X86\dinput8.lib $(SolutionDir)DirectX9Sdk\Lib\X86\dxguid.lib Winmm.lib"
+				AdditionalDependencies="$(SolutionDir)DirectX10Sdk\Lib\X86\d3d9.lib $(SolutionDir)DirectX10Sdk\Lib\X86\d3dx9.lib $(SolutionDir)DirectX10Sdk\Lib\X86\dinput8.lib $(SolutionDir)DirectX10Sdk\Lib\X86\dxguid.lib Winmm.lib"
 				OutputFile="$(SolutionDir)\Out\$(ProjectName)D.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
@@ -139,7 +139,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(SolutionDir)DirectX9Sdk\Lib\X86\d3d9.lib $(SolutionDir)DirectX9Sdk\Lib\X86\d3dx9.lib $(SolutionDir)DirectX9Sdk\Lib\X86\dinput8.lib $(SolutionDir)DirectX9Sdk\Lib\X86\dxguid.lib Winmm.lib"
+				AdditionalDependencies="$(SolutionDir)DirectX10Sdk\Lib\X86\d3d9.lib $(SolutionDir)DirectX10Sdk\Lib\X86\d3dx9.lib $(SolutionDir)DirectX10Sdk\Lib\X86\dinput8.lib $(SolutionDir)DirectX10Sdk\Lib\X86\dxguid.lib Winmm.lib"
 				OutputFile="$(SolutionDir)\Out\$(ProjectName).exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
