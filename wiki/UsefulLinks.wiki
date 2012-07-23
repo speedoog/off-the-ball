@@ -6,4 +6,4 @@
  * [http://msdn.microsoft.com/en-us/library/windows/desktop/ee417014(v=vs.85).aspx XInput Msdn]
 
 = Physic =
-[http://lol.zoy.org/blog/2011/12/14/understanding-motion-in-games Verlet Integration]
+ * [http://lol.zoy.org/blog/2011/12/14/understanding-motion-in-games Verlet Integration]
