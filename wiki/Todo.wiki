@@ -4,7 +4,7 @@
   * ~~Interpolation orientation de la racket~~
   * ~~PcPadManager: gérer plusieurs pads~~
   * Gestion correcte de la frappe
- *inertie xml
+  * inertie xml
   * ~~ControllerKbdMouse~~
   * Load Controller config depuis OTB.xml ex: P1=Pad(0) P2=KbdMouse
   * Pause entre les Fails avec un affichage de qui a scoré
