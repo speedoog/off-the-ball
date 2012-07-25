@@ -243,6 +243,14 @@
 				RelativePath=".\SmartEnum.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Base\TString.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Base\TString.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="PlayerCommand"
@@ -273,6 +281,18 @@
 			</File>
 			<File
 				RelativePath=".\CommandPad.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Settings"
+			>
+			<File
+				RelativePath=".\PlayerSettings.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PlayerSettings.h"
 				>
 			</File>
 		</Filter>

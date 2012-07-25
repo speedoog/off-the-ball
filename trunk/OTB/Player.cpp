@@ -122,8 +122,8 @@ float SegmentDist(const hgeVector& v0, const hgeVector& v1, const hgeVector& p, 
 void Player::Update(const float rDeltaTime)
 {
 	// input char
-	const float rAcceleration =30.0f;
-	const float rDamping =4.0f;
+	const float rAcceleration =300.0f;
+	const float rDamping =40.0f;
 	if (fabsf(_vInputMove.x)>0.15f)						// deadzone
 	{
 		_vVelocity.x+=_vInputMove.x*rDeltaTime*rAcceleration;
