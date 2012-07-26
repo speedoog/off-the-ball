@@ -22,10 +22,11 @@
 #if defined(WIN32)
 void	Win32OSReport(char*	string,...)
 {
-	char	buf[2048];
+	const int MAX_SIZE =1024;
+	char	buf[MAX_SIZE];
 	va_list	marker;
 	va_start(marker,string);
-	vsprintf(buf,string,marker);
+	vsprintf_s(buf,MAX_SIZE,string,marker);
 	va_end(marker);
 	OutputDebugString(buf);
 }

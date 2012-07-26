@@ -18,7 +18,7 @@ TString::TString(const char* str)
 		m_nLength = strlen(str);
 		m_pString = new char[m_nLength + 1];
 		assert(m_pString != 0);
-		strcpy(m_pString, str);
+		strcpy_s(m_pString, m_nLength+1, str);
 	}
 }
 
@@ -34,7 +34,7 @@ TString::TString(const TString& str)
 		m_nLength = str.m_nLength; 
 		m_pString = new char[m_nLength + 1];
 		assert(m_pString != 0);
-		strcpy(m_pString, str.m_pString); 
+		strcpy_s(m_pString, m_nLength+1, str.m_pString); 
 	}
 }
 
@@ -43,8 +43,8 @@ TString& TString::operator +=(const TString& str)
 	m_nLength += str.m_nLength;
 	char* pNew = new char[m_nLength + 1];
 	assert(pNew != 0);
-	strcpy(pNew, m_pString);
-	strcat(pNew, str.m_pString);
+	strcpy_s(pNew, m_nLength+1, m_pString);
+	strcat_s(pNew, m_nLength+1, str.m_pString);
 	delete m_pString;
 	m_pString = pNew;
 
@@ -57,7 +57,7 @@ TString& TString::operator =(const char* str)
 	m_nLength = strlen(str);
 	m_pString = new char[m_nLength + 1]; 
 	assert(m_pString != 0);
-	strcpy(m_pString, str);
+	strcpy_s(m_pString, m_nLength+1, str);
 
 	return *this;
 }
@@ -69,16 +69,19 @@ TString& TString::operator =(const TString& str)
 	m_nLength = strlen(str.m_pString);
 	m_pString = new char[m_nLength + 1]; 
 	assert(m_pString != 0);
-	strcpy(m_pString, str.m_pString);
+	strcpy_s(m_pString, m_nLength+1, str.m_pString);
 
 	return *this;
 }
 
 void TString::VarToString(const double var)
 {
-	char str[32];
+	const int MAX_SIZE=32;
+	char str[MAX_SIZE];
 
-	gcvt(var, 16, str);
+	//gcvt(var, 16, str);
+	_gcvt_s(str, MAX_SIZE, var, 16);
+
 	m_nLength = strlen(str);
 	if (str[m_nLength - 1] == '.')
 	{
@@ -88,7 +91,7 @@ void TString::VarToString(const double var)
 	m_nLength = strlen(str);
 	m_pString = new char[m_nLength + 1];
 	assert(m_pString != 0);
-	strcpy(m_pString, str);
+	strcpy_s(m_pString, m_nLength+1, str);
 }
 
 int TString::Format(const char* format, ...)
@@ -103,7 +106,7 @@ int TString::Format(const char* format, ...)
 		MaxBuf = new char[len];
 		if (!MaxBuf) return 0;
 		// some UNIX's do not support vsnprintf and snprintf
-		len = _vsnprintf(MaxBuf, len, format, (char*)(&format + 1));
+		len = _vsnprintf_s(MaxBuf, len, len, format, (char*)(&format + 1));
 		if (len > 0) break;
 		delete []MaxBuf;
 		if (len == 0) return 0;
@@ -121,7 +124,7 @@ int TString::Format(const char* format, ...)
 		m_pString = new char[m_nLength + 1];
 	}
 	if (m_pString) 
-		strcpy(m_pString, MaxBuf);
+		strcpy_s(m_pString, m_nLength+1, MaxBuf);
 	else
 		len = 0;
 	delete []MaxBuf;
@@ -334,4 +337,17 @@ bool TString::NumericParse(void* pvar, char flag)
 
 		return true;
 	}
+}
+
+void TString::_Test_Me_()
+{
+	TString sTest;
+	sTest="tt";
+	sTest="oo";
+	sTest+="ii";
+	sTest.Format("this %s %d", "test", 18);
+	bool b0 =sTest.Search("*hi*");
+	bool b1 =sTest.Search("test");
+	sTest =3.14f;
+	char* pBuff =sTest.GetChar();
 }
