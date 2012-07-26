@@ -35,9 +35,29 @@ extern HGE* hge;
 #endif
 */
 
+typedef char				Char;
+typedef char				Int8;
+typedef short				Int16;
+typedef int					Int32;
+typedef __int64				Int64;
+typedef unsigned char		UInt8;
+typedef unsigned char		UChar;
+typedef unsigned short		UInt16;
+typedef unsigned int		UInt32;
+typedef unsigned __int64	UInt64;
+typedef float				Float32;
+typedef double				Float64;
+typedef bool				Bool;
+typedef UInt32				IntPtr;
+
+
 #define RfxDelete(_Obj)					if (_Obj) {delete (_Obj);(_Obj)=NULL;}
 #define RfxDeleteTab(_Tab)				if (_Tab) {delete [](_Tab);(_Tab)=NULL;}
 #define RfxRelease(p)					{ if(p) { (p)->Release(); (p)=NULL; } }
+
+#define	OTB_NEW_PLACED(_ptr_, _type_)		new (_ptr_) _type_
+#define	OTB_DELETE_PLACED(_ptr_, _type_)	(_ptr_)->_type_::~_type_()
+
 
 template<typename T> inline T		RfxClamp(const T& _x, const T& _min_, const T& _max_)	{ return (_x<_min_ ? _min_ : _x<_max_ ? _x : _max_);	}
 template<typename T> inline void 	RfxClip(T& _x, const T& _min_, const T& _max_)			{ _x = RfxClamp(_x, _min_, _max_);						}
