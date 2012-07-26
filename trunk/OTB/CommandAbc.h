@@ -38,7 +38,7 @@ public:
 					CommandAbc();
 					~CommandAbc();
 
-			void	Init(Game* pGame, Player* pPlayer);
+			void	Init(Game* pGame, Player* pPlayer, const int nCmdId);
 			void	Update(const float rDeltaTime);
 
 protected:
@@ -49,6 +49,7 @@ protected:
 protected:
 	Game*		_pGame;
 	Player* 	_pPlayer;
+	int			_nCmdId;
 };
 
 
