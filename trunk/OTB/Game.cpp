@@ -22,6 +22,7 @@
 #include "CommandKbdMouse.h"
 #include "CommandMouse.h"
 #include "xml/XMLParser.h"
+#include "Base/TString.h"
 
 const char* XML_SECTION_GAME			="Game";
 const char* XML_ATTRIB_GAME_P1CMD		="P1Cmd";

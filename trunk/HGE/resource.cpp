@@ -21,7 +21,7 @@ bool CALL HGE_Impl::Resource_AttachPack(const char *filename, const char *passwo
 	unzFile zip;
 
 	szName=Resource_MakePath(filename);
-	strupr(szName);
+	_strupr(szName);
 
 	while(resItem)
 	{
@@ -49,7 +49,7 @@ void CALL HGE_Impl::Resource_RemovePack(const char *filename)
 	CResourceList *resItem=res, *resPrev=0;
 
 	szName=Resource_MakePath(filename);
-	strupr(szName);
+	_strupr(szName);
 
 	while(resItem)
 	{
@@ -98,7 +98,7 @@ void* CALL HGE_Impl::Resource_Load(const char *filename, DWORD *size)
 	// Load from pack
  
 	strcpy(szName,filename);
-	strupr(szName);
+	_strupr(szName);
 	for(i=0; szName[i]; i++) { if(szName[i]=='/') szName[i]='\\'; }
 
 	while(resItem)
@@ -108,7 +108,7 @@ void* CALL HGE_Impl::Resource_Load(const char *filename, DWORD *size)
 		while(done==UNZ_OK)
 		{
 			unzGetCurrentFileInfo(zip, &file_info, szZipName, sizeof(szZipName), NULL, 0, NULL, 0);
-			strupr(szZipName);
+			_strupr(szZipName);
 			for(i=0; szZipName[i]; i++)	{ if(szZipName[i]=='/') szZipName[i]='\\'; }
 			if(!strcmp(szName,szZipName))
 			{

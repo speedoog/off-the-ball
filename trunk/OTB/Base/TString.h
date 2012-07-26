@@ -76,6 +76,9 @@ protected:
 	bool GetVar(unsigned int& var)		{ return NumericParse((void*)&var, 'I'); }
 	bool GetVar(unsigned long& var)		{ return NumericParse((void*)&var, 'L'); }
 
+	static void _Test_Me_();
+
+protected:
 	// data block
 	int   m_nLength;
 	char* m_pString;
