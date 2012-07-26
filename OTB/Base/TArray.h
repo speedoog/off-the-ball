@@ -6,7 +6,7 @@
 
 #include "../Base.h"
 
-template <typename TType, UInt32 TCapacity>
+template <class TType, UInt32 TCapacity>
 class TArray
 {
 public:

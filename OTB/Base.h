@@ -51,9 +51,9 @@ typedef bool				Bool;
 typedef UInt32				IntPtr;
 
 
-#define RfxDelete(_Obj)					if (_Obj) {delete (_Obj);(_Obj)=NULL;}
-#define RfxDeleteTab(_Tab)				if (_Tab) {delete [](_Tab);(_Tab)=NULL;}
-#define RfxRelease(p)					{ if(p) { (p)->Release(); (p)=NULL; } }
+#define RfxDelete(_Obj)						if (_Obj) {delete (_Obj);(_Obj)=NULL;}
+#define RfxDeleteTab(_Tab)					if (_Tab) {delete [](_Tab);(_Tab)=NULL;}
+#define RfxRelease(p)						{ if(p) { (p)->Release(); (p)=NULL; } }
 
 #define	OTB_NEW_PLACED(_ptr_, _type_)		new (_ptr_) _type_
 #define	OTB_DELETE_PLACED(_ptr_, _type_)	(_ptr_)->_type_::~_type_()
