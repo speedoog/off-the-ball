@@ -244,6 +244,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Base\TArray.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Base\TArray.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Base\TArray.inl"
+				>
+			</File>
+			<File
 				RelativePath=".\Base\TString.cpp"
 				>
 			</File>
