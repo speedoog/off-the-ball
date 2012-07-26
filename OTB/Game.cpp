@@ -23,9 +23,11 @@
 #include "CommandMouse.h"
 #include "xml/XMLParser.h"
 
-const char* XML_SECTION_GAME			="Game";
-const char* XML_ATTRIB_GAME_P1CMD		="P1Cmd";
-const char* XML_ATTRIB_GAME_P2CMD		="P2Cmd";
+const char* XML_SECTION_GAME		="Game";
+const char* XML_SECTION_GAME_P1		="P1";
+const char* XML_SECTION_GAME_P2		="P2";
+const char* XML_ATTRIBUTE_CMD		="Cmd";
+const char* XML_ATTRIBUTE_ID		="Id";
 
 // ********************************************
 //	Ctor
@@ -77,16 +79,29 @@ void Game::Init(XML_PARSER* pXml)
 	const char* pCmd2Default =SMARTENUM_GET_STRING(CommandAbc::CmdType, CommandAbc::CMD_KBDMOUSE)+nOffset;
 	const char* pCmd1 =pCmd1Default;
 	const char* pCmd2 =pCmd2Default;
+	int nCmdId1 =0;
+	int nCmdId2 =1;
 	if (pXml)
 	{
 		XML_ELEMENT* pRoot =pXml->GetRoot();
 		// Read Game
+		if (pRoot)
 		{
 			XML_ELEMENT* pXmlGame =pRoot->FindElement(XML_SECTION_GAME, false);
 			if (pXmlGame)
 			{
-				pCmd1 =pXmlGame->GetAttribute(XML_ATTRIB_GAME_P1CMD, pCmd1Default);
-				pCmd2 =pXmlGame->GetAttribute(XML_ATTRIB_GAME_P2CMD, pCmd1Default);
+				XML_ELEMENT* pXmlGameP1 =pXmlGame->FindElement(XML_SECTION_GAME_P1, false);
+				if (pXmlGameP1)
+				{
+					pCmd1	=pXmlGameP1->GetAttribute(XML_ATTRIBUTE_CMD, pCmd1Default);
+					nCmdId1	=pXmlGameP1->GetAttribute(XML_ATTRIBUTE_ID, 0);
+				}
+				XML_ELEMENT* pXmlGameP2 =pXmlGame->FindElement(XML_SECTION_GAME_P2, false);
+				if (pXmlGameP2)
+				{
+					pCmd2	=pXmlGameP2->GetAttribute(XML_ATTRIBUTE_CMD, pCmd2Default);
+					nCmdId2	=pXmlGameP2->GetAttribute(XML_ATTRIBUTE_ID, 1);
+				}
 			}
 		}
 	}
@@ -94,12 +109,12 @@ void Game::Init(XML_PARSER* pXml)
 	// P1 Init
 	CommandAbc::CmdType cmd1 =SMARTENUM_FIND(CommandAbc::CmdType, pCmd1, nOffset);
 	_pCmd0 =CreateCommand(cmd1);
-	_pCmd0->Init(this, &_Players[0]);
+	_pCmd0->Init(this, &_Players[0], nCmdId1);
 
 	// P2 Init
 	CommandAbc::CmdType cmd2 =SMARTENUM_FIND(CommandAbc::CmdType, pCmd2, nOffset);
 	_pCmd1 =CreateCommand(cmd2);
-	_pCmd1->Init(this, &_Players[1]);
+	_pCmd1->Init(this, &_Players[1], nCmdId2);
 
 	_Rules.ActionStartGame(0);		// start w/ player[0]
 }

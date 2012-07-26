@@ -37,10 +37,11 @@ CommandAbc::~CommandAbc()
 // ********************************************
 //	Init
 // ********************************************
-void CommandAbc::Init(Game* pGame, Player* pPlayer)
+void CommandAbc::Init(Game* pGame, Player* pPlayer, const int nCmdId)
 {
 	_pGame	 =pGame;
 	_pPlayer =pPlayer;
+	_nCmdId	 =nCmdId;
 	OnInit();
 }
 

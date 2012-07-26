@@ -1,2 +1,8 @@
 <Video ScreenSizeX="1280" ScreenSizeY="720" Windowed="1">
 </Video>
+<Game>
+	<P1 Cmd="PAD" Id="0">
+	</P1>
+	<P2 Cmd="KBDMOUSE" Id="0">
+	</P2>
+</Game>
