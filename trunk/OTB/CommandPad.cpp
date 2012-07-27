@@ -50,7 +50,7 @@ void CommandPad::OnInit()
 void CommandPad::OnUpdate(const float rDeltaTime)
 {
 	hgeVector vAxisLeft =_pPadManager->GetAxisLeft(_nCmdId);
-	if (fabsf(vAxisLeft.x)>0.15f)						// deadzone
+	if (vAxisLeft.Length()>0.2f)						// deadzone
 	{
 		_pPlayer->SetInputMove(vAxisLeft);
 	}
