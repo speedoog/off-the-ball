@@ -55,6 +55,10 @@ typedef UInt32				IntPtr;
 #define RfxDeleteTab(_Tab)					if (_Tab) {delete [](_Tab);(_Tab)=NULL;}
 #define RfxRelease(p)						{ if(p) { (p)->Release(); (p)=NULL; } }
 
+// new override / placement
+
+inline void* operator new(size_t, void *_P)	{return (_P); }	// new with placement
+
 #define	OTB_NEW_PLACED(_ptr_, _type_)		new (_ptr_) _type_
 #define	OTB_DELETE_PLACED(_ptr_, _type_)	(_ptr_)->_type_::~_type_()
 

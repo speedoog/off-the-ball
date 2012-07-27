@@ -22,7 +22,6 @@
 #include "CommandKbdMouse.h"
 #include "CommandMouse.h"
 #include "xml/XMLParser.h"
-#include "Base/TArray.h"
 
 const char* XML_SECTION_GAME		="Game";
 const char* XML_SECTION_GAME_P1		="P1";
@@ -116,23 +115,6 @@ void Game::Init(XML_PARSER* pXml)
 	CommandAbc::CmdType cmd2 =SMARTENUM_FIND(CommandAbc::CmdType, pCmd2, nOffset);
 	_pCmd1 =CreateCommand(cmd2);
 	_pCmd1->Init(this, &_Players[1], nCmdId2);
-
-	/*
-	class test
-	{
-	public:
-	test(int t):_t(t){};
-	int _t;
-	};
-
-	TArray<test, 10> ppp;
-	ppp.PushTail(test(0));
-	ppp.PushTail(test(15));
-	ppp.PushTail(test(7));
-	ppp.PushTail(test(3));
-	ppp.Resize(2);
-	ppp.Resize(20);
-	*/
 
 	_Rules.ActionStartGame(0);		// start w/ player[0]
 }
