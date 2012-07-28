@@ -28,9 +28,9 @@ const float rRacketRotationSpeedMax =8.0f*M_PI;
 Player::Player()
 {
 	_rCharSpeedMax 	=7.0f;
-	_vCharSize 		=hgeVector(0.35f, 1.8f);
+	_vCharSize 		=hgeVector(0.35f, 1.8f)*0.75f;
 	_rCharRacketY	=_vCharSize.y*0.75f;
-	_rRacketLen		=_vCharSize.y*0.75f;
+	_rRacketLen		=_vCharSize.y*1.0f;
 	_nScore			=0;
 	_vInitialPos	=hgeVector(0,0);
 }
@@ -215,7 +215,7 @@ void Player::Update(const float rDeltaTime)
 
 				// temp version
 				float rRacketSpeedAbs =fabsf(_rRacketRotationSpeed);
-				float rImpactSpeed =RfxClamp(rRacketSpeedAbs, 4.0f, 12.0f);
+				float rImpactSpeed =RfxClamp(rRacketSpeedAbs, 4.0f, 9.0f);
 
 				ball.Hit( vHit*rImpactSpeed);	// test
 				_rHitCooldown =0.5f;
