@@ -61,7 +61,7 @@ void Level::Update(const float rDeltaTime)
 	_rCounter +=rDeltaTime;
 	if (_rCounter>15.0f)
 	{
-		_rNetY +=rDeltaTime*0.15f;
+		_rNetY +=rDeltaTime*0.05f;
 	}
 }
 

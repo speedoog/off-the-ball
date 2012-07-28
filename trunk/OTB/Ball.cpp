@@ -20,11 +20,11 @@
 #include "Ball.h"
 #include "Game.h"
 
-float rGravity			=-9.0f;
+float rGravity			=-7.0f;
 float rRadius			=0.075f;
 float rTimescale		=1.0f;
-float rGroundResitution	=0.8f;
-float rWallResitution	=0.8f;
+float rGroundResitution	=0.6f;
+float rWallResitution	=0.6f;
 float rCeilResitution	=0.8f;
 float rNetResitution	=0.1f;
 
