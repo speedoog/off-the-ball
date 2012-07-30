@@ -34,7 +34,7 @@ PcPadManager::PcPadManager()
 // ********************************************
 PcPadManager::~PcPadManager()
 {
-	RfxAssert(!_bInited);
+	TAssert(!_bInited);
 }
 
 // ********************************************
@@ -42,7 +42,7 @@ PcPadManager::~PcPadManager()
 // ********************************************
 int	PcPadManager::Init(HWND	hWnd)
 {
-	RfxAssert(!_bInited);
+	TAssert(!_bInited);
 
 	HRESULT hr;
 
@@ -53,8 +53,8 @@ int	PcPadManager::Init(HWND	hWnd)
 							IID_IDirectInput8,
 							(void**)&_pDirectInput,
 							NULL);
-	RfxAssert(_pDirectInput);
-	RfxAssert(!hr);
+	TAssert(_pDirectInput);
+	TAssert(!hr);
 	if (!_pDirectInput)		return	-1;
 	if (hr)					return	-2;
 	
@@ -62,7 +62,7 @@ int	PcPadManager::Init(HWND	hWnd)
 
 	// Look for a simple joystick we can use for this sample program.
 	hr =_pDirectInput->EnumDevices(DI8DEVCLASS_GAMECTRL,EnumJoysticksCallback,(void*)this,DIEDFL_ATTACHEDONLY);
-	RfxAssert(!hr);
+	TAssert(!hr);
 	if (hr)					return	-3;
 
 	_nPadCount =_nPadCurrent;
@@ -75,20 +75,20 @@ int	PcPadManager::Init(HWND	hWnd)
 		if (PadCurrent._PadType!=PT_INVALID)
 		{
 			// Make sure we got a joystick
-			RfxAssert(PadCurrent._pDInputDevice);
+			TAssert(PadCurrent._pDInputDevice);
 			if (!PadCurrent._pDInputDevice)	return	-4;
 
 			// Set the data format to "simple joystick" - a predefined data format 
 			hr =PadCurrent._pDInputDevice->SetDataFormat(&c_dfDIJoystick2);
-			RfxAssert(!hr);
+			TAssert(!hr);
 
 			// Set the cooperative level to let DInput know how this device should interact with the system and with other DInput applications.
 			hr =PadCurrent._pDInputDevice->SetCooperativeLevel(hWnd, DISCL_EXCLUSIVE| DISCL_FOREGROUND);
-			RfxAssert(!hr);
+			TAssert(!hr);
 
 			_nPadCurrent =iPadIdx;
 			hr =PadCurrent._pDInputDevice->EnumObjects(EnumObjectsCallback,(void*)this, DIDFT_ALL);						// Enumerate the joystick objects. The callback function enabled user interface elements for objects that are found, and sets the min/max values property for discovered axes.
-			RfxAssert(!hr);
+			TAssert(!hr);
 		}
 	}
 
@@ -102,7 +102,7 @@ int	PcPadManager::Init(HWND	hWnd)
 // ********************************************
 void PcPadManager::Kill()
 {
-	RfxAssert(_bInited);
+	TAssert(_bInited);
 
 	for(PadIdx iPadIdx=0; iPadIdx<_nPadCount; ++iPadIdx)
 	{
@@ -114,10 +114,10 @@ void PcPadManager::Kill()
 		}
 
 		// Release any DirectInput objects.
-		RfxRelease(PadCurrent._pDInputDevice);
+		TRelease(PadCurrent._pDInputDevice);
 	}
 
-	RfxRelease(_pDirectInput);
+	TRelease(_pDirectInput);
 
 	_bInited =false;
 }
@@ -127,13 +127,13 @@ void PcPadManager::Kill()
 // ********************************************
 void PcPadManager::Update(void)
 {
-	RfxAssert(_bInited);
+	TAssert(_bInited);
 
 	for(PadIdx iPadIdx=0; iPadIdx<_nPadCount; ++iPadIdx)
 	{
 		PcPad& PadCurrent =_Pad[iPadIdx];
 		HRESULT hr;
-		RfxAssert(PadCurrent._pDInputDevice);
+		TAssert(PadCurrent._pDInputDevice);
 		if (!PadCurrent._pDInputDevice)
 			continue;
 

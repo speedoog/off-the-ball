@@ -1,3 +1,21 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//     ________   _____  _____    __  .__             __________        .__  .__        //
+//     \_____  \_/ ____\/ ____\ _/  |_|  |__   ____   \______   \_____  |  | |  |       //
+//      /   |   \   __\\   __\  \   __\  |  \_/ __ \   |    |  _/\__  \ |  | |  |       //
+//     /    |    \  |   |  |     |  | |   Y  \  ___/   |    |   \ / __ \|  |_|  |__     //
+//     \_______  /__|   |__|     |__| |___|  /\___  >  |______  /(____  /____/____/     //
+//             \/                          \/     \/          \/      \/                //
+//                                                                                      //
+//                          .o                                                          //
+//                   ¨>   .                                      <¨                     //
+//                  /_                       |                    | ___                 //
+//               __/\ `\                     |                   / \                    //
+//                   \,                      |                 ,/  /                    //
+// ------------------------------------------ ----------------------------------------- //
+//                        Copyright(c) 2012 by Bertrand Faure                           //
+//////////////////////////////////////////////////////////////////////////////////////////
+
 
 //-----------------------------------------------------------------------------
 //! @brief		Ctor
@@ -21,7 +39,7 @@ void TArray<TType, TCapacity>::Clear()
 {
 	for (UInt32 i=0; i<_nSize; ++i)
 	{
-		OTB_DELETE_PLACED(&At(i), TType);
+		TDeletePlaced(&At(i), TType);
 	}
 	_nSize =0;
 }
@@ -47,8 +65,8 @@ void TArray<TType, TCapacity>::ClearAll()
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::PushTail(const TType& Obj)
 {
-	RfxAssert(!IsFull());
-	OTB_NEW_PLACED(GetArray()+_nSize, TType)(Obj);
+	TAssert(!IsFull());
+	TNewPlaced(GetArray()+_nSize, TType)(Obj);
 	++_nSize;
 }
 
@@ -61,14 +79,14 @@ void TArray<TType, TCapacity>::PushTail(const TArray<TType, TCapacity>& Containe
 {
 	const UInt32 nSumSize =_nSize+Container._nSize;
 
-	RfxAssert(nSumSize<=GetCapacity());
+	TAssert(nSumSize<=GetCapacity());
 
 	TType* pDst =GetTailPtr();
 	const TType* pSrc =Container.GetArray();
 	const TType* pEnd =Container.GetTailPtr();
 	for (; pSrc!=pEnd; ++pSrc, ++pDst)
 	{
-		OTB_NEW_PLACED(pDst, TType)(*pSrc);
+		TNewPlaced(pDst, TType)(*pSrc);
 	}
 	_nSize =nSumSize;
 }
@@ -94,21 +112,21 @@ void TArray<TType, TCapacity>::Fill(const TType& Obj)
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::Resize(const UInt32 nNewSize)
 {
-	RfxAssert(nNewSize<=GetCapacity());
+	TAssert(nNewSize<=GetCapacity());
 
 	const UInt32 uActualSize =GetSize();
 	if (nNewSize<uActualSize)
 	{
 		for (UInt32 i =nNewSize; i<uActualSize; ++i)
 		{
-			OTB_DELETE_PLACED(GetArray()+i, TType);
+			TDeletePlaced(GetArray()+i, TType);
 		}
 	}
 	else
 	{
 		for (UInt32 i =uActualSize; i<nNewSize; ++i)
 		{
-			OTB_NEW_PLACED(GetArray()+i, TType);
+			TNewPlaced(GetArray()+i, TType);
 		}
 	}
 	_nSize = nNewSize;
@@ -121,7 +139,7 @@ void TArray<TType, TCapacity>::Resize(const UInt32 nNewSize)
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::Remove(const TIterator& it)
 {
-	RfxAssert(it.GetArray()==this);
+	TAssert(it.GetArray()==this);
 	RemoveIndex(it.GetIndex());
 }
 
@@ -132,7 +150,7 @@ void TArray<TType, TCapacity>::Remove(const TIterator& it)
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::RemoveIndex(const UInt32 nIndex)
 {
-	RfxAssert(nIndex<GetSize());
+	TAssert(nIndex<GetSize());
 
 	const UInt32 nLast =GetSize()-1;
 	for (UInt32 i =nIndex; i<nLast; ++i)
@@ -140,7 +158,7 @@ void TArray<TType, TCapacity>::RemoveIndex(const UInt32 nIndex)
 		At(i) = At(i+1);
 	}
 
-	OTB_DELETE_PLACED(GetArray()+nLast, TType);
+	TDeletePlaced(GetArray()+nLast, TType);
 	--_nSize;
 }
 
@@ -151,13 +169,13 @@ void TArray<TType, TCapacity>::RemoveIndex(const UInt32 nIndex)
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::RemoveIndexFast(UInt32 nIndex)
 {
-	RfxAssert(nIndex<GetSize());
+	TAssert(nIndex<GetSize());
 
 	TType* ptr =&At(nIndex);
-	OTB_DELETE_PLACED(ptr, TType);
+	TDeletePlaced(ptr, TType);
 
 	TType* ptrLast =GetTailPtr()-1;
-	QDT_MEMMOVE(ptr, ptrLast, sizeof(TType));				// move last element in place of [i] removed
+	TMemMove(ptr, ptrLast, sizeof(TType));				// move last element in place of [i] removed
 
 	--_nSize;
 }
@@ -169,13 +187,13 @@ void TArray<TType, TCapacity>::RemoveIndexFast(UInt32 nIndex)
 template <class TType, UInt32 TCapacity>
 TType& TArray<TType, TCapacity>::At(const UInt32 nIndex)
 {
-#	ifdef QDT_DEBUG
+#	ifdef T_DEBUG
 	if (nIndex>=GetSize())
 	{
-		QDT_FAIL();
+		TFail();
 		return GetArray()[0];			// Ensure not accessing out of boundaries ! (it's the caller's responsability to check index)
 	}
-#	endif
+#	endif // T_DEBUG
 	return GetArray()[nIndex];
 }
 
@@ -186,13 +204,13 @@ TType& TArray<TType, TCapacity>::At(const UInt32 nIndex)
 template <class TType, UInt32 TCapacity>
 const TType& TArray<TType, TCapacity>::At(const UInt32 nIndex) const
 {
-#	ifdef QDT_DEBUG
+#	ifdef T_DEBUG
 	if (nIndex>=GetSize())
 	{
-		QDT_FAIL();
+		TFail();
 		return GetArray()[0];			// Ensure not accessing out of boundaries ! (it's the caller's responsability to check index)
 	}
-#	endif
+#	endif // T_DEBUG
 	return GetArray()[nIndex];
 }
 
@@ -204,7 +222,7 @@ template <class TType, UInt32 TCapacity>
 UInt32 TArray<TType, TCapacity>::Find(const UInt32& nStart, const TType& Obj) const
 {
 	const UInt32 nSize =GetSize();
-	RfxAssert((nSize==0) || (nStart<nSize));
+	TAssert((nSize==0) || (nStart<nSize));
 
 	UInt32 i =nStart;
 	for (; i<nSize; ++i)

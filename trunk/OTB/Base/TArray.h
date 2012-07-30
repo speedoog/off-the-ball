@@ -1,3 +1,21 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//     ________   _____  _____    __  .__             __________        .__  .__        //
+//     \_____  \_/ ____\/ ____\ _/  |_|  |__   ____   \______   \_____  |  | |  |       //
+//      /   |   \   __\\   __\  \   __\  |  \_/ __ \   |    |  _/\__  \ |  | |  |       //
+//     /    |    \  |   |  |     |  | |   Y  \  ___/   |    |   \ / __ \|  |_|  |__     //
+//     \_______  /__|   |__|     |__| |___|  /\___  >  |______  /(____  /____/____/     //
+//             \/                          \/     \/          \/      \/                //
+//                                                                                      //
+//                          .o                                                          //
+//                   ¨>   .                                      <¨                     //
+//                  /_                       |                    | ___                 //
+//               __/\ `\                     |                   / \                    //
+//                   \,                      |                 ,/  /                    //
+// ------------------------------------------ ----------------------------------------- //
+//                        Copyright(c) 2012 by Bertrand Faure                           //
+//////////////////////////////////////////////////////////////////////////////////////////
+
 
 #ifndef __BASE_TARRAY_H__
 #define __BASE_TARRAY_H__
@@ -46,8 +64,8 @@ public:
 
 		// Validity
 		inline	Bool		IsValid() const								{ return (_pArray && _nIndex<=_pArray->GetSize());					}
-		inline	void		AssertValid() const							{ RfxAssert(IsValid());												}
-		inline	void		AssertCompatible(const TIterator& it) const	{ AssertValid(); it.AssertValid(); RfxAssert(_pArray==it._pArray); }
+		inline	void		AssertValid() const							{ TAssert(IsValid());												}
+		inline	void		AssertCompatible(const TIterator& it) const	{ AssertValid(); it.AssertValid(); TAssert(_pArray==it._pArray); }
 
 		// Classic access
 		inline	UInt32		GetIndex() const							{ return _nIndex;	}
@@ -70,7 +88,7 @@ public:
 	// Accessors
 	inline	UInt32				GetSize() const							{ return _nSize;	}
 	inline	UInt32				GetCapacity() const						{ return TCapacity;	}
-	inline	void				Reserve(const UInt32 nSize) const		{ RfxAssert(nSize<=GetCapacity()); /* nothing */ }
+	inline	void				Reserve(const UInt32 nSize) const		{ TAssert(nSize<=GetCapacity()); /* nothing */ }
 	inline	Bool				IsEmpty() const							{ return _nSize==0;		}
 	inline	Bool				IsFull() const							{ return (GetSize()>=GetCapacity()); }
 
@@ -99,8 +117,8 @@ public:
 	inline	TIterator			GetTail() const							{ return (TIterator(const_cast<TTypeContainer*>(this), _nSize));	}
 
 	// Array accessors
-	inline	TType&				GetLast()								{ RfxAssert(!IsEmpty()); return At(_nSize-1); }
-	inline	const TType&		GetLast() const							{ RfxAssert(!IsEmpty()); return At(_nSize-1); }
+	inline	TType&				GetLast()								{ TAssert(!IsEmpty()); return At(_nSize-1); }
+	inline	const TType&		GetLast() const							{ TAssert(!IsEmpty()); return At(_nSize-1); }
 	inline	TType&				At(const UInt32 nIndex);
 	inline	const TType&		At(const UInt32 nIndex) const;
 	inline	TType&				operator [] (const UInt32 nIndex)		{ return At(nIndex); }

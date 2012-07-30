@@ -106,4 +106,4 @@ class XML_PARSER
 
 };
 
-#endif
+#endif	//__XML_PARSER_H__
