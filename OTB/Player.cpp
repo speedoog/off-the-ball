@@ -215,7 +215,7 @@ void Player::Update(const float rDeltaTime)
 
 				// temp version
 				float rRacketSpeedAbs =fabsf(_rRacketRotationSpeed);
-				float rImpactSpeed =RfxClamp(rRacketSpeedAbs, 4.0f, 9.0f);
+				float rImpactSpeed =TClamp(rRacketSpeedAbs, 4.0f, 9.0f);
 
 				ball.Hit( vHit*rImpactSpeed);	// test
 				_rHitCooldown =0.5f;

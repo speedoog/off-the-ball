@@ -23,17 +23,13 @@
 
 #include "../hge/hge.h"
 #include "../hge/hgevector.h"
+
+
+// -------------------------------------------- global HGE --------------------------------------------
+
 extern HGE* hge;
 
-/*
-#if defined(WIN32)
-#	ifndef _WIN32_WINNT
-#		define	_WIN32_WINNT		0x0500
-#	endif
-#	include  "windows.h"
-#	include <cassert>
-#endif
-*/
+// -------------------------------------------- Base types --------------------------------------------
 
 typedef char				Char;
 typedef char				Int8;
@@ -50,51 +46,98 @@ typedef double				Float64;
 typedef bool				Bool;
 typedef UInt32				IntPtr;
 
+// -------------------------------------------- new / delete --------------------------------------------
 
-#define RfxDelete(_Obj)						if (_Obj) {delete (_Obj);(_Obj)=NULL;}
-#define RfxDeleteTab(_Tab)					if (_Tab) {delete [](_Tab);(_Tab)=NULL;}
-#define RfxRelease(p)						{ if(p) { (p)->Release(); (p)=NULL; } }
+#define TDelete(_Obj)					if (_Obj) {delete (_Obj);(_Obj)=NULL;}
+#define TDeleteTab(_Tab)				if (_Tab) {delete [](_Tab);(_Tab)=NULL;}
+#define TRelease(p)						{ if(p) { (p)->Release(); (p)=NULL; } }
 
 // new override / placement
 
 inline void* operator new(size_t, void *_P)	{return (_P); }	// new with placement
 
-#define	OTB_NEW_PLACED(_ptr_, _type_)		new (_ptr_) _type_
-#define	OTB_DELETE_PLACED(_ptr_, _type_)	(_ptr_)->_type_::~_type_()
+#define	TNewPlaced(_ptr_, _type_)		new (_ptr_) _type_
+#define	TDeletePlaced(_ptr_, _type_)	(_ptr_)->_type_::~_type_()
 
+inline static void TMemMove(void* dest, const void* src, UInt32 nSize)
+{
+	UInt8* d		=(UInt8*)dest;
+	const UInt8* s	=(UInt8*)src;
+	if (s<d && d<(s+nSize))			// Test for overlap that prevents an ascending copy
+	{
+		s += nSize;					// copy backwards (descending copy)
+		d += nSize;
+		while (nSize--)
+			*--d = *--s;
+	}
+	else
+	{
+		while (nSize--)				// Forward copy
+			*d++ = *s++;
+	}
+}
 
-template<typename T> inline T		RfxClamp(const T& _x, const T& _min_, const T& _max_)	{ return (_x<_min_ ? _min_ : _x<_max_ ? _x : _max_);	}
-template<typename T> inline void 	RfxClip(T& _x, const T& _min_, const T& _max_)			{ _x = RfxClamp(_x, _min_, _max_);						}
-template<typename T> inline void 	RfxClipMin(T& _x, T _min_)								{ _x = ((_x)<(_min_) ? (_min_) : (_x));					}
-template<typename T> inline void 	RfxClipMax(T& _x, T _max_)								{ _x = ((_x)>(_max_) ? (_max_) : (_x));					}
-template<typename T> inline void 	RfxMinMax (const T& a, const T& b, T& min, T& max)	{ if (a<b) { min=a; max=b;} else { max=a;min=b;}}
+// -------------------------------------------- clip / clamp / Min / Max --------------------------------------------
 
-#ifdef WIN32
-	void	Win32OSReport(char*	string,...);
-#	define RfxMsg(a)							Win32OSReport (a)
-#	define RfxMsg2(a, b)					Win32OSReport (a,b)
-#	define RfxMsg3(a,b,c)				Win32OSReport (a,b,c)
-#	define RfxMsg4(a,b,c,d)			Win32OSReport (a,b,c,d)
-#	define RfxMsg5(a,b,c,d,e)	  Win32OSReport (a,b,c,d,e)
-#endif	//WIN32
+template<typename T>
+inline T TClamp(const T& _x, const T& _min_, const T& _max_)
+{
+	return (_x<_min_ ? _min_ : _x<_max_ ? _x : _max_);
+}
+
+template<typename T>
+inline void TClip(T& _x, const T& _min_, const T& _max_)
+{
+	_x = TClamp(_x, _min_, _max_);
+}
+
+template<typename T>
+inline void TClipMin(T& _x, T _min_)
+{
+	_x = ((_x)<(_min_) ? (_min_) : (_x));
+}
+
+template<typename T>
+inline void TClipMax(T& _x, T _max_)
+{
+	_x = ((_x)>(_max_) ? (_max_) : (_x));
+}
+
+template<typename T>
+inline void TMinMax(const T& a, const T& b, T& min, T& max)
+{
+	if (a<b)
+	{
+		min=a;
+		max=b;
+	}
+	else
+	{
+		max=a;
+		min=b;
+	}
+}
+
+// -------------------------------------------- Assert --------------------------------------------
+
+void Win32OSReport(char* pFormatedMsg, ...);
 
 #ifdef NDEBUG
-#	define RfxAssert(a)      		{}
-#	define RfxDebug(a)       		{}
-#	define RfxDebug2(a, b)     		{}
-#	define RfxDebug3(a,b,c)    		{}
-#	define RfxDebug4(a,b,c,d)   	{}
-#	define RfxDebug5(a,b,c,d,e)  	{}
-#	define RfxTry(a)       			a 
+// -------------------------------------------------------
+// -                       Release                       - 
+// -------------------------------------------------------
+#	define	TAssert(a)      		{}
+#	define	TFail()      			{}
 #else
-	void	RfxAssertPC (char* msg, const char* file, int line);
-#	define RfxAssert(a)          if	(!(a))	RfxAssertPC (#a, __FILE__, __LINE__)    
-#	define RfxDebug(a)           RfxMsg (a)
-#	define RfxDebug2(a, b)       RfxMsg2 (a,b)
-#	define RfxDebug3(a,b,c)      RfxMsg3 (a,b,c)
-#	define RfxDebug4(a,b,c,d)    RfxMsg4 (a,b,c,d)
-#	define RfxDebug5(a,b,c,d,e)  RfxMsg5 (a,b,c,d,e)
-#	define RfxTry(a)             RfxAssert (a)
+
+// -------------------------------------------------------
+// -                        Debug                        - 
+// -------------------------------------------------------
+	void	TAssertPC(char* msg, const char* file, int line);
+#	define TAssert(a)			if	(!(a))	TAssertPC(#a, __FILE__, __LINE__)
+#	define TFail()				TAssertPC("Fail", __FILE__, __LINE__)
+#	define T_DEBUG				1
+
 #endif
 
 static const char* UID_BUILD = "Build : "__DATE__" "__TIME__;

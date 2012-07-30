@@ -17,34 +17,20 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 #include "base.h"
-#include <cstdio>
+#include <stdio.h>
 
-#if defined(WIN32)
-void	Win32OSReport(char*	string,...)
+void Win32OSReport(char* pFormatedMsg, ...)
 {
 	const int MAX_SIZE =1024;
 	char	buf[MAX_SIZE];
 	va_list	marker;
-	va_start(marker,string);
-	vsprintf_s(buf,MAX_SIZE,string,marker);
+	va_start(marker,pFormatedMsg);
+	vsprintf_s(buf,MAX_SIZE,pFormatedMsg,marker);
 	va_end(marker);
 	OutputDebugString(buf);
 }
 
-void RfxAssertPC (char* msg, const char* file, int line)
+void TAssertPC(char* msg, const char* file, int line)
 {
-	Win32OSReport ("*** ASSERT Failed in file %s on line %d\n%s\n", file,line,msg);
+	Win32OSReport("*** ASSERT Failed in file %s on line %d\n%s\n", file, line, msg);
 }
-#endif
-
-#if defined(NGC) && !defined (NDEBUG)
-void RfxAssertGC (bool cond, char* msg, const char* file, int line)
-{
-	if (!cond)
-	{
-		RfxDebug3 ("*** ASSERT Failed in file %s on line %d\n", file, line);
-		RfxDebug (msg);
-		RfxDebug ("\n");
-	}
-}
-#endif
