@@ -1,27 +1,29 @@
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
-//=============================================================================
+//////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//     ________   _____  _____    __  .__             __________        .__  .__        //
+//     \_____  \_/ ____\/ ____\ _/  |_|  |__   ____   \______   \_____  |  | |  |       //
+//      /   |   \   __\\   __\  \   __\  |  \_/ __ \   |    |  _/\__  \ |  | |  |       //
+//     /    |    \  |   |  |     |  | |   Y  \  ___/   |    |   \ / __ \|  |_|  |__     //
+//     \_______  /__|   |__|     |__| |___|  /\___  >  |______  /(____  /____/____/     //
+//             \/                          \/     \/          \/      \/                //
+//                                                                                      //
+//                          .o                                                          //
+//                   ¨>   .                                      <¨                     //
+//                  /_                       |                    | ___                 //
+//               __/\ `\                     |                   / \                    //
+//                   \,                      |                 ,/  /                    //
+// ------------------------------------------ ----------------------------------------- //
+//                        Copyright(c) 2012 by Bertrand Faure                           //
+//////////////////////////////////////////////////////////////////////////////////////////
+
 
 // ********************************************
 //	Ctor
 // ********************************************
 template <class TType>
 TList<TType>::TList()
-: _pFirst	(NULL)
-, _pLast	(NULL)
+: _pHead	(NULL)
+, _pQueue	(NULL)
 , _nSize	(0)
 {
 }
@@ -31,8 +33,8 @@ TList<TType>::TList()
 // ********************************************
 template <class TType>
 TList<TType>::TList(const TList& List)
-: _pFirst(NULL)
-, _pLast(NULL)
+: _pHead(NULL)
+, _pQueue(NULL)
 , _nSize(0)
 {
 	PushTail(List);
@@ -74,7 +76,7 @@ UInt32 TList<TType>::GetMemoryUsed() const
 template <class TType>
 void TList<TType>::Clear()
 {
-	Node* pNode =_pFirst;
+	Node* pNode =_pHead;
 	while (pNode)
 	{
 		Node* pNext =pNode->GetNext();
@@ -82,8 +84,8 @@ void TList<TType>::Clear()
 		pNode =pNext;
 	}
 
-	_pFirst =NULL;
-	_pLast  =NULL;
+	_pHead =NULL;
+	_pQueue  =NULL;
 	_nSize	=0;
 }
 
@@ -93,7 +95,7 @@ void TList<TType>::Clear()
 template <class TType>
 void TList<TType>::ClearAll()
 {
-	Node* pNode =_pFirst;
+	Node* pNode =_pHead;
 	while (pNode)
 	{
 		Node* pNext =pNode->GetNext();
@@ -102,8 +104,8 @@ void TList<TType>::ClearAll()
 		pNode = pNext;
 	}
 
-	_pFirst =NULL;
-	_pLast  =NULL;
+	_pHead =NULL;
+	_pQueue  =NULL;
 	_nSize  =0;
 }
 
@@ -119,7 +121,7 @@ void TList<TType>::MoveToHead(const Iterator& itElt)
 	Node* pNodeToMove =itElt.GetNode();
 
 	// Remove
-	if (pNodeToMove == _pFirst)
+	if (pNodeToMove == _pHead)
 		return;
 
 	if (pNodeToMove->GetPrev())
@@ -132,16 +134,16 @@ void TList<TType>::MoveToHead(const Iterator& itElt)
 		pNodeToMove->GetNext()->SetPrev(pNodeToMove->GetPrev());
 	}
 
-	if (pNodeToMove == _pLast)
+	if (pNodeToMove == _pQueue)
 	{
-		_pLast = _pLast->GetPrev();
+		_pQueue = _pQueue->GetPrev();
 	}
 
 	// Insert Head
 	pNodeToMove->SetPrev(NULL);	
-	pNodeToMove->SetNext(_pFirst);
-	_pFirst->SetPrev(pNodeToMove);
-	_pFirst = pNodeToMove;
+	pNodeToMove->SetNext(_pHead);
+	_pHead->SetPrev(pNodeToMove);
+	_pHead = pNodeToMove;
 
 	++_nSize;
 }
@@ -153,16 +155,16 @@ template <class TType>
 void TList<TType>::PushTail(const TType& Elt)
 {
 	Node* pNode =new Node(Elt);
-	if (_pFirst==NULL)
+	if (_pHead==NULL)
 	{
-		_pFirst =pNode;
-		_pLast  =pNode;
+		_pHead =pNode;
+		_pQueue  =pNode;
 	}
 	else
 	{
-		_pLast->SetNext(pNode);
-		pNode->SetPrev(_pLast);
-		_pLast = pNode;
+		_pQueue->SetNext(pNode);
+		pNode->SetPrev(_pQueue);
+		_pQueue = pNode;
 	}
 
 	++_nSize;
@@ -192,18 +194,18 @@ void TList<TType>::PopTail()
 {
 	TAssert(IsEmpty()==false);
 
-	Node* pNode =_pLast;
-	_pLast =pNode->GetPrev();
+	Node* pNode =_pQueue;
+	_pQueue =pNode->GetPrev();
 	delete pNode;
 	--_nSize;
 
-	if (_pLast)
+	if (_pQueue)
 	{
-		_pLast->SetNext(NULL);
+		_pQueue->SetNext(NULL);
 	}
 	else
 	{
-		_pFirst =NULL;
+		_pHead =NULL;
 	}
 }
 
@@ -223,16 +225,16 @@ template <class TType>
 void TList<TType>::InsertHead(const TType& Elt)
 {
 	Node* pNode =new Node(Elt);
-	if (_pFirst == NULL)
+	if (_pHead == NULL)
 	{
-		_pFirst =pNode;
-		_pLast  =pNode;
+		_pHead =pNode;
+		_pQueue  =pNode;
 	}
 	else
 	{
-		pNode->SetNext(_pFirst);
-		_pFirst->SetPrev(pNode);
-		_pFirst =pNode;
+		pNode->SetNext(_pHead);
+		_pHead->SetPrev(pNode);
+		_pHead =pNode;
 	}
 
 	++_nSize;
@@ -265,7 +267,7 @@ void TList<TType>::InsertHead(TList& List)
 template <class TType>
 void TList<TType>::Reverse()
 {
-	Node* pNode =_pFirst;
+	Node* pNode =_pHead;
 	while (pNode)
 	{
 		// Swap element
@@ -276,8 +278,8 @@ void TList<TType>::Reverse()
 		pNode =pNode->GetPrev();
 	}
 
-	_pFirst =_pLast;
-	_pLast  =_pFirst;
+	_pHead =_pQueue;
+	_pQueue  =_pHead;
 }
 
 // ********************************************
@@ -287,12 +289,12 @@ template <class TType>
 void TList<TType>::RemoveHead()
 {
 	TAssert(GetSize() > 0);
-	Node* pNodeToRemove = _pFirst;
-	_pFirst = _pFirst->GetNext();
+	Node* pNodeToRemove = _pHead;
+	_pHead = _pHead->GetNext();
 	
-	if (_pFirst)
+	if (_pHead)
 	{
-		_pFirst->SetPrev(NULL);
+		_pHead->SetPrev(NULL);
 	}
 
 	--_nSize;
@@ -352,7 +354,7 @@ TList<TType>& TList<TType>::operator=(const TList<TType>& List)
 //	InsertSort
 // ********************************************
 template <class TType>
-Bool TList<TType>::InsertSort(const TList& lOther, Bool bAllowDup)
+Bool TList<TType>::InsertSort(const TList& lOther, const Bool bAllowDup)
 {
 	Bool bIsIn =false;
 	for (Iterator itCur =lOther.GetHead(); itCur!=lOther.GetTail(); ++itCur)
@@ -364,99 +366,97 @@ Bool TList<TType>::InsertSort(const TList& lOther, Bool bAllowDup)
 	return bIsIn;
 }
 
-//-----------------------------------------------------------------------------
-//	Name:		Remove
-//	Object:		
-//	05-09-13:	RMA - Created
-//-----------------------------------------------------------------------------	
+// ********************************************
+//	Remove
+// ********************************************
 template <class TType>
 Bool TList<TType>::Remove(const TType& Elt)
 {
-	Iterator it;
-	it = Find(GetHead(), Elt);
+	Iterator it =Find(Elt);
 	if (it!= GetTail())
 	{
 		Remove(it);
-		return (true);
+		return true;
 	}
 
-	return (false);
+	return false;
 }
 
-//-----------------------------------------------------------------------------
-//	Name:		Remove
-//	Object:		
-//	05-09-13:	RMA - Created
-//-----------------------------------------------------------------------------	
+// ********************************************
+//	Remove
+// ********************************************
 template <class TType>
-void TList<TType>::Remove(const Iterator& I)
+void TList<TType>::Remove(const Iterator& it)
 {
-	TAssert(I.GetNode());
-	TAssert(I.GetList() == this);
+	TAssert(it.GetNode());
+	TAssert(it.GetList() == this);
 
-	if (I.GetNode()->GetPrev())
+	if (it.GetNode()->GetPrev())
 	{
-		I.GetNode()->GetPrev()->SetNext(I.GetNode()->GetNext());
+		it.GetNode()->GetPrev()->SetNext(it.GetNode()->GetNext());
 	}
 
-	if (I.GetNode()->GetNext())
+	if (it.GetNode()->GetNext())
 	{
-		I.GetNode()->GetNext()->SetPrev(I.GetNode()->GetPrev());
+		it.GetNode()->GetNext()->SetPrev(it.GetNode()->GetPrev());
 	}
 
-	if (I.GetNode() == _pFirst)
+	if (it.GetNode() == _pHead)
 	{
-		_pFirst = _pFirst->GetNext();
+		_pHead = _pHead->GetNext();
 	}
 
-	if (I.GetNode() == _pLast)
+	if (it.GetNode() == _pQueue)
 	{
-		_pLast = _pLast->GetPrev();
+		_pQueue = _pQueue->GetPrev();
 	}
 
-	delete I.GetNode();
+	delete it.GetNode();
 	--_nSize;
 }
 
-//-----------------------------------------------------------------------------
-//	Name:		Remove
-//	Object:		
-//	05-09-13:	RMA - Created
-//-----------------------------------------------------------------------------
+// ********************************************
+//	operator ==
+// ********************************************
 template <class TType>
 Bool TList<TType>::operator == (const TList<TType>& List) const
 {
-	if (GetSize() != List.GetSize())
+	if (GetSize()!=List.GetSize())
 	{
-		return (false);
+		return false;
 	}
 
 	Iterator it1 = GetHead();
 	Iterator it2 = List.GetHead();
 	Iterator itTail = GetTail();
-
 	while (it1 != itTail)
 	{
 		if ((*it1 != *it2))
 		{
-			return (false);
+			return false;
 		}
 
 		++it1;
 		++it2;
 	}
 
-	return (true);
+	return true;
 }
 
-//-----------------------------------------------------------------------------
-//	Name:		Remove
-//	Object:		
-//	05-09-14:	RMA - Created
-//-----------------------------------------------------------------------------
+// ********************************************
+//	operator !=
+// ********************************************
 template <class TType>
-void TList<TType>::Push(const TType & Elt, 
-						Bool bReverse)
+Bool TList<TType>::operator != (const TList<TType>& List) const
+{
+	return ((*this)==List) == false;
+}
+
+// ********************************************
+//	Push
+// ********************************************
+template <class TType>
+void TList<TType>::Push(const TType& Elt, const Bool bReverse)
 {
 	if (bReverse)
 	{
@@ -468,23 +468,19 @@ void TList<TType>::Push(const TType & Elt,
 	}
 }
 
-//-----------------------------------------------------------------------------
-//	Name:		Remove
-//	Object:		
-//	05-09-14:	RMA - Created
-//				This is a common bubble sort... 
-//				I suppose it can be greatly optimized!
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Sort (bubble sort)
+// ********************************************
 template <class TType>
 void TList<TType>::Sort()
 {
 	if (GetSize() == 2)
 	{
-		if (_pFirst->GetData() < _pLast->GetData())
+		if (_pHead->GetData() < _pQueue->GetData())
 		{
-			TType Temp = _pFirst->GetData();
-			_pFirst->SetData(_pLast->GetData());
-			_pLast->SetData(Temp);
+			TType Temp = _pHead->GetData();
+			_pHead->SetData(_pQueue->GetData());
+			_pQueue->SetData(Temp);
 		}
 	}
 	else
@@ -522,60 +518,9 @@ void TList<TType>::Sort()
 	}
 }
 
-//-----------------------------------------------------------------------------
-//	Name:		Remove
-//	Object:		
-//	05-09-14:	RMA - Created
-//				This is a common bubble sort... 
-//				I suppose it can be greatly optimized!
-//-----------------------------------------------------------------------------
-template <class TType>
-void TList<TType>::SortByPointers()
-{
-	if (GetSize() == 2)
-	{
-		if (*_pFirst->GetData() < *_pLast->GetData())
-		{
-			TType Temp = _pFirst->GetData();
-			_pFirst->SetData(_pLast->GetData());
-			_pLast->SetData(Temp);
-		}
-	}
-	else
-	{
-		if (GetSize() > 2)
-		{
-			Iterator itX = GetHead();
-			Iterator itY = itX;
-			++itY;
-
-			Iterator itTail = GetTail();
-			Iterator itTailMinusOne = itTail;
-			--itTailMinusOne;
-
-			while (itX != itTail)
-			{
-				while (itY != itTailMinusOne)
-				{
-					Node * pNodeY = itY.GetNode();
-					Node * pNodeYPlusOne = itY.GetNode()->GetNext();
-
-					if (*pNodeYPlusOne->GetData() < *pNodeY->GetData())
-					{
-						TType holder = pNodeYPlusOne->GetData();	
-						pNodeYPlusOne->SetData(pNodeY->GetData());
-						pNodeY->SetData(holder);
-					}
-
-					++itY;
-				}
-
-				++itX;
-			}
-		}
-	}
-}
-
+// ********************************************
+//	Find
+// ********************************************
 template <class TType>
 typename TList<TType>::Iterator TList<TType>::Find(const Iterator& itStart, const TType& Elt) const
 {
@@ -594,12 +539,18 @@ typename TList<TType>::Iterator TList<TType>::Find(const Iterator& itStart, cons
 	return itCur;
 }
 
+// ********************************************
+//	Find
+// ********************************************
 template <class TType>
 typename TList<TType>::Iterator TList<TType>::Find(const TType& Elt) const
 {
 	return Find(GetHead(), Elt);
 }
 
+// ********************************************
+//	PushOnce
+// ********************************************
 template <class TType>
 typename TList<TType>::Iterator TList<TType>::PushOnce(const TType& Elt)
 {
@@ -613,12 +564,18 @@ typename TList<TType>::Iterator TList<TType>::PushOnce(const TType& Elt)
 	return itCur;
 }
 
+// ********************************************
+//	Contains
+// ********************************************
 template <class TType>
 Bool TList<TType>::Contains(const TType& Elt) const
 {
 	return Find(Elt)!=GetTail();
 }
 
+// ********************************************
+//	Insert
+// ********************************************
 template <class TType>
 typename TList<TType>::Iterator TList<TType>::Insert(const Iterator& it, const TType& Elt)
 {
@@ -639,7 +596,7 @@ typename TList<TType>::Iterator TList<TType>::Insert(const Iterator& it, const T
 	}
 	else
 	{
-		_pFirst = pNode;
+		_pHead = pNode;
 	}
 
 	pAfter->SetPrev(pNode);
@@ -652,6 +609,9 @@ typename TList<TType>::Iterator TList<TType>::Insert(const Iterator& it, const T
 	return Iterator(this, pNode);
 }
 
+// ********************************************
+//	InsertOnce
+// ********************************************
 template <class TType>
 typename TList<TType>::Iterator TList<TType>::InsertOnce(const Iterator& it, const TType& Elt)
 {
@@ -663,8 +623,11 @@ typename TList<TType>::Iterator TList<TType>::InsertOnce(const Iterator& it, con
 	return itCur;
 }
 
+// ********************************************
+//	InsertSort
+// ********************************************
 template <class TType>
-typename TList<TType>::Iterator TList<TType>::InsertSort(const TType& Elt, Bool bAllowDup, Bool& bIsIn)
+typename TList<TType>::Iterator TList<TType>::InsertSort(const TType& Elt, const Bool bAllowDup, Bool& bIsIn)
 {
 	Iterator	itCur = GetHead();
 	Iterator	itEnd = GetTail();
@@ -672,58 +635,6 @@ typename TList<TType>::Iterator TList<TType>::InsertSort(const TType& Elt, Bool 
 	bIsIn = false;
 
 	while ( (itCur != itEnd) && (*itCur < Elt) )
-	{
-		++itCur;
-	}
-
-	if (itCur != itEnd)
-	{
-		bIsIn = (*itCur == Elt);
-
-		if	( (bAllowDup == false) && (bIsIn == true) )
-		{
-			return itCur;
-		}
-	}
-
-	return Insert(itCur, Elt);
-}
-
-// Insère un élément dans la liste en le triant (necessite operateur < et == définit pour la classe template)
-template <class TType>
-typename TList<TType>::Iterator TList<TType>::InsertSortPointers(const TType& Elt, Bool bAllowDup, Bool& bIsIn)
-{
-	Iterator itCur =GetHead();
-	Iterator itEnd =GetTail();
-
-	bIsIn = false;
-
-	while ( (itCur != itEnd) && (**itCur < *Elt) )
-	{
-		++itCur;
-	}
-
-	if (itCur != itEnd)
-	{
-		bIsIn = (*itCur == Elt);
-
-		if	( (bAllowDup == false) && (bIsIn == true) )
-		{
-			return itCur;
-		}
-	}
-
-	return Insert(itCur, Elt);
-}
-
-template <class TType>
-typename TList<TType>::Iterator TList<TType>::InsertSortPointers(const TType& Elt, Bool bAllowDup, Bool& bIsIn, DLIST_COMPARISON_CALLBACK ComparisonCallback)
-{
-	Iterator itCur =GetHead();
-	Iterator itEnd =GetTail();
-
-	bIsIn = false;
-	while ( (itCur != itEnd) && (*ComparisonCallback)(*itCur, Elt) )
 	{
 		++itCur;
 	}

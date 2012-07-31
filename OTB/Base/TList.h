@@ -1,21 +1,20 @@
-//*****************************************************************************
-//
-// Copyright (C) 2000-2005 Quantic Dream SA
-//
-// These coded instructions, statements and computer programs contain
-// unpublished information proprietary to Quantic Dream SA and are 
-// protected by French and EEC copyright laws. They may not be 
-// disclosed to third parties or copied or duplicated, in whole or in part, 
-// without prior written consent of Quantic Dream SA
-//
-// Unpublished-rights reserved under the Copyright Laws of the EEC.
-//
-//*****************************************************************************
-//
-//	CLASS:	QDT_list
-//
-//	05-08-17:	RMA - Created
-//*****************************************************************************
+//////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//     ________   _____  _____    __  .__             __________        .__  .__        //
+//     \_____  \_/ ____\/ ____\ _/  |_|  |__   ____   \______   \_____  |  | |  |       //
+//      /   |   \   __\\   __\  \   __\  |  \_/ __ \   |    |  _/\__  \ |  | |  |       //
+//     /    |    \  |   |  |     |  | |   Y  \  ___/   |    |   \ / __ \|  |_|  |__     //
+//     \_______  /__|   |__|     |__| |___|  /\___  >  |______  /(____  /____/____/     //
+//             \/                          \/     \/          \/      \/                //
+//                                                                                      //
+//                          .o                                                          //
+//                   ¨>   .                                      <¨                     //
+//                  /_                       |                    | ___                 //
+//               __/\ `\                     |                   / \                    //
+//                   \,                      |                 ,/  /                    //
+// ------------------------------------------ ----------------------------------------- //
+//                        Copyright(c) 2012 by Bertrand Faure                           //
+//////////////////////////////////////////////////////////////////////////////////////////
 
 
 #ifndef __KCORE_TEMPLATE_QDT_DLIST_H__
@@ -96,7 +95,7 @@ public:
 
 public:
 	inline 				TList();
-	inline 				TList(const TList & List);
+	inline 				TList(const TList& List);
 	inline 				~TList();
 
 	inline UInt32 		GetSize() const;
@@ -104,9 +103,9 @@ public:
 	inline void 		Clear();
 	inline void 		ClearAll();
 
-	inline Iterator 	GetHead() const	{ return Iterator(const_cast<TList<TType>*>(this), _pFirst);	}
-	inline Iterator 	GetLast() const	{ return Iterator(const_cast<TList<TType>*>(this), _pLast);		}
-	inline Iterator 	GetTail() const	{ return Iterator(const_cast<TList<TType>*>(this), NULL);		}
+	inline Iterator 	GetHead() const	{ return Iterator(const_cast<TList<TType>*>(this), _pHead);	}
+	inline Iterator 	GetLast() const	{ return Iterator(const_cast<TList<TType>*>(this), _pQueue);}
+	inline Iterator 	GetTail() const	{ return Iterator(const_cast<TList<TType>*>(this), NULL);	}
 
 	inline void 		PushTail(const TType& Elt);
 	inline void 		PushTail(const TList& List);
@@ -117,7 +116,7 @@ public:
 	inline void 		InsertHead(const TType& Elt);
 	inline void 		InsertHead(TList& List);
 	inline void 		RemoveHead();
-	inline void 		Push(const TType& Elt, Bool bReverse);
+	inline void 		Push(const TType& Elt, const Bool bReverse);
 	inline void 		MoveToHead(const Iterator& I);
 
 	// Find an element in the list! return tail if the element has not been found
@@ -130,27 +129,24 @@ public:
 	// Insert / Remove
 	inline Iterator 	Insert(const Iterator& it, const TType& Elt);
 	inline Iterator 	InsertOnce(const Iterator& it, const TType& Elt);
-	inline Iterator 	InsertSort(const TType& Elt, Bool bAllowDup, Bool& bIsIn);
-	inline Iterator 	InsertSortPointers(const TType& Elt, Bool bAllowDup, Bool& bIsIn);
-	inline Iterator 	InsertSortPointers(const TType& Elt, Bool bAllowDup, Bool& bIsIn, DLIST_COMPARISON_CALLBACK ComparisonCallback);
-	inline Bool			InsertSort(const TList& List, Bool bAllowDup);
+	inline Iterator 	InsertSort(const TType& Elt, const Bool bAllowDup, Bool& bIsIn);
+	inline Bool			InsertSort(const TList& List, const Bool bAllowDup);
 	inline Bool 		Remove(const TType& Elt);
 	inline void 		Remove(const Iterator& it);
 
 	// Sort
 	inline void 		Sort();
-	inline void 		SortByPointers();
 
 	// Operators
 	inline TList&		operator +=	(const TType& Elt);
 	inline TList&		operator +=	(const TList<TType>& List);
 	inline TList&		operator =	(const TList<TType>& List);
 	inline Bool			operator == (const TList<TType>& List) const;
-	inline Bool			operator != (const TList<TType>& List) const	{ return ((*this)==List) == false; }
+	inline Bool			operator != (const TList<TType>& List) const;
 
 private:
-	Node*  	_pFirst;
-	Node*  	_pLast;
+	Node*  	_pHead;
+	Node*  	_pQueue;
 	UInt32	_nSize;
 };
 
