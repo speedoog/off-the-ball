@@ -1,73 +1,44 @@
-#include	"Stdafx.h"
-#include	"Root.h"
+//////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                      //
+//     ________   _____  _____    __  .__             __________        .__  .__        //
+//     \_____  \_/ ____\/ ____\ _/  |_|  |__   ____   \______   \_____  |  | |  |       //
+//      /   |   \   __\\   __\  \   __\  |  \_/ __ \   |    |  _/\__  \ |  | |  |       //
+//     /    |    \  |   |  |     |  | |   Y  \  ___/   |    |   \ / __ \|  |_|  |__     //
+//     \_______  /__|   |__|     |__| |___|  /\___  >  |______  /(____  /____/____/     //
+//             \/                          \/     \/          \/      \/                //
+//                                                                                      //
+//                          .o                                                          //
+//                   ¨>   .                                      <¨                     //
+//                  /_                       |                    | ___                 //
+//               __/\ `\                     |                   / \                    //
+//                   \,                      |                 ,/  /                    //
+// ------------------------------------------ ----------------------------------------- //
+//                        Copyright(c) 2012 by Bertrand Faure                           //
+//////////////////////////////////////////////////////////////////////////////////////////
 
-#include	INCL_KCORE(Template/QDT_Vector)
-#include	INCL_KCORE(Stream/iostream)
+#include "TVector.h"
 
-namespace QDT
+
+class TVector_Test
 {
-	namespace KCORE
-	{
-#if 1
-		template <class T>
-		IO_STREAM &	operator << (IO_STREAM & Stream, const QDT_VECTOR<T> & Vector)
-		{
-			Stream << Vector.GetSize();
+public:
+	TVector_Test();
+};
 
-			for (UInt32 i = 0 ; i < Vector.GetSize() ; ++i)
-			{
-				Stream << Vector[i];
-			}
+static TVector_Test _TVector_Test;
 
-			return (Stream);
-		}
+TVector_Test::TVector_Test()
+{
+	typedef TVector<int>	IntVector;
 
-		template <class T>
-		IO_STREAM &	operator >>  (IO_STREAM & Stream, QDT_VECTOR<T> & Vector)
-		{
-			//
-			// [MBI] - OK, that's a VERY nasty trick, but it will work.
-			//
-			// On GCC, if you do:
-			//
-			//			UInt32 nSize = 0; Stream >> nSize;
-			//
-			// It wont compile because GCC try to find the actual implementation of operator >> for stream.
-			// But we dont know it because QDT_VECTOR is a template class...
-			//
-			// So, here, the trick is to force the compiler to delay the method compilation.
-			// If we do:
-			//
-			//			Stream >> Vector._nSize;
-			//
-			// The compiler here is force to delay the compilation, because VECTOR is a template class.
-			// In this case, the compiler will wait to implement the inline directly in the appropriate CPP files.
-			//
-			// Tada, problem resolved ;-)
-			//
+	IntVector lInt;
+	lInt.PushTail(0);
+	lInt.PushTail(1);
+	lInt.PushTail(5);
 
-			// Backup Vector._nSize.
-			UInt32 nSize = Vector._nSize;
+	lInt.PushOnce(6);
+	lInt.PushOnce(6);
 
-			// Read the actual value.
-			Stream >> Vector._nSize;
+	IntVector::Iterator itFind =lInt.Find(1);
 
-			// Swap the value with the backup.
-			UInt32 nTmp		= nSize;
-			nSize			= Vector._nSize;
-			Vector._nSize	= nTmp;
-
-			Vector.Reserve( nSize );
-
-			for (UInt32 i = 0 ; i < nSize ; ++i)
-			{
-				T t;
-				Stream >> t;
-				Vector.PushTail(t);
-			}
-
-			return (Stream);
-		}
-#endif
-	}
 }
