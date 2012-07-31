@@ -21,6 +21,8 @@
 #include "Game.h"
 #include "xml/XMLParser.h"
 
+#include "Base/TList.h"
+
 HGE*			hge =0;
 // hgeSprite*			spt =0;
 // hgeParticleSystem*	par =0;

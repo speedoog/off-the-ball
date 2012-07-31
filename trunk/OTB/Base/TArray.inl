@@ -137,7 +137,7 @@ void TArray<TType, TCapacity>::Resize(const UInt32 nNewSize)
 //! @author		BFA : 2012-02-08
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
-void TArray<TType, TCapacity>::Remove(const TIterator& it)
+void TArray<TType, TCapacity>::Remove(const Iterator& it)
 {
 	TAssert(it.GetArray()==this);
 	RemoveIndex(it.GetIndex());

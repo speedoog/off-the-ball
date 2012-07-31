@@ -256,6 +256,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Base\TList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Base\TList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Base\TList.inl"
+				>
+			</File>
+			<File
 				RelativePath=".\Base\TString.cpp"
 				>
 			</File>
