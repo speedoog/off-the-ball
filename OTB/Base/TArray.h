@@ -69,7 +69,7 @@ public:
 
 		// Classic access
 		inline	UInt32		GetIndex() const							{ return _nIndex;	}
-		inline	TArray*	GetArray() const							{ return _pArray;	}
+		inline	TArray*		GetArray() const							{ return _pArray;	}
 
 	protected:
 		TArray*	_pArray;

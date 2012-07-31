@@ -17,8 +17,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __KCORE_TEMPLATE_QDT_DLIST_H__
-#define __KCORE_TEMPLATE_QDT_DLIST_H__
+#ifndef __BASE_TLIST_H__
+#define __BASE_TLIST_H__
 
 #pragma once
 
@@ -152,4 +152,4 @@ private:
 
 #include "TList.inl"
 
-#endif //__KCORE_TEMPLATE_QDT_DLIST_H__
+#endif //__BASE_TLIST_H__
