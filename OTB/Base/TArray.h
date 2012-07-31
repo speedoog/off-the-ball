@@ -34,38 +34,38 @@ public:
 
 	// ------------------------------------------------ TIterator ------------------------------------------------
 
-	class TIterator
+	class Iterator
 	{
 	public:
-		inline				TIterator(const TIterator& it): _pArray(it._pArray), _nIndex(it._nIndex)						{ /* Empty */		}
-		inline				TIterator(TArray* pArray =NULL, const UInt32 nIndex =0): _pArray(pArray), _nIndex(nIndex)	{ AssertValid();	}
-		inline				~TIterator()																					{ /* Empty */		}
+		inline				Iterator(const Iterator& it): _pArray(it._pArray), _nIndex(it._nIndex)						{ /* Empty */		}
+		inline				Iterator(TArray* pArray =NULL, const UInt32 nIndex =0): _pArray(pArray), _nIndex(nIndex)	{ AssertValid();	}
+		inline				~Iterator()																					{ /* Empty */		}
 
 		// Inc, Dec operators
-		inline	TIterator&	operator ++ ()								{ ++_nIndex;						AssertValid(); return *this;	}
-		inline	TIterator	operator +  (const Int32 n) const			{ TIterator it(_pArray, _nIndex+n);	AssertValid(); return it;		}
-		inline	TIterator&	operator += (const Int32 n)					{ _nIndex += n;						AssertValid(); return *this;	}
+		inline	Iterator&	operator ++ ()								{ ++_nIndex;						AssertValid(); return *this;	}
+		inline	Iterator	operator +  (const Int32 n) const			{ Iterator it(_pArray, _nIndex+n);	AssertValid(); return it;		}
+		inline	Iterator&	operator += (const Int32 n)					{ _nIndex += n;						AssertValid(); return *this;	}
 									 																						 
-		inline	TIterator&	operator -- ()								{ --_nIndex;						AssertValid(); return *this;	}
-		inline	TIterator	operator -  (const Int32 n) const			{ TIterator it(_pArray, _nIndex-n);	AssertValid(); return it;		}
-		inline	TIterator&	operator -= (const Int32 n)					{ _nIndex -= n;						AssertValid(); return *this;	}
+		inline	Iterator&	operator -- ()								{ --_nIndex;						AssertValid(); return *this;	}
+		inline	Iterator	operator -  (const Int32 n) const			{ Iterator it(_pArray, _nIndex-n);	AssertValid(); return it;		}
+		inline	Iterator&	operator -= (const Int32 n)					{ _nIndex -= n;						AssertValid(); return *this;	}
 
 		// Copy, Dereference
-		inline	TIterator&	operator =  (const TIterator& it)			{ _pArray =it._pArray; _nIndex =it._nIndex;	return *this;			}
+		inline	Iterator&	operator =  (const Iterator& it)			{ _pArray =it._pArray; _nIndex =it._nIndex;	return *this;			}
 		inline	TType&		operator *  () const						{ AssertValid();		return _pArray->At(_nIndex);				}
 
 		// Compare
-		inline	Bool		operator == (const TIterator& it) const		{ AssertCompatible(it);	return _nIndex==it._nIndex;					}
-		inline	Bool		operator != (const TIterator& it) const		{ AssertCompatible(it); return _nIndex!=it._nIndex;					}
-		inline	Bool		operator >  (const TIterator& it) const		{ AssertCompatible(it); return _nIndex>it._nIndex;					}
-		inline	Bool		operator >= (const TIterator& it) const		{ AssertCompatible(it); return _nIndex>=it._nIndex;					}
-		inline	Bool		operator <  (const TIterator& it) const		{ AssertCompatible(it); return _nIndex<it._nIndex;					}
-		inline	Bool		operator <= (const TIterator& it) const		{ AssertCompatible(it); return _nIndex<=it._nIndex;					}
+		inline	Bool		operator == (const Iterator& it) const		{ AssertCompatible(it);	return _nIndex==it._nIndex;					}
+		inline	Bool		operator != (const Iterator& it) const		{ AssertCompatible(it); return _nIndex!=it._nIndex;					}
+		inline	Bool		operator >  (const Iterator& it) const		{ AssertCompatible(it); return _nIndex>it._nIndex;					}
+		inline	Bool		operator >= (const Iterator& it) const		{ AssertCompatible(it); return _nIndex>=it._nIndex;					}
+		inline	Bool		operator <  (const Iterator& it) const		{ AssertCompatible(it); return _nIndex<it._nIndex;					}
+		inline	Bool		operator <= (const Iterator& it) const		{ AssertCompatible(it); return _nIndex<=it._nIndex;					}
 
 		// Validity
 		inline	Bool		IsValid() const								{ return (_pArray && _nIndex<=_pArray->GetSize());					}
 		inline	void		AssertValid() const							{ TAssert(IsValid());												}
-		inline	void		AssertCompatible(const TIterator& it) const	{ AssertValid(); it.AssertValid(); TAssert(_pArray==it._pArray); }
+		inline	void		AssertCompatible(const Iterator& it) const	{ AssertValid(); it.AssertValid(); TAssert(_pArray==it._pArray); }
 
 		// Classic access
 		inline	UInt32		GetIndex() const							{ return _nIndex;	}
@@ -96,13 +96,13 @@ public:
 	inline	void				PushTail(const TType& Obj);
 	inline	void				PushTail(const TTypeContainer& Container);
 	inline	void				Fill(const TType& Obj);
-	inline	TIterator			PushOnce(const TType& Obj)
+	inline	Iterator			PushOnce(const TType& Obj)
 	{
-		TIterator it = Find(GetHead(), Obj);
+		Iterator it = Find(GetHead(), Obj);
 		if (it== GetTail())
 		{
 			PushTail(Obj);
-			it= TIterator(this, GetSize()-1);
+			it= Iterator(this, GetSize()-1);
 		}
 		return it;
 	}
@@ -110,11 +110,11 @@ public:
 	inline	void				Resize(const UInt32 nNewSize);
 	inline	void				RemoveIndex(const UInt32 nIndex);
 	inline	void				RemoveIndexFast(const UInt32 nIndex);
-	inline	void				Remove(const TIterator& it);
+	inline	void				Remove(const Iterator& it);
 
 	// Iterator
-	inline	TIterator			GetHead() const							{ return (TIterator(const_cast<TTypeContainer*>(this), 0));		}
-	inline	TIterator			GetTail() const							{ return (TIterator(const_cast<TTypeContainer*>(this), _nSize));	}
+	inline	Iterator			GetHead() const							{ return (Iterator(const_cast<TTypeContainer*>(this), 0));		}
+	inline	Iterator			GetTail() const							{ return (Iterator(const_cast<TTypeContainer*>(this), _nSize));	}
 
 	// Array accessors
 	inline	TType&				GetLast()								{ TAssert(!IsEmpty()); return At(_nSize-1); }
@@ -134,7 +134,7 @@ public:
 
 	// Find
 	inline	UInt32				Find(const UInt32& nStart, const TType& Obj) const;
-	inline	TIterator			Find(const TIterator& it, const TType& Obj) const { return TIterator(const_cast<TTypeContainer*>(this), Find(it.GetIndex(), Obj)); }
+	inline	Iterator			Find(const Iterator& it, const TType& Obj) const { return Iterator(const_cast<TTypeContainer*>(this), Find(it.GetIndex(), Obj)); }
 
 	inline	void				Swap(const Int32 i, const Int32 j);
 
