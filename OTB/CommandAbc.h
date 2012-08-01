@@ -20,7 +20,7 @@
 #define __COMMANDABC_H__
 #pragma once
 
-#include "base.h"
+#include "Base/Base.h"
 #include "SmartEnum.h"
 
 class Game;

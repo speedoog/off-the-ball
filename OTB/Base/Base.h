@@ -21,8 +21,8 @@
 
 #pragma once
 
-#include "../hge/hge.h"
-#include "../hge/hgevector.h"
+#include "../../hge/hge.h"
+#include "../../hge/hgevector.h"
 
 
 // -------------------------------------------- global HGE --------------------------------------------
@@ -116,6 +116,12 @@ inline void TMinMax(const T& a, const T& b, T& min, T& max)
 		max=a;
 		min=b;
 	}
+}
+
+template <class T>
+void TSwap(T& a, T& b)
+{
+	T c(a); a=b; b=c;
 }
 
 // -------------------------------------------- Assert --------------------------------------------

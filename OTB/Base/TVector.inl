@@ -14,38 +14,34 @@
 //-----------------------------------------------------------------------------
 template <class TType>
 TVector<TType>::TVector()
-: _pArray			(NULL)
-, _nSize			(0)
-, _nAllocatedSize	(0)
-, _nAllocationSize	(8)
+: _pArray		(NULL)
+, _nSize		(0)
+, _nAllocSize	(0)
 {
 }
 
 //-----------------------------------------------------------------------------
 template <class TType>
-TVector<TType>::TVector(UInt32 nSize, const TType & initializationValue)
-: _pArray			(NULL)
-, _nSize			(0)
-, _nAllocatedSize	(0)
-, _nAllocationSize	(8)
+TVector<TType>::TVector(UInt32 nSize, const TType& Value)
+: _pArray		(NULL)
+, _nSize		(0)
+, _nAllocSize	(0)
 {
 	_nSize = nSize;
 	Reserve(_nSize);
 
 	for (UInt32 i = 0 ; i < _nSize ; ++i)
 	{
-		TNewPlaced(&_pArray[i], TType)(initializationValue);
+		TNewPlaced(&_pArray[i], TType)(Value);
 	}
 }
 
 //-----------------------------------------------------------------------------
 template <class TType>
-TVector<TType>::TVector(const TVector & vector)
-:
-_pArray(NULL),
-_nSize(0),
-_nAllocatedSize(0),
-_nAllocationSize(vector._nAllocationSize)
+TVector<TType>::TVector(const TVector& vector)
+: _pArray		(NULL)
+, _nSize		(0)
+, _nAllocSize	(0)
 {
 	PushTail(vector);
 }
@@ -84,11 +80,11 @@ void TVector<TType>::ClearMemory()
 {
 	Clear();
 	
-	if(_pArray)
+	if (_pArray)
 	{
 		free(_pArray);
 		_pArray = NULL;
-		_nAllocatedSize = 0;
+		_nAllocSize = 0;
 	}
 }
 
@@ -96,8 +92,8 @@ void TVector<TType>::ClearMemory()
 template <class TType>
 void TVector<TType>::ClearAll()
 {
-	ITERATOR It		=GetHead();
-	ITERATOR ItEnd  =GetTail();
+	Iterator It		=GetHead();
+	Iterator ItEnd  =GetTail();
 	for (; It != ItEnd; ++It)
 	{
 		delete(*It);
@@ -113,20 +109,23 @@ void TVector<TType>::Grow()
 	// We grow faster, by 50% until we have 64 elements then by 19%
 	// So the grow is like  : 0,8,12,18,27,40,60,90,106,125,148,175,207,245,290,344,408,484,
 	// Instead of (with 20%): 0,8,9,10,12,14,16,19,22,26,31,37,44,52,62,74,88,105,126,151,181,217,260,312,374,448,
-	UInt32 nNextAlloc = _nAllocatedSize>64 ? (_nAllocatedSize * 3) / 16 : _nAllocatedSize / 2;//(x*3/16) env 19%
-	if (nNextAlloc == 0) nNextAlloc = _nAllocationSize;
-	Grow(_nAllocatedSize + nNextAlloc); 
+	UInt32 nNextAlloc = _nAllocSize>64 ? (_nAllocSize * 3) / 16 : _nAllocSize / 2;//(x*3/16) env 19%
+	if (nNextAlloc == 0)
+	{
+		nNextAlloc = GetAllocationSize();
+	}
+	Grow(_nAllocSize + nNextAlloc); 
 }
 
 //-----------------------------------------------------------------------------
 template <class TType>
-typename TVector<TType>::Iterator TVector<TType>::PushOnce(const TType& t)
+typename TVector<TType>::Iterator TVector<TType>::PushOnce(const TType& Elt)
 {
-	Iterator Cur = Find(t);
+	Iterator Cur = Find(Elt);
 
 	if (Cur == GetTail())
 	{
-		PushTail(t);
+		PushTail(Elt);
 		Cur = GetLast();
 	}
 
@@ -135,14 +134,14 @@ typename TVector<TType>::Iterator TVector<TType>::PushOnce(const TType& t)
 
 //-----------------------------------------------------------------------------
 template <class TType>
-void TVector<TType>::PushTail(const	TType& t)
+void TVector<TType>::PushTail(const	TType& Elt)
 {
-	if (_nSize == _nAllocatedSize)
+	if (_nSize == _nAllocSize)
 	{
 		Grow();
 	}
 
-	TNewPlaced(&_pArray[_nSize++], TType)(t);
+	TNewPlaced(&_pArray[_nSize++], TType)(Elt);
 }
 
 //-----------------------------------------------------------------------------
@@ -152,7 +151,7 @@ void TVector<TType>::PushTail(const TVector& v)
 	UInt32 nOldSize = _nSize;
 	UInt32 nSumSize = _nSize + v._nSize;
 
-	if (_nSize + v._nSize > _nAllocatedSize)
+	if (_nSize + v._nSize > _nAllocSize)
 	{
 		Reserve(_nSize + v._nSize);
 	}
@@ -167,14 +166,14 @@ void TVector<TType>::PushTail(const TVector& v)
 
 //-----------------------------------------------------------------------------
 template <class TType>
-void TVector<TType>::PushTail(const TType & t, UInt32 nTimes)
+void TVector<TType>::PushTail(const TType& Elt, UInt32 nTimes)
 {
 	Reserve(_nSize + nTimes);
 
 	UInt32 nCount =  _nSize + nTimes;
 	for (UInt32 i = _nSize ; i < nCount ; ++i)
 	{
-		TNewPlaced(&_pArray[i], TType)(t);
+		TNewPlaced(&_pArray[i], TType)(Elt);
 	}
 	
 	_nSize += nTimes;
@@ -201,16 +200,9 @@ void TVector<TType>::PopTail()
 
 //-----------------------------------------------------------------------------
 template <class TType>
-Bool TVector<TType>::IsExist(const TType& t) const
+Bool TVector<TType>::Reserve(const UInt32 nReserveSize)
 {
-	return (Find(t) != GetTail());
-}
-
-//-----------------------------------------------------------------------------
-template <class TType>
-Bool TVector<TType>::Reserve(UInt32 nReserveSize)
-{
-	if (nReserveSize>_nAllocatedSize)
+	if (nReserveSize>_nAllocSize)
 	{
 		Grow(nReserveSize);
 		return true;
@@ -220,14 +212,14 @@ Bool TVector<TType>::Reserve(UInt32 nReserveSize)
 
 //-----------------------------------------------------------------------------
 template <class TType>
-void TVector<TType>::Grow(UInt32 nGrowSize)
+void TVector<TType>::Grow(const UInt32 nGrowSize)
 {
-	TAssert(nGrowSize>_nAllocatedSize);
+	TAssert(nGrowSize>_nAllocSize);
 
 	TType* pTempArray = (TType*)malloc( nGrowSize*sizeof(TType) );
 	if (_pArray)
 	{
-		for (unsigned int i = 0 ; i < _nSize ; ++i)
+		for (UInt32 i = 0 ; i < _nSize ; ++i)
 		{
 			TNewPlaced(&pTempArray[i], TType)(_pArray[i]);
 	
@@ -238,12 +230,12 @@ void TVector<TType>::Grow(UInt32 nGrowSize)
 	}
 
 	_pArray = pTempArray;
-	_nAllocatedSize = nGrowSize;
+	_nAllocSize = nGrowSize;
 }
 
 //-----------------------------------------------------------------------------
 template <class TType>
-void TVector<TType>::Resize(UInt32 uNewSize)
+void TVector<TType>::Resize(const UInt32 uNewSize)
 {
 	UInt32 uActualSize = GetSize();
 	if ( uNewSize < uActualSize ) 
@@ -283,9 +275,9 @@ const TType& TVector<TType>::operator [] (UInt32 nElementIndex) const
 
 //-----------------------------------------------------------------------------
 template <class TType>
-TVector<TType>& TVector<TType>::operator += (const TType& t)
+TVector<TType>& TVector<TType>::operator += (const TType& Elt)
 {
-	PushTail(t);
+	PushTail(Elt);
 	return *this;
 }
 
@@ -400,14 +392,14 @@ void TVector<TType>::RemoveIndexFast(UInt32 index)
 
 //-----------------------------------------------------------------------------
 template <class TType>
-UInt32 TVector<TType>::Remove(const TType& t, Bool bRemoveAll)
+UInt32 TVector<TType>::Remove(const TType& Elt, Bool bRemoveAll)
 {
 	UInt32 nbr = 0;
-	ITERATOR	Cur = GetHead();
+	Iterator	Cur = GetHead();
 
 	while (Cur != GetTail())
 	{
-		if ((*Cur) == t)
+		if ((*Cur) == Elt)
 		{
 			Cur = Remove(Cur);
 			++nbr;
@@ -427,14 +419,14 @@ UInt32 TVector<TType>::Remove(const TType& t, Bool bRemoveAll)
 
 //-----------------------------------------------------------------------------
 template <class TType>
-typename TVector<TType>::Iterator TVector<TType>::Find(const Iterator& it, const TType& t) const
+typename TVector<TType>::Iterator TVector<TType>::Find(const Iterator& it, const TType& Elt) const
 {
 	TAssert(it.IsValid());
 
 	UInt32 i;
 	for (i = it.GetIndex() ; i < _nSize ; ++i)
 	{
-		if (_pArray[i] == t)
+		if (_pArray[i] == Elt)
 		{
 			break;
 		}
@@ -525,20 +517,9 @@ void TVector<TType>::Swap(Int32	X, Int32 Y)
 template <class TType>
 void TVector<TType>::Swap(TVector<TType>& V)
 {
-	TType*	pArray			= _pArray;
-	UInt32	nSize			= _nSize;
-	UInt32	nAllocatedSize	= _nAllocatedSize;
-	UInt16	nAllocationSize = _nAllocationSize;
-
-	_pArray				= V._pArray;
-	_nSize				= V._nSize;
-	_nAllocatedSize		= V._nAllocatedSize;
-	_nAllocationSize	= V._nAllocationSize;
-
-	V._pArray			= pArray;
-	V._nSize			= nSize;
-	V._nAllocatedSize	= nAllocatedSize;
-	V._nAllocationSize	= nAllocationSize;
+	TSwap( _pArray,		V._pArray	  );
+	TSwap( _nSize,		V._nSize	  );
+	TSwap( _nAllocSize, V._nAllocSize );
 }
 
 //-----------------------------------------------------------------------------
@@ -551,9 +532,9 @@ void TVector<TType>::Remove(const Iterator& it)
 
 //-----------------------------------------------------------------------------
 template <class TType>
-void TVector<TType>::RemoveFast(const TType& t)
+void TVector<TType>::RemoveFast(const TType& Elt)
 {
-	Iterator Cur = Find(t);
+	Iterator Cur = Find(Elt);
 	if (Cur != GetTail())
 	{
 		RemoveIndexFast(Cur.GetIndex());
@@ -562,7 +543,7 @@ void TVector<TType>::RemoveFast(const TType& t)
 
 //-----------------------------------------------------------------------------
 template <class TType>
-typename TVector<TType>::Iterator TVector<TType>::Insert(const Iterator & it, const TType & t)
+typename TVector<TType>::Iterator TVector<TType>::Insert(const Iterator& it, const TType& Elt)
 {
 	TAssert(it.IsValid());
 
@@ -576,11 +557,11 @@ typename TVector<TType>::Iterator TVector<TType>::Insert(const Iterator & it, co
 			_pArray[i] = _pArray[i - 1];
 		}
 
-		_pArray[i] = t;
+		_pArray[i] = Elt;
 	}
 	else
 	{
-		PushTail(t);
+		PushTail(Elt);
 		return GetHead();
 	}
 

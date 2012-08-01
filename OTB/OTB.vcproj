@@ -232,11 +232,11 @@
 			Name="Base"
 			>
 			<File
-				RelativePath=".\Base.cpp"
+				RelativePath=".\Base\Base.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Base.h"
+				RelativePath=".\Base\Base.h"
 				>
 			</File>
 			<File

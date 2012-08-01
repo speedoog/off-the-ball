@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "../Base.h"
+#include "Base.h"
 
 typedef Bool (*DLIST_COMPARISON_CALLBACK)(void* pParam1, void* pParam2);
 

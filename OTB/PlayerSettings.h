@@ -20,7 +20,7 @@
 #define __PLAYERSETTINGS_H__
 #pragma once
 
-#include "base.h"
+#include "Base/Base.h"
 #include "Base/TString.h"
 
 class XML_ELEMENT;

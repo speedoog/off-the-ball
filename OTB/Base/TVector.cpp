@@ -29,7 +29,7 @@ static TVector_Test _TVector_Test;
 
 TVector_Test::TVector_Test()
 {
-	typedef TVector<int>	IntVector;
+	typedef TVector<Int32>	IntVector;
 
 	IntVector lInt;
 	lInt.PushTail(0);
@@ -40,5 +40,22 @@ TVector_Test::TVector_Test()
 	lInt.PushOnce(6);
 
 	IntVector::Iterator itFind =lInt.Find(1);
+
+	IntVector lInt2(50, 12);
+	lInt2.Clear();
+
+	IntVector lInt3(lInt);
+	lInt2.ClearMemory();
+
+	// array of pointers
+	typedef TVector<Int32*>	IntPtrVector;
+	IntPtrVector lpInt;
+	for(UInt32 i=0; i<10; ++i)
+	{
+		Int32* pInt =new Int32;
+		*pInt =i;
+		lpInt.PushTail(pInt);
+	}
+	lpInt.ClearAll();
 
 }
