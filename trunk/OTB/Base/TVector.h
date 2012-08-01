@@ -78,16 +78,15 @@ public:
 
 	inline UInt32		GetCapacity() const					{ return _nAllocSize;	}
 	inline UInt32		GetAllocatedSize()					{ return _nAllocSize;	}
-	inline UInt32		GetSize() const						{ return _nSize;			}
-	inline UInt16		GetAllocationSize() const			{ return 8;					}
-	inline Bool			IsEmpty() const						{ return _nSize==0;			}
+	inline UInt32		GetSize() const						{ return _nSize;		}
+	inline Bool			IsEmpty() const						{ return _nSize==0;		}
 
 	inline UInt32		GetMemoryUsed() const;
 	inline void			Clear();
 	inline void			ClearMemory();	// release all mem
 	inline void			ClearAll();
 
-	inline bool 		Reserve(const UInt32 nReserveSize);
+	inline Bool 		Reserve(const UInt32 nReserveSize);
 	inline void			Resize(const UInt32 uSize);
 
 	// Classic access
@@ -126,15 +125,14 @@ public:
 	inline Iterator		InsertOnce(const Iterator& it, const TType& N);
 
 	inline void 		RemoveIndex(UInt32 i);
-	inline void 		RemoveRange(UInt32 i, UInt32 nCount);
 	inline void 		RemoveIndexFast(UInt32 i);
 	inline void			Remove(const Iterator& it);
 	inline void			RemoveFast(const TType& Elt);
-	inline UInt32		Remove(const TType& Elt, bool bRemoveAll = false);
+	inline UInt32		Remove(const TType& Elt, Bool bRemoveAll = false);
 
 
 	// Sort
-	inline Iterator		InsertSort(const TType& Element, bool bAllowDoublon, bool& bFound);
+	inline Iterator		InsertSort(const TType& Element, const Bool bAllowDoublon, Bool& bFound);
 	inline void			Sort();
 	inline Bool			IsSorted() const;
 	inline void			QuickSort(Int32 Left, Int32 Right);
@@ -150,7 +148,6 @@ protected:
 	TType*		_pArray;
 	UInt32		_nSize;
 	UInt32		_nAllocSize;
-//	UInt16		_nAllocationSize;
 };
 
 
