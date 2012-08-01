@@ -20,7 +20,7 @@
 #define __COMMANDKBDMOUSE_H__
 #pragma once
 
-#include "base.h"
+#include "Base/Base.h"
 #include "CommandAbc.h"
 
 class CommandKbdMouse : public CommandAbc

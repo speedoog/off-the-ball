@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "../Base.h"
+#include "Base.h"
 
 template <class TType, UInt32 TCapacity>
 class TArray

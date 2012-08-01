@@ -24,7 +24,7 @@
 #include <basetsd.h>
 
 #include "DirectX10Sdk/Include/dinput.h"            //DirectInput header (NEW)
-#include "Base.h"
+#include "Base/Base.h"
 #include "SmartEnum.h"
 #include "../hge/hgevector.h"
 

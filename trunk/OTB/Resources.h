@@ -20,8 +20,8 @@
 #define __RESOURCES_H__
 #pragma once
 
-#include "base.h"
-#include "..\HGE\hgefont.h"
+#include "Base/Base.h"
+#include "../HGE/hgefont.h"
 
 class Resources
 {

@@ -20,7 +20,7 @@
 #define __BALL_H__
 #pragma once
 
-#include "base.h"
+#include "Base/Base.h"
 
 class Game;
 class Player;
