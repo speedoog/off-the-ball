@@ -60,8 +60,6 @@
 
 #include "Base.h"
 
-//#define NULL    0
-
 // Usefulls macros
 
 // use it like a classic for
@@ -79,40 +77,40 @@
 
 class TQuickListElement
 {
-protected:
-	TQuickListElement*	_Prev;
-	TQuickListElement*	_Next;
-
 public:
-	inline			TQuickListElement()													{ _Prev=(TQuickListElement*)NULL; _Next=(TQuickListElement*)NULL; }
-	inline			TQuickListElement(TQuickListElement* Prev, TQuickListElement* Next)	{ _Prev=Prev; _Next=Next; }
+	inline			TQuickListElement()													{ _pPrev=(TQuickListElement*)NULL; _pNext=(TQuickListElement*)NULL; }
+	inline			TQuickListElement(TQuickListElement* pPrev, TQuickListElement* pNext)	{ _pPrev=pPrev; _pNext=pNext; }
 	inline virtual ~TQuickListElement()													{}
-	inline void		SetNext(TQuickListElement* Next)									{ _Next=Next; }
-	inline void		SetPrev(TQuickListElement* Prev)									{ _Prev=Prev; }
-	inline			TQuickListElement*	GetNext() const									{ return _Next; }
-	inline			TQuickListElement*	GetPrev() const									{ return _Prev; }
+	inline void		SetNext(TQuickListElement* Next)									{ _pNext=Next; }
+	inline void		SetPrev(TQuickListElement* Prev)									{ _pPrev=Prev; }
+	inline			TQuickListElement*	GetNext() const									{ return _pNext; }
+	inline			TQuickListElement*	GetPrev() const									{ return _pPrev; }
+
+protected:
+	TQuickListElement*	_pPrev;
+	TQuickListElement*	_pNext;
 };
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-typedef bool	(*ListApplyFunc)	(TQuickListElement*, unsigned long);
-typedef bool	(*ListSortFunc)		(TQuickListElement*, TQuickListElement*);
+typedef Bool	(*ListApplyFunc)	(TQuickListElement*, UInt32);
+typedef Bool	(*ListSortFunc)		(TQuickListElement*, TQuickListElement*);
 
 class TQuickList
 {
 protected:
-	TQuickListElement*			_Head;
-	TQuickListElement*			_Queue;
-	unsigned long				_nNbElements;
-	bool						_bSupOnDestructor;
+	TQuickListElement*	_pHead;
+	TQuickListElement*	_pQueue;
+	UInt32				_nSize;
+	Bool				_bSupOnDestructor;
 
 public:
-	inline						TQuickList()											{ Init(); }
+	inline						TQuickList()										{ Init(); }
 	inline						~TQuickList();
 
-	inline void					Init(void)											{ _Head=(TQuickListElement*)NULL; _Queue=(TQuickListElement*)NULL; _nNbElements=0; _bSupOnDestructor = false;}
+	inline void					Init()												{ _pHead=(TQuickListElement*)NULL; _pQueue=(TQuickListElement*)NULL; _nSize=0; _bSupOnDestructor = false;}
 
-	inline void					SetSupOnDestructor(bool bSupOnDestructor)			{ _bSupOnDestructor = bSupOnDestructor; }
+	inline void					SetSupOnDestructor(Bool bSupOnDestructor)			{ _bSupOnDestructor = bSupOnDestructor; }
 
 	inline void					InsertHead(TQuickListElement*);
 	inline void					InsertQueue(TQuickListElement*);
@@ -122,24 +120,24 @@ public:
 
 	inline void					Sort(ListSortFunc);
 
-	inline TQuickListElement*	GetHead() const										{ return _Head; }
-	inline TQuickListElement*	GetQueue() const									{ return _Queue; }
-	inline TQuickListElement*	GetIndex(unsigned long Index) const;
+	inline TQuickListElement*	GetHead() const										{ return _pHead; }
+	inline TQuickListElement*	GetQueue() const									{ return _pQueue; }
+	inline TQuickListElement*	GetIndex(UInt32 nIndex) const;
 
 	inline TQuickListElement*	Sup(TQuickListElement*);						// Do not delete the element! Just break links
-	inline void					SupAllElements(void);						// remove but don't delete all elements
+	inline void					SupAllElements();						// remove but don't delete all elements
 	inline void					DeleteElement(TQuickListElement* pElement);	// Delete element, using virtual destructor
-	inline void					DeleteAllElements(void);
+	inline void					DeleteAllElements();
 
-	inline unsigned long		GetNbElements() const								{ return _nNbElements; }
+	inline UInt32				GetNbElements() const								{ return _nSize; }
 
-	inline bool							IsEmpty() const { return _nNbElements == 0; }
+	inline Bool					IsEmpty() const										{ return _nSize == 0; }
 
-	inline TQuickListElement*	operator[](unsigned long);
+	inline TQuickListElement*	operator[](UInt32);
 
 	inline int					Find(const TQuickListElement* pElement) const;
 
-	inline TQuickListElement*	Apply(ListApplyFunc, unsigned long);
+	inline TQuickListElement*	Apply(ListApplyFunc, UInt32);
 
 	inline void					TransfertElementsTo(TQuickList& lDestination);
 
@@ -168,13 +166,13 @@ void inline TQuickList::Sort(ListSortFunc Function)
 	int					Zapped = true;
 	TQuickListElement	*Element;
 
-	if(_nNbElements < 2)
+	if(_nSize < 2)
 		return;
 
 	while(Zapped)
 	{
 		Zapped = 0;
-		Element = _Head;
+		Element = _pHead;
 		while(Element)
 		{
 			if(Element->GetNext())
@@ -198,11 +196,11 @@ void inline TQuickList::Sort(ListSortFunc Function)
 					Element2->SetNext(Element);
 					Element2->SetPrev(bckp2);
 
-					if(Element == _Head)
-						_Head = Element2;
+					if(Element == _pHead)
+						_pHead = Element2;
 
-					if(Element2 == _Queue)
-						_Queue = Element;
+					if(Element2 == _pQueue)
+						_pQueue = Element;
 
 					Element = Element2;
 				}
@@ -256,32 +254,32 @@ void TQuickList::InsertHead(TQuickListElement* pElement)
 {
 	TAssert(pElement != NULL && "TQuickList: trying to insert a NULL element");
 
-	pElement->SetNext(_Head);
+	pElement->SetNext(_pHead);
 	pElement->SetPrev((TQuickListElement*)NULL);
 
-	if (_Head)
-		_Head->SetPrev(pElement);
+	if (_pHead)
+		_pHead->SetPrev(pElement);
 	else
-		_Queue = pElement;
+		_pQueue = pElement;
 
-	_Head = pElement;
-	_nNbElements++;
+	_pHead = pElement;
+	_nSize++;
 }
 
 void TQuickList::InsertQueue(TQuickListElement* pElement)
 {
 	TAssert(pElement != NULL && "TQuickList: trying to insert a NULL element");
 
-	pElement->SetPrev(_Queue);
+	pElement->SetPrev(_pQueue);
 	pElement->SetNext((TQuickListElement*)NULL);
 
-	if (_Queue)
-		_Queue->SetNext(pElement);
+	if (_pQueue)
+		_pQueue->SetNext(pElement);
 	else
-		_Head = pElement;
+		_pHead = pElement;
 
-	_Queue = pElement;
-	_nNbElements++;
+	_pQueue = pElement;
+	_nSize++;
 }
 
 void TQuickList::InsertBefore(TQuickListElement* pExistingElement,TQuickListElement* pElementToInsert)
@@ -295,10 +293,10 @@ void TQuickList::InsertBefore(TQuickListElement* pExistingElement,TQuickListElem
 	if (pExistingElement->GetPrev())
 		pExistingElement->GetPrev()->SetNext(pElementToInsert);
 	else
-		_Head = pElementToInsert;
+		_pHead = pElementToInsert;
 
 	pExistingElement->SetPrev(pElementToInsert);
-	_nNbElements++;
+	_nSize++;
 }
 
 void TQuickList::InsertAfter(TQuickListElement* pExistingElement,TQuickListElement* pElementToInsert)
@@ -312,10 +310,10 @@ void TQuickList::InsertAfter(TQuickListElement* pExistingElement,TQuickListEleme
 	if (pExistingElement->GetNext())
 		pExistingElement->GetNext()->SetPrev(pElementToInsert);
 	else
-		_Queue = pElementToInsert;
+		_pQueue = pElementToInsert;
 
 	pExistingElement->SetNext(pElementToInsert);
-	_nNbElements++;
+	_nSize++;
 }
 
 TQuickListElement* TQuickList::Sup(TQuickListElement* pElement)
@@ -328,7 +326,7 @@ TQuickListElement* TQuickList::Sup(TQuickListElement* pElement)
 	}
 	else
 	{
-		_Head = pElement->GetNext();
+		_pHead = pElement->GetNext();
 	}
 
 	if (pElement->GetNext())
@@ -337,19 +335,19 @@ TQuickListElement* TQuickList::Sup(TQuickListElement* pElement)
 	}
 	else
 	{
-		_Queue = pElement->GetPrev();
+		_pQueue = pElement->GetPrev();
 	}
 
-	_nNbElements--;
+	_nSize--;
 
 	return pElement;
 }
 
-TQuickListElement* TQuickList::Apply(ListApplyFunc pFunc, unsigned long UserValue=0)
+TQuickListElement* TQuickList::Apply(ListApplyFunc pFunc, UInt32 UserValue=0)
 {
 	TQuickListElement* pElement;
 
-	pElement = _Head;
+	pElement = _pHead;
 	while (pElement)
 	{
 		if (!pFunc(pElement,UserValue))
@@ -376,15 +374,15 @@ int	TQuickList::Find(const TQuickListElement* pElement) const
 	return -1;
 }
 
-TQuickListElement* TQuickList::GetIndex(unsigned long Index) const
+TQuickListElement* TQuickList::GetIndex(UInt32 nIndex) const
 {
 	TQuickListElement*	pElement	= GetHead();
-	unsigned long		i			= 0;
+	UInt32		i			= 0;
 
-	if( Index >= _nNbElements)
+	if( nIndex >= _nSize)
 		return (TQuickListElement*)NULL;
 	
-	while (pElement && i!=Index)
+	while (pElement && i!=nIndex)
 	{
 		pElement = pElement->GetNext();
 		i++;
@@ -393,15 +391,15 @@ TQuickListElement* TQuickList::GetIndex(unsigned long Index) const
 	return pElement;
 }
 
-TQuickListElement* TQuickList::operator[](unsigned long Index)
+TQuickListElement* TQuickList::operator[](UInt32 nIndex)
 {
 	TQuickListElement*	pElement=GetHead();
-	unsigned long		i=0;
+	UInt32		i=0;
 
-	if( Index >= _nNbElements)
+	if( nIndex >= _nSize)
 		return (TQuickListElement*)NULL;
 	
-	while (pElement && i!=Index)
+	while (pElement && i!=nIndex)
 	{
 		pElement = pElement->GetNext();
 		i++;
@@ -416,7 +414,7 @@ void TQuickList::DeleteElement(TQuickListElement* pElmt)
 	delete pElmt;
 }
 
-void TQuickList::DeleteAllElements(void)
+void TQuickList::DeleteAllElements()
 {
 	while( GetHead() )
 	{
@@ -424,7 +422,7 @@ void TQuickList::DeleteAllElements(void)
 	}
 }
 
-void TQuickList::SupAllElements(void)
+void TQuickList::SupAllElements()
 {
 	while( GetHead() )
 	{
@@ -441,23 +439,23 @@ void TQuickList::TransfertElementsTo(TQuickList& lDestination)
 		if (pDestQueue==NULL)
 		{
 			// Destination is empty -> do a simple copy
-			lDestination._Head			=_Head;
-			lDestination._Queue			=_Queue;
-			lDestination._nNbElements	=_nNbElements;
+			lDestination._pHead		=_pHead;
+			lDestination._pQueue	=_pQueue;
+			lDestination._nSize		=_nSize;
 		}
 		else
 		{
 			// Enqueue items (link list extremities)
 			pDestQueue->SetNext(pSourceHead);
 			pSourceHead->SetPrev(pDestQueue);
-			lDestination._Queue	=_Queue;
-			lDestination._nNbElements +=_nNbElements;
+			lDestination._pQueue	=_pQueue;
+			lDestination._nSize +=_nSize;
 		}
 
 		// Clear source list
-		_Head		=(TQuickListElement*)NULL;
-		_Queue		=(TQuickListElement*)NULL;
-		_nNbElements=0;
+		_pHead	=(TQuickListElement*)NULL;
+		_pQueue	=(TQuickListElement*)NULL;
+		_nSize	=0;
 	}
 }
 
