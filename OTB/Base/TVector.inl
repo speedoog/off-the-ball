@@ -11,7 +11,9 @@
 // 
 
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Ctor
+// ********************************************
 template <class TType>
 TVector<TType>::TVector()
 : _pArray		(NULL)
@@ -20,7 +22,9 @@ TVector<TType>::TVector()
 {
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Ctor
+// ********************************************
 template <class TType>
 TVector<TType>::TVector(UInt32 nSize, const TType& Value)
 : _pArray		(NULL)
@@ -36,7 +40,9 @@ TVector<TType>::TVector(UInt32 nSize, const TType& Value)
 	}
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Ctor
+// ********************************************
 template <class TType>
 TVector<TType>::TVector(const TVector& vector)
 : _pArray		(NULL)
@@ -46,14 +52,18 @@ TVector<TType>::TVector(const TVector& vector)
 	PushTail(vector);
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Dtor
+// ********************************************
 template <class TType>
 TVector<TType>::~TVector()
 {
 	ClearMemory();
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	GetMemoryUsed
+// ********************************************
 template <class TType>
 UInt32 TVector<TType>::GetMemoryUsed() const
 {
@@ -62,7 +72,9 @@ UInt32 TVector<TType>::GetMemoryUsed() const
 	return nMem;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Clear
+// ********************************************
 template <class TType>
 void TVector<TType>::Clear()
 {
@@ -74,7 +86,9 @@ void TVector<TType>::Clear()
 	_nSize = 0;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	ClearMemory
+// ********************************************
 template <class TType>
 void TVector<TType>::ClearMemory()
 {
@@ -88,7 +102,9 @@ void TVector<TType>::ClearMemory()
 	}
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	ClearAll
+// ********************************************
 template <class TType>
 void TVector<TType>::ClearAll()
 {
@@ -102,7 +118,9 @@ void TVector<TType>::ClearAll()
 	Clear();
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Grow
+// ********************************************
 template <class TType>
 void TVector<TType>::Grow()
 {
@@ -112,12 +130,39 @@ void TVector<TType>::Grow()
 	UInt32 nNextAlloc = _nAllocSize>64 ? (_nAllocSize * 3) / 16 : _nAllocSize / 2;//(x*3/16) env 19%
 	if (nNextAlloc == 0)
 	{
-		nNextAlloc = GetAllocationSize();
+		nNextAlloc = 8;		// first alloc
 	}
 	Grow(_nAllocSize + nNextAlloc); 
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Grow
+// ********************************************
+template <class TType>
+void TVector<TType>::Grow(const UInt32 nGrowSize)
+{
+	TAssert(nGrowSize>_nAllocSize);
+
+	TType* pTempArray = (TType*)malloc( nGrowSize*sizeof(TType) );
+	if (_pArray)
+	{
+		for (UInt32 i = 0 ; i < _nSize ; ++i)
+		{
+			TNewPlaced(&pTempArray[i], TType)(_pArray[i]);
+
+			TDeletePlaced(&_pArray[i], TType);
+		}
+
+		free(_pArray);
+	}
+
+	_pArray = pTempArray;
+	_nAllocSize = nGrowSize;
+}
+
+// ********************************************
+//	PushOnce
+// ********************************************
 template <class TType>
 typename TVector<TType>::Iterator TVector<TType>::PushOnce(const TType& Elt)
 {
@@ -132,7 +177,9 @@ typename TVector<TType>::Iterator TVector<TType>::PushOnce(const TType& Elt)
 	return Cur;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	PushTail
+// ********************************************
 template <class TType>
 void TVector<TType>::PushTail(const	TType& Elt)
 {
@@ -144,7 +191,9 @@ void TVector<TType>::PushTail(const	TType& Elt)
 	TNewPlaced(&_pArray[_nSize++], TType)(Elt);
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	PushTail
+// ********************************************
 template <class TType>
 void TVector<TType>::PushTail(const TVector& v)
 {
@@ -164,7 +213,9 @@ void TVector<TType>::PushTail(const TVector& v)
 	_nSize += v._nSize;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	PushTail
+// ********************************************
 template <class TType>
 void TVector<TType>::PushTail(const TType& Elt, UInt32 nTimes)
 {
@@ -179,7 +230,9 @@ void TVector<TType>::PushTail(const TType& Elt, UInt32 nTimes)
 	_nSize += nTimes;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Fill
+// ********************************************
 template <class TType>
 void TVector<TType>::Fill(const TType& Elt)
 {
@@ -189,7 +242,9 @@ void TVector<TType>::Fill(const TType& Elt)
 	}
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	PopTail
+// ********************************************
 template <class TType>
 void TVector<TType>::PopTail()
 {
@@ -198,7 +253,9 @@ void TVector<TType>::PopTail()
 	_nSize--;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Reserve
+// ********************************************
 template <class TType>
 Bool TVector<TType>::Reserve(const UInt32 nReserveSize)
 {
@@ -210,30 +267,9 @@ Bool TVector<TType>::Reserve(const UInt32 nReserveSize)
 	return false;
 }
 
-//-----------------------------------------------------------------------------
-template <class TType>
-void TVector<TType>::Grow(const UInt32 nGrowSize)
-{
-	TAssert(nGrowSize>_nAllocSize);
-
-	TType* pTempArray = (TType*)malloc( nGrowSize*sizeof(TType) );
-	if (_pArray)
-	{
-		for (UInt32 i = 0 ; i < _nSize ; ++i)
-		{
-			TNewPlaced(&pTempArray[i], TType)(_pArray[i]);
-	
-			TDeletePlaced(&_pArray[i], TType);
-		}
-			
-		free(_pArray);
-	}
-
-	_pArray = pTempArray;
-	_nAllocSize = nGrowSize;
-}
-
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Resize
+// ********************************************
 template <class TType>
 void TVector<TType>::Resize(const UInt32 uNewSize)
 {
@@ -257,7 +293,9 @@ void TVector<TType>::Resize(const UInt32 uNewSize)
 	_nSize = uNewSize;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	operator []
+// ********************************************
 template <class TType>
 TType& TVector<TType>::operator [] (UInt32 nElementIndex)
 {
@@ -265,7 +303,9 @@ TType& TVector<TType>::operator [] (UInt32 nElementIndex)
 	return _pArray[nElementIndex];
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	operator []
+// ********************************************
 template <class TType>
 const TType& TVector<TType>::operator [] (UInt32 nElementIndex) const
 {
@@ -273,7 +313,9 @@ const TType& TVector<TType>::operator [] (UInt32 nElementIndex) const
 	return _pArray[nElementIndex];
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	operator +=
+// ********************************************
 template <class TType>
 TVector<TType>& TVector<TType>::operator += (const TType& Elt)
 {
@@ -281,7 +323,9 @@ TVector<TType>& TVector<TType>::operator += (const TType& Elt)
 	return *this;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	operator +=
+// ********************************************
 template <class TType>
 TVector<TType>& TVector<TType>::operator += (const TVector<TType>& v)
 {
@@ -289,7 +333,9 @@ TVector<TType>& TVector<TType>::operator += (const TVector<TType>& v)
 	return *this;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	operator =
+// ********************************************
 template <class TType>
 TVector<TType>& TVector<TType>::operator = (const TVector<TType>& v)
 {
@@ -298,7 +344,9 @@ TVector<TType>& TVector<TType>::operator = (const TVector<TType>& v)
 	return *this;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	operator ==
+// ********************************************
 template <class TType>
 Bool TVector<TType>::operator == (const TVector& v) const
 {
@@ -318,28 +366,36 @@ Bool TVector<TType>::operator == (const TVector& v) const
 	return true;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	operator !=
+// ********************************************
 template <class TType>
 Bool TVector<TType>::operator!=(const TVector& v) const
 {
 	return !((*this)==v);
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	At
+// ********************************************
 template <class TType>
 TType& TVector<TType>::At(UInt32 nElementIndex)
 {
 	return _pArray[nElementIndex];
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	At
+// ********************************************
 template <class TType>
 const TType& TVector<TType>::At(UInt32 nElementIndex) const
 {
 	return _pArray[nElementIndex];
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	RemoveIndex
+// ********************************************
 template <class TType>
 void TVector<TType>::RemoveIndex(UInt32 i)
 {
@@ -354,28 +410,9 @@ void TVector<TType>::RemoveIndex(UInt32 i)
 	--_nSize;
 }
 
-//-----------------------------------------------------------------------------
-template <class TType>
-void TVector<TType>::RemoveRange(UInt32	i, UInt32 nCount)
-{
-	TAssert(i < GetSize())
-	TAssert(i <= GetSize() - nCount);
-
-	UInt32 index;
-	for (index = i; index < GetSize() - nCount; ++index)
-	{
-		_pArray[index] = _pArray[index + nCount];
-	}
-
-	for (index = GetSize() - nCount ; index < GetSize(); ++index)
-	{
-		TDeletePlaced(&_pArray[index], TType);
-	}
-
-	_nSize -= nCount;
-}
-
-//-----------------------------------------------------------------------------
+// ********************************************
+//	RemoveIndexFast
+// ********************************************
 template <class TType>
 void TVector<TType>::RemoveIndexFast(UInt32 index)
 {
@@ -385,12 +422,14 @@ void TVector<TType>::RemoveIndexFast(UInt32 index)
 	TDeletePlaced(ptr, TType);
 
 	TType* ptrLast =&_pArray[_nSize-1];
-	QDT_MEMMOVE(ptr, ptrLast, sizeof(TType));				// move last element in place of [i] removed
+	TMemMove(ptr, ptrLast, sizeof(TType));				// move last element in place of [i] removed
 
 	--_nSize;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Remove
+// ********************************************
 template <class TType>
 UInt32 TVector<TType>::Remove(const TType& Elt, Bool bRemoveAll)
 {
@@ -417,7 +456,32 @@ UInt32 TVector<TType>::Remove(const TType& Elt, Bool bRemoveAll)
 	return (nbr);
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Remove
+// ********************************************
+template <class TType>
+void TVector<TType>::Remove(const Iterator& it)
+{
+	TAssert(it.GetVector() == this);
+	RemoveIndex(it.GetIndex());
+}
+
+// ********************************************
+//	RemoveFast
+// ********************************************
+template <class TType>
+void TVector<TType>::RemoveFast(const TType& Elt)
+{
+	Iterator Cur = Find(Elt);
+	if (Cur != GetTail())
+	{
+		RemoveIndexFast(Cur.GetIndex());
+	}
+}
+
+// ********************************************
+//	Find
+// ********************************************
 template <class TType>
 typename TVector<TType>::Iterator TVector<TType>::Find(const Iterator& it, const TType& Elt) const
 {
@@ -435,7 +499,9 @@ typename TVector<TType>::Iterator TVector<TType>::Find(const Iterator& it, const
 	return (Iterator(const_cast<TVector<TType>*>(this), i));
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Sort
+// ********************************************
 template <class TType>
 void TVector<TType>::Sort()
 {
@@ -457,7 +523,9 @@ void TVector<TType>::Sort()
 	}
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	IsSorted
+// ********************************************
 template <class TType>
 Bool TVector<TType>::IsSorted() const
 {
@@ -472,7 +540,9 @@ Bool TVector<TType>::IsSorted() const
 	return true;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	QuickSort
+// ********************************************
 template <class TType>
 void TVector<TType>::QuickSort(Int32 Left, Int32 Right)
 {
@@ -485,7 +555,9 @@ void TVector<TType>::QuickSort(Int32 Left, Int32 Right)
 	}
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Partition
+// ********************************************
 template <class TType>
 Int32 TVector<TType>::Partition(Int32 Left, Int32 Right, Int32 Pivot)
 {
@@ -504,16 +576,18 @@ Int32 TVector<TType>::Partition(Int32 Left, Int32 Right, Int32 Pivot)
 	return	(StoreIndex);
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Swap
+// ********************************************
 template <class TType>
 void TVector<TType>::Swap(Int32	X, Int32 Y)
 {
-	TType Temp = _pArray[X];
-	_pArray[X] = _pArray[Y];
-	_pArray[Y] = Temp;
+	TSwap(_pArray[X], _pArray[Y]);
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Swap
+// ********************************************
 template <class TType>
 void TVector<TType>::Swap(TVector<TType>& V)
 {
@@ -522,26 +596,9 @@ void TVector<TType>::Swap(TVector<TType>& V)
 	TSwap( _nAllocSize, V._nAllocSize );
 }
 
-//-----------------------------------------------------------------------------
-template <class TType>
-void TVector<TType>::Remove(const Iterator& it)
-{
-	TAssert(it.GetVector() == this);
-	RemoveIndex(it.GetIndex());
-}
-
-//-----------------------------------------------------------------------------
-template <class TType>
-void TVector<TType>::RemoveFast(const TType& Elt)
-{
-	Iterator Cur = Find(Elt);
-	if (Cur != GetTail())
-	{
-		RemoveIndexFast(Cur.GetIndex());
-	}
-}
-
-//-----------------------------------------------------------------------------
+// ********************************************
+//	Insert
+// ********************************************
 template <class TType>
 typename TVector<TType>::Iterator TVector<TType>::Insert(const Iterator& it, const TType& Elt)
 {
@@ -568,9 +625,11 @@ typename TVector<TType>::Iterator TVector<TType>::Insert(const Iterator& it, con
 	return it;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	InsertSort
+// ********************************************
 template <class TType>
-typename TVector<TType>::Iterator TVector<TType>::InsertSort(const TType& Element, bool bAllowDoublon, bool& bFound)
+typename TVector<TType>::Iterator TVector<TType>::InsertSort(const TType& Element, const Bool bAllowDoublon, Bool& bFound)
 {
 	Iterator	Cur = GetHead();
 	Iterator	End = GetTail();
@@ -595,7 +654,9 @@ typename TVector<TType>::Iterator TVector<TType>::InsertSort(const TType& Elemen
 	return	Cur;
 }
 
-//-----------------------------------------------------------------------------
+// ********************************************
+//	InsertOnce
+// ********************************************
 template <class TType>
 typename TVector<TType>::Iterator TVector<TType>::InsertOnce(const Iterator& I, const TType& N)
 {

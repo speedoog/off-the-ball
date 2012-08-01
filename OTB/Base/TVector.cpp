@@ -39,6 +39,9 @@ TVector_Test::TVector_Test()
 	lInt.PushOnce(6);
 	lInt.PushOnce(6);
 
+	lInt.Swap(0,2);
+	lInt.Sort();
+
 	IntVector::Iterator itFind =lInt.Find(1);
 
 	IntVector lInt2(50, 12);

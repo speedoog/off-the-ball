@@ -12,12 +12,12 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "QDT_List.h"
+#include "../Base/TQuickList.h"
 #include "DynamicBuffer.h"
 
 #pragma warning( disable : 4996)
 
-class XML_ATTRIBUTE : public QDT_LIST_ELEMENT
+class XML_ATTRIBUTE : public TQuickListElement
 {
 	public:
 		inline				XML_ATTRIBUTE(char *pName)			{ _pAttrName = _strdup(pName); }
@@ -34,7 +34,7 @@ class XML_ATTRIBUTE : public QDT_LIST_ELEMENT
 		char		*_pAttrValue;
 };
 
-class XML_ELEMENT : public QDT_LIST_ELEMENT
+class XML_ELEMENT : public TQuickListElement
 {
 	public:
 		inline					XML_ELEMENT(char *pName)				{ _pFather=0; strcpy(_AttrName, pName); }
@@ -73,8 +73,8 @@ class XML_ELEMENT : public QDT_LIST_ELEMENT
 	protected:
 		XML_ELEMENT			*_pFather;
 		char				_AttrName[256];
-		QDT_LIST			_Childs;
-		QDT_LIST			_Attributes;
+		TQuickList			_Childs;
+		TQuickList			_Attributes;
 		DYNAMIC_BUFFER		_sText;
 };
 

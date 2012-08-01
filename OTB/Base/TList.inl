@@ -320,34 +320,71 @@ void TList<TType>::InsertTail(const TList& List)
 }
 
 // ********************************************
-//	operator+=
+//	operator +=
 // ********************************************
 template <class TType>
-TList<TType>& TList<TType>::operator+=(const TType&	Elt)
+TList<TType>& TList<TType>::operator += (const TType& Elt)
 {
 	PushTail(Elt);
 	return *this;
 }
 
 // ********************************************
-//	operator+=
+//	operator +=
 // ********************************************
 template <class TType>
-TList<TType>& TList<TType>::operator+=(const TList<TType>& List)
+TList<TType>& TList<TType>::operator += (const TList<TType>& List)
 {
 	PushTail(List);
 	return *this;
 }
 
 // ********************************************
-//	operator=
+//	operator =
 // ********************************************
 template <class TType>
-TList<TType>& TList<TType>::operator=(const TList<TType>& List)
+TList<TType>& TList<TType>::operator = (const TList<TType>& List)
 {
 	Clear();
 	PushTail(List);
 	return *this;
+}
+
+// ********************************************
+//	operator ==
+// ********************************************
+template <class TType>
+Bool TList<TType>::operator == (const TList<TType>& List) const
+{
+	if (GetSize()!=List.GetSize())
+	{
+		return false;
+	}
+
+	Iterator it1 = GetHead();
+	Iterator it2 = List.GetHead();
+	Iterator itTail = GetTail();
+	while (it1 != itTail)
+	{
+		if ((*it1 != *it2))
+		{
+			return false;
+		}
+
+		++it1;
+		++it2;
+	}
+
+	return true;
+}
+
+// ********************************************
+//	operator !=
+// ********************************************
+template <class TType>
+Bool TList<TType>::operator != (const TList<TType>& List) const
+{
+	return ((*this)==List) == false;
 }
 
 // ********************************************
@@ -413,43 +450,6 @@ void TList<TType>::Remove(const Iterator& it)
 
 	delete it.GetNode();
 	--_nSize;
-}
-
-// ********************************************
-//	operator ==
-// ********************************************
-template <class TType>
-Bool TList<TType>::operator == (const TList<TType>& List) const
-{
-	if (GetSize()!=List.GetSize())
-	{
-		return false;
-	}
-
-	Iterator it1 = GetHead();
-	Iterator it2 = List.GetHead();
-	Iterator itTail = GetTail();
-	while (it1 != itTail)
-	{
-		if ((*it1 != *it2))
-		{
-			return false;
-		}
-
-		++it1;
-		++it2;
-	}
-
-	return true;
-}
-
-// ********************************************
-//	operator !=
-// ********************************************
-template <class TType>
-Bool TList<TType>::operator != (const TList<TType>& List) const
-{
-	return ((*this)==List) == false;
 }
 
 // ********************************************
