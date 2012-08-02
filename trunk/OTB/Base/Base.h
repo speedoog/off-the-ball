@@ -103,23 +103,8 @@ inline void TClipMax(T& _x, T _max_)
 	_x = ((_x)>(_max_) ? (_max_) : (_x));
 }
 
-template<typename T>
-inline void TMinMax(const T& a, const T& b, T& min, T& max)
-{
-	if (a<b)
-	{
-		min=a;
-		max=b;
-	}
-	else
-	{
-		max=a;
-		min=b;
-	}
-}
-
-template <class T>
-void TSwap(T& a, T& b)
+template <typename T>
+inline void TSwap(T& a, T& b)
 {
 	T c(a); a=b; b=c;
 }

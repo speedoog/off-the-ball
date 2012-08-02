@@ -78,13 +78,13 @@
 class TQuickListElement
 {
 public:
-	inline			TQuickListElement()													{ _pPrev=(TQuickListElement*)NULL; _pNext=(TQuickListElement*)NULL; }
-	inline			TQuickListElement(TQuickListElement* pPrev, TQuickListElement* pNext)	{ _pPrev=pPrev; _pNext=pNext; }
-	inline virtual ~TQuickListElement()													{}
-	inline void		SetNext(TQuickListElement* Next)									{ _pNext=Next; }
-	inline void		SetPrev(TQuickListElement* Prev)									{ _pPrev=Prev; }
-	inline			TQuickListElement*	GetNext() const									{ return _pNext; }
-	inline			TQuickListElement*	GetPrev() const									{ return _pPrev; }
+	inline						TQuickListElement()														{ _pPrev=(TQuickListElement*)NULL; _pNext=(TQuickListElement*)NULL; }
+	inline						TQuickListElement(TQuickListElement* pPrev, TQuickListElement* pNext)	{ _pPrev=pPrev; _pNext=pNext; }
+	virtual						~TQuickListElement()													{}
+	inline void					SetNext(TQuickListElement* Next)										{ _pNext=Next; }
+	inline void					SetPrev(TQuickListElement* Prev)										{ _pPrev=Prev; }
+	inline TQuickListElement*	GetNext() const															{ return _pNext; }
+	inline TQuickListElement*	GetPrev() const															{ return _pPrev; }
 
 protected:
 	TQuickListElement*	_pPrev;
@@ -98,12 +98,6 @@ typedef Bool	(*ListSortFunc)		(TQuickListElement*, TQuickListElement*);
 
 class TQuickList
 {
-protected:
-	TQuickListElement*	_pHead;
-	TQuickListElement*	_pQueue;
-	UInt32				_nSize;
-	Bool				_bSupOnDestructor;
-
 public:
 	inline						TQuickList()										{ Init(); }
 	inline						~TQuickList();
@@ -118,15 +112,13 @@ public:
 	inline void					InsertBefore(TQuickListElement*,TQuickListElement* );
 	inline void					InsertAfter(TQuickListElement*,TQuickListElement* );
 
-	inline void					Sort(ListSortFunc);
-
 	inline TQuickListElement*	GetHead() const										{ return _pHead; }
 	inline TQuickListElement*	GetQueue() const									{ return _pQueue; }
 	inline TQuickListElement*	GetIndex(UInt32 nIndex) const;
 
 	inline TQuickListElement*	Sup(TQuickListElement*);						// Do not delete the element! Just break links
-	inline void					SupAllElements();						// remove but don't delete all elements
-	inline void					DeleteElement(TQuickListElement* pElement);	// Delete element, using virtual destructor
+	inline void					SupAllElements();								// remove but don't delete all elements
+	inline void					DeleteElement(TQuickListElement* pElement);		// Delete element, using virtual destructor
 	inline void					DeleteAllElements();
 
 	inline UInt32				GetNbElements() const								{ return _nSize; }
@@ -141,10 +133,17 @@ public:
 
 	inline void					TransfertElementsTo(TQuickList& lDestination);
 
+	inline void					Sort(ListSortFunc);
 	inline void					QSort(ListSortFunc);
 
 protected:
 	inline void					q_sort_internal(TQuickListElement *pLeft, TQuickListElement *pRight, ListSortFunc a_Function);
+
+protected:
+	TQuickListElement*	_pHead;
+	TQuickListElement*	_pQueue;
+	UInt32				_nSize;
+	Bool				_bSupOnDestructor;
 };
 
 TQuickList::~TQuickList()

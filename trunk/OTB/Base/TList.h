@@ -29,7 +29,9 @@ typedef Bool (*DLIST_COMPARISON_CALLBACK)(void* pParam1, void* pParam2);
 
 // (new impl 05/05/2011) Use it like a classic for
 #define FOR_EACH_ELEMENT_OF_DLIST(_list_, _it_, _type_)			\
-	FOR_EACH(_list_, _it_, _type_)
+	for(_type_::Iterator _it_ = (_list_).GetHead();				\
+		_it_ != (_list_).GetTail();								\
+		++_it_)
 
 // (new impl 05/05/2011) Same as above but next is getted before the loop so you can delete an element safely
 #define FOR_EACH_ELEMENT_OF_DLIST_SAFE(_list_, _it_, _type_)	\
@@ -46,8 +48,8 @@ public:
 	public:
 
 		inline			Node(const TType& data) : _pPrev(NULL), _pNext(NULL), _Data(data)	{ };
-		inline void		SetPrev(Node * pPrev)							{ _pPrev =pPrev;	}
-		inline void		SetNext(Node * pNext)							{ _pNext =pNext;	}
+		inline void		SetPrev(Node* pPrev)							{ _pPrev =pPrev;	}
+		inline void		SetNext(Node* pNext)							{ _pNext =pNext;	}
 		inline void		SetData(const TType & data)						{ _Data  =data;		}
 		inline Node*	GetNext() const									{ return _pNext; 	}
 		inline Node*	GetPrev() const									{ return _pPrev; 	}
@@ -75,14 +77,14 @@ public:
 		inline Iterator		operator--(int)							{ Iterator itTmp=*this; --(*this); return	(itTmp); }
 		inline Iterator		operator-(int n) const					{ Iterator itTmp=*this; int i=0; while (i<n) { --itTmp; ++i; } return itTmp; }
 		inline Iterator&	operator-=(int n)						{ int i=0; while (i<n) { --(*this); ++i; } return *this; }
-		inline Iterator&	operator=(const Iterator& I)			{ _pNode=I._pNode; _pList=I._pList; return *this; }
+		inline Iterator&	operator=(const Iterator& it)			{ _pNode=it._pNode; _pList=it._pList; return *this; }
 
 		// Dereference
 		inline TType&		operator*() const						{ TAssert(_pNode); return _pNode->GetData(); }
 
 		// Compare
-		inline Bool			operator!=(const Iterator&	I) const	{ TAssert(_pList==I._pList); return (_pNode!=I._pNode);	}
-		inline Bool			operator==(const Iterator&	I) const	{ TAssert(_pList==I._pList); return (_pNode==I._pNode);	}
+		inline Bool			operator!=(const Iterator& it) const	{ TAssert(_pList==it._pList); return (_pNode!=it._pNode);	}
+		inline Bool			operator==(const Iterator& it) const	{ TAssert(_pList==it._pList); return (_pNode==it._pNode);	}
 
 		// LowLevel access
 		inline Node*		GetNode() const							{ return _pNode; }
@@ -103,9 +105,9 @@ public:
 	inline void 		Clear();
 	inline void 		ClearAll();
 
-	inline Iterator 	GetHead() const	{ return Iterator(const_cast<TList<TType>*>(this), _pHead);	}
-	inline Iterator 	GetLast() const	{ return Iterator(const_cast<TList<TType>*>(this), _pQueue);}
-	inline Iterator 	GetTail() const	{ return Iterator(const_cast<TList<TType>*>(this), NULL);	}
+	inline Iterator 	GetHead() const	{ return Iterator(const_cast<TList*>(this), _pHead);	}
+	inline Iterator 	GetLast() const	{ return Iterator(const_cast<TList*>(this), _pQueue);}
+	inline Iterator 	GetTail() const	{ return Iterator(const_cast<TList*>(this), NULL);	}
 
 	inline void 		PushTail(const TType& Elt);
 	inline void 		PushTail(const TList& List);
@@ -117,7 +119,7 @@ public:
 	inline void 		InsertHead(TList& List);
 	inline void 		RemoveHead();
 	inline void 		Push(const TType& Elt, const Bool bReverse);
-	inline void 		MoveToHead(const Iterator& I);
+	inline void 		MoveToHead(const Iterator& it);
 
 	// Find an element in the list! return tail if the element has not been found
 	inline Iterator 	Find(const Iterator& itStart, const TType& Elt) const;
@@ -139,10 +141,10 @@ public:
 
 	// Operators
 	inline TList&		operator +=	(const TType& Elt);
-	inline TList&		operator +=	(const TList<TType>& List);
-	inline TList&		operator =	(const TList<TType>& List);
-	inline Bool			operator == (const TList<TType>& List) const;
-	inline Bool			operator != (const TList<TType>& List) const;
+	inline TList&		operator +=	(const TList& List);
+	inline TList&		operator =	(const TList& List);
+	inline Bool			operator == (const TList& List) const;
+	inline Bool			operator != (const TList& List) const;
 
 private:
 	Node*  	_pHead;

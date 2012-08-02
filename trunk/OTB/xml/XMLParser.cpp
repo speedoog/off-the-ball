@@ -54,7 +54,7 @@ int XML_ATTRIBUTE::WriteToFile(FILE *pFile)
 //-------------------------------------------------------------------------------
 XML_ATTRIBUTE *XML_ELEMENT::FindAttribute(const char *pAttribName)
 {
-	XML_ATTRIBUTE *pAtt = (XML_ATTRIBUTE*)_Attributes.GetHead();
+	XML_ATTRIBUTE *pAtt = (XML_ATTRIBUTE*)_lAttributes.GetHead();
 
 	while (pAtt)
 	{
@@ -189,7 +189,7 @@ int XML_ELEMENT::GetAttributeAsInt(const char *pAttrib, int &Destination, int De
 int XML_ELEMENT::SaveToFile(FILE *pFile, int IndentLevel)
 {
 	int				indent;
-	XML_ATTRIBUTE	*pAttribs = (XML_ATTRIBUTE*)_Attributes.GetHead();
+	XML_ATTRIBUTE	*pAttribs = (XML_ATTRIBUTE*)_lAttributes.GetHead();
 
 	for(indent=0; indent<IndentLevel; indent++)
 		fwrite("\t", 1, 1, pFile);
@@ -202,7 +202,7 @@ int XML_ELEMENT::SaveToFile(FILE *pFile, int IndentLevel)
 		pAttribs = (XML_ATTRIBUTE*)pAttribs->GetNext();
 	}
 
-	if( _Childs.GetNbElements() || _sText.GetSize()>1)
+	if( _lChilds.GetNbElements() || _sText.GetSize()>1)
 	{
 		fwrite(">", 1, 1, pFile);
 		
@@ -213,7 +213,7 @@ int XML_ELEMENT::SaveToFile(FILE *pFile, int IndentLevel)
 
 		fwrite("\n", 1, 1, pFile);
 
-		XML_ELEMENT *pChilds = (XML_ELEMENT*)_Childs.GetHead();
+		XML_ELEMENT *pChilds = (XML_ELEMENT*)_lChilds.GetHead();
 		while(pChilds)
 		{
 			pChilds->SaveToFile(pFile, IndentLevel+1);
@@ -446,7 +446,7 @@ XML_PARSER::XMLRC XML_PARSER::LoadFromFile(const char *pFileName)
 //-------------------------------------------------------------------------------
 XML_ELEMENT	*XML_ELEMENT::FindElement(const char *pName, int bRecursiveSearch)
 {
-	XML_ELEMENT	*pElem = (XML_ELEMENT*)_Childs.GetHead();
+	XML_ELEMENT	*pElem = (XML_ELEMENT*)_lChilds.GetHead();
 
 	while(pElem)
 	{
@@ -468,7 +468,7 @@ XML_ELEMENT	*XML_ELEMENT::FindElement(const char *pName, int bRecursiveSearch)
 //-------------------------------------------------------------------------------
 XML_ELEMENT	*XML_ELEMENT::FindElementEx(char *pName, char *pAttributeMatch, char *pMatch)
 {
-	XML_ELEMENT	*pScanChilds = (XML_ELEMENT*)_Childs.GetHead();
+	XML_ELEMENT	*pScanChilds = (XML_ELEMENT*)_lChilds.GetHead();
 	while(pScanChilds)
 	{
 		if( !stricmp(pName, pScanChilds->GetName()) )
