@@ -118,7 +118,6 @@ public:
 	inline void 		InsertHead(const TType& Elt);
 	inline void 		InsertHead(TList& List);
 	inline void 		RemoveHead();
-	inline void 		Push(const TType& Elt, const Bool bReverse);
 	inline void 		MoveToHead(const Iterator& it);
 
 	// Find an element in the list! return tail if the element has not been found
