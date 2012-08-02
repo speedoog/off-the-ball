@@ -453,22 +453,6 @@ void TList<TType>::Remove(const Iterator& it)
 }
 
 // ********************************************
-//	Push
-// ********************************************
-template <class TType>
-void TList<TType>::Push(const TType& Elt, const Bool bReverse)
-{
-	if (bReverse)
-	{
-		InsertHead(Elt);
-	}
-	else
-	{
-		PushTail(Elt);
-	}
-}
-
-// ********************************************
 //	Sort (bubble sort)
 // ********************************************
 template <class TType>

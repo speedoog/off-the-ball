@@ -29,6 +29,7 @@ public:
 
 static TList_Test _TList_Test;
 
+
 TList_Test::TList_Test()
 {
 	typedef TList<int>	IntList;
@@ -57,4 +58,18 @@ TList_Test::TList_Test()
 	IntList lInt3(lInt2);
 	lInt3 +=lInt;
 
+	// another test
+
+	class My_test
+	{
+	public:
+		My_test(int t, int v):_t(t), _v(v) {}
+		int _t,_v;
+	};
+
+	typedef TList<My_test> TestList;
+	TestList lTest;
+	/*My_test* pTest =*/lTest.PushTail(My_test(0,1));
+
+	int break_here=0;
 }
