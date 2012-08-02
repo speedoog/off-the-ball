@@ -18,8 +18,7 @@
 
 
 //-----------------------------------------------------------------------------
-//! @brief		Ctor
-//! @author		BFA : 2012-02-08
+// Ctor
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 TArray<TType, TCapacity>::TArray()
@@ -31,8 +30,7 @@ TArray<TType, TCapacity>::TArray()
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		Clear
-//! @author		BFA : 2012-02-08
+// Clear
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::Clear()
@@ -45,8 +43,7 @@ void TArray<TType, TCapacity>::Clear()
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		ClearAll
-//! @author		BFA : 2012-02-08
+// ClearAll
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::ClearAll()
@@ -59,8 +56,7 @@ void TArray<TType, TCapacity>::ClearAll()
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		PushTail
-//! @author		BFA : 2012-02-08
+// PushTail
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::PushTail(const TType& Obj)
@@ -71,8 +67,7 @@ void TArray<TType, TCapacity>::PushTail(const TType& Obj)
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		PushTail
-//! @author		BFA : 2012-02-08
+// PushTail
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::PushTail(const TArray<TType, TCapacity>& Container)
@@ -92,9 +87,7 @@ void TArray<TType, TCapacity>::PushTail(const TArray<TType, TCapacity>& Containe
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		Fill
-//! @details	Sets the value to all elements of the array
-//! @author		BFA : 2012-02-08
+// Fill
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::Fill(const TType& Obj)
@@ -106,8 +99,22 @@ void TArray<TType, TCapacity>::Fill(const TType& Obj)
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		Resize
-//! @author		BFA : 2012-02-08
+// PushOnce
+//-----------------------------------------------------------------------------
+template <class TType, UInt32 TCapacity>
+typename TArray<TType, TCapacity>::Iterator TArray<TType, TCapacity>::PushOnce(const TType& Obj)
+{
+	Iterator it = Find(GetHead(), Obj);
+	if (it== GetTail())
+	{
+		PushTail(Obj);
+		it= Iterator(this, GetSize()-1);
+	}
+	return it;
+}
+
+//-----------------------------------------------------------------------------
+// Resize
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::Resize(const UInt32 nNewSize)
@@ -133,8 +140,7 @@ void TArray<TType, TCapacity>::Resize(const UInt32 nNewSize)
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		Remove
-//! @author		BFA : 2012-02-08
+// Remove
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::Remove(const Iterator& it)
@@ -144,8 +150,7 @@ void TArray<TType, TCapacity>::Remove(const Iterator& it)
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		RemoveIndex
-//! @author		BFA : 2012-02-08
+// RemoveIndex
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::RemoveIndex(const UInt32 nIndex)
@@ -163,8 +168,7 @@ void TArray<TType, TCapacity>::RemoveIndex(const UInt32 nIndex)
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		RemoveIndexFast
-//! @author		BFA : 2012-02-08
+// RemoveIndexFast
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::RemoveIndexFast(UInt32 nIndex)
@@ -181,8 +185,7 @@ void TArray<TType, TCapacity>::RemoveIndexFast(UInt32 nIndex)
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		At
-//! @author		BFA : 2012-02-08
+// At
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 TType& TArray<TType, TCapacity>::At(const UInt32 nIndex)
@@ -198,8 +201,7 @@ TType& TArray<TType, TCapacity>::At(const UInt32 nIndex)
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		At
-//! @author		BFA : 2012-02-08
+// At
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 const TType& TArray<TType, TCapacity>::At(const UInt32 nIndex) const
@@ -215,8 +217,7 @@ const TType& TArray<TType, TCapacity>::At(const UInt32 nIndex) const
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		Find
-//! @author		BFA : 2012-02-08
+// Find
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 UInt32 TArray<TType, TCapacity>::Find(const UInt32& nStart, const TType& Obj) const
@@ -236,8 +237,7 @@ UInt32 TArray<TType, TCapacity>::Find(const UInt32& nStart, const TType& Obj) co
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		Sort
-//! @author		BFA : 2012-02-08
+// Sort
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 template <Bool TCompare(const TType& a0, const TType& a1)>
@@ -261,8 +261,7 @@ void TArray<TType, TCapacity>::Sort()
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		QuickSort
-//! @author		BFA : 2012-02-08
+// QuickSort
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 template <Bool TCompare(const TType& a0, const TType& a1)>
@@ -278,8 +277,7 @@ void TArray<TType, TCapacity>::QuickSort(const Int32 nLeft, const Int32 nRight)
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		Partition
-//! @author		BFA : 2012-02-08
+// Partition
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 template <Bool TCompare(const TType& a0, const TType& a1)>
@@ -301,8 +299,7 @@ Int32 TArray<TType, TCapacity>::Partition(const Int32 nLeft, const Int32	nRight,
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		Swap
-//! @author		BFA : 2012-02-08
+// Swap
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 void TArray<TType, TCapacity>::Swap(const Int32 i, const Int32 j)
@@ -313,8 +310,7 @@ void TArray<TType, TCapacity>::Swap(const Int32 i, const Int32 j)
 }
 
 //-----------------------------------------------------------------------------
-//! @brief		operator = (copy from)
-//! @author		BFA : 2012-02-08
+// operator = (copy from)
 //-----------------------------------------------------------------------------
 template <class TType, UInt32 TCapacity>
 TArray<TType, TCapacity>& TArray<TType, TCapacity>::operator = (const TArray<TType, TCapacity>& Source)
@@ -323,40 +319,3 @@ TArray<TType, TCapacity>& TArray<TType, TCapacity>::operator = (const TArray<TTy
 	PushTail(Source);
 	return (*this);
 }
-
-/*
-//-----------------------------------------------------------------------------
-//! @brief		StreamWrite
-//! @author		BFA : 2012-02-08
-//-----------------------------------------------------------------------------
-template <class TType, UInt32 TCapacity>
-void TArray<TType, TCapacity>::StreamWrite(IO_STREAM& Stream) const
-{
-	const UInt32 nSize =GetSize();
-	Stream << nSize;
-
-	for (UInt32 i =0; i<GetSize(); ++i)
-	{
-		Stream << At(i);
-	}
-}
-
-//-----------------------------------------------------------------------------
-//! @brief		StreamRead
-//! @author		BFA : 2012-02-08
-//-----------------------------------------------------------------------------
-template <class TType, UInt32 TCapacity>
-void TArray<TType, TCapacity>::StreamRead(IO_CHUNK_STREAM& Stream)
-{
-	Clear();
-
-	UInt32 nSize;
-	Stream >> nSize;
-
-	Resize(nSize);
-	for (UInt32 i =0; i<nSize; ++i)
-	{
-		Stream >> At(i);
-	}
-}
-*/

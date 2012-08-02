@@ -32,7 +32,7 @@ public:
 	typedef TType						TTypeArray[TCapacity];
 	typedef Bool						(*COMPARISON_CALLBACK)(void* pParam1, void* pParam2);
 
-	// ------------------------------------------------ TIterator ------------------------------------------------
+	// ------------------------------------------------ Iterator ------------------------------------------------
 
 	class Iterator
 	{
@@ -76,7 +76,7 @@ public:
 		UInt32	_nIndex;
 	};
 
-	// ------------------------------------------------ CONTAINER ------------------------------------------------
+	// ------------------------------------------------ Container ------------------------------------------------
 
 	inline						TArray();
 	inline						~TArray()							{ Clear(); }
@@ -96,16 +96,7 @@ public:
 	inline	void				PushTail(const TType& Obj);
 	inline	void				PushTail(const TTypeContainer& Container);
 	inline	void				Fill(const TType& Obj);
-	inline	Iterator			PushOnce(const TType& Obj)
-	{
-		Iterator it = Find(GetHead(), Obj);
-		if (it== GetTail())
-		{
-			PushTail(Obj);
-			it= Iterator(this, GetSize()-1);
-		}
-		return it;
-	}
+	inline	Iterator			PushOnce(const TType& Obj);
 
 	inline	void				Resize(const UInt32 nNewSize);
 	inline	void				RemoveIndex(const UInt32 nIndex);

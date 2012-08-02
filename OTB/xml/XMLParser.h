@@ -40,10 +40,10 @@ class XML_ELEMENT : public TQuickListElement
 		inline					XML_ELEMENT(char *pName)				{ _pFather=0; strcpy(_AttrName, pName); }
 		inline	void			SetFather(XML_ELEMENT *pFather)			{ _pFather = pFather; }
 		inline	XML_ELEMENT		*GetFather(void)						{ return _pFather; }
-		inline	void			AddChild(XML_ELEMENT *pChild)			{ _Childs.InsertQueue(pChild); pChild->SetFather(this); }
-		inline	void			AddAttribute(XML_ATTRIBUTE *pAttrib)	{ _Attributes.InsertQueue(pAttrib); }
+		inline	void			AddChild(XML_ELEMENT *pChild)			{ _lChilds.InsertQueue(pChild); pChild->SetFather(this); }
+		inline	void			AddAttribute(XML_ATTRIBUTE *pAttrib)	{ _lAttributes.InsertQueue(pAttrib); }
 				int				SaveToFile(FILE *pFile, int IndentLevel);
-		inline	XML_ELEMENT		*GetFirstChild(void)					{ return (XML_ELEMENT*)_Childs.GetHead(); }
+		inline	XML_ELEMENT		*GetFirstChild(void)					{ return (XML_ELEMENT*)_lChilds.GetHead(); }
 
 		inline	char			*GetName(void)							{ return _AttrName; }
 		inline	char			*GetText(void)							{ return _sText.GetBufferAsString(); }
@@ -73,8 +73,8 @@ class XML_ELEMENT : public TQuickListElement
 	protected:
 		XML_ELEMENT			*_pFather;
 		char				_AttrName[256];
-		TQuickList			_Childs;
-		TQuickList			_Attributes;
+		TQuickList			_lChilds;
+		TQuickList			_lAttributes;
 		DYNAMIC_BUFFER		_sText;
 };
 

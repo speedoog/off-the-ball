@@ -43,4 +43,18 @@ TList_Test::TList_Test()
 
 	IntList::Iterator itFind =lInt.Find(1);
 
+	Int32 nSum =0;
+	FOR_EACH_ELEMENT_OF_DLIST(lInt, it, IntList)
+	{
+		nSum +=*it;
+	}
+
+	IntList lInt2;
+	lInt2 +=19;
+	lInt2 +=78;
+	lInt2 +=12;
+
+	IntList lInt3(lInt2);
+	lInt3 +=lInt;
+
 }

@@ -158,7 +158,7 @@ void TList<TType>::PushTail(const TType& Elt)
 	if (_pHead==NULL)
 	{
 		_pHead =pNode;
-		_pQueue  =pNode;
+		_pQueue=pNode;
 	}
 	else
 	{
