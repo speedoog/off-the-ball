@@ -192,7 +192,7 @@ void Rules::EventBallHitGround()
 			++_nGroundTouch;
 			if (_nGroundTouch>=2)			// 2 touch is a fail !
 			{
-				ActionServiceFailed();
+				ActionFail();
 			}
 		}
 	}

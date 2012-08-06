@@ -13,10 +13,11 @@
 
 #include "XMLParser.h"
 
+#pragma warning( disable : 4996)
+
 //-------------------------------------------------------------------------------
 XML_PARSER::XML_PARSER()
-:
-_Root(0)
+: _Root(NULL)
 {
 }
 
@@ -238,7 +239,7 @@ XML_PARSER::XMLRC XML_PARSER::LoadFromFile(const char *pFileName)
 }
 
 //-------------------------------------------------------------------------------
-XML_ELEMENT	*XML_PARSER::FindElement(char *pName, int bRecursiveSearch)
+XML_ELEMENT	*XML_PARSER::FindElement(char *pName, bool bRecursiveSearch)
 {
 	if(!_Root)
 		return 0;

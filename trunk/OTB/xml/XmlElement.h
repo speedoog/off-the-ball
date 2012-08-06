@@ -15,20 +15,14 @@
 
 #pragma once
 
-// #include <string.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-
 #include "../Base/TQuickList.h"
 #include "DynamicBuffer.h"
 #include "XmlAttribute.h"
 
-#pragma warning( disable : 4996)
-
 class XML_ELEMENT : public TQuickListElement
 {
 	public:
-		inline					XML_ELEMENT(char *pName)				{ _pFather=0; strcpy(_AttrName, pName); }
+		inline					XML_ELEMENT(char *pName)				{ _pFather=0; strcpy_s(_AttrName, 256, pName); }
 		inline	void			SetFather(XML_ELEMENT *pFather)			{ _pFather = pFather; }
 		inline	XML_ELEMENT		*GetFather(void)						{ return _pFather; }
 		inline	void			AddChild(XML_ELEMENT *pChild)			{ _lChilds.InsertQueue(pChild); pChild->SetFather(this); }
@@ -42,7 +36,7 @@ class XML_ELEMENT : public TQuickListElement
 		inline	void			SetText(char* pText)					{ _sText.Release(); _sText.AppendStringNull(pText); }
 
 				XML_ATTRIBUTE	*FindAttribute(const char *pAttribName);
-				XML_ELEMENT		*FindElement(const char *pName, int bRecursiveSearch=true);
+				XML_ELEMENT		*FindElement(const char *pName, bool bRecursiveSearch=true);
 				XML_ELEMENT		*FindElementEx(char *pName, char *pAttributeMatch, char *pMatch);
 
 		inline	XML_ATTRIBUTE	*CreateAttribute(char *pName, unsigned int nValue)	{ return CreateAttribute(pName, (int)nValue); }
