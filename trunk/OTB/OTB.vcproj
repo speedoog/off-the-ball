@@ -216,6 +216,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\xml\XmlAttribute.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\xml\XmlAttribute.h"
+				>
+			</File>
+			<File
+				RelativePath=".\xml\XmlElement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\xml\XmlElement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Xml\XMLParser.cpp"
 				>
 			</File>
