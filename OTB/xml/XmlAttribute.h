@@ -18,8 +18,6 @@
 #include <stdio.h>
 #include "../Base/TQuickList.h"
 
-#pragma warning( disable : 4996)
-
 class XML_ATTRIBUTE : public TQuickListElement
 {
 	public:

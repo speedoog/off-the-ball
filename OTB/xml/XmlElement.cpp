@@ -13,6 +13,8 @@
 
 #include "XmlElement.h"
 
+#pragma warning( disable : 4996)
+
 //-------------------------------------------------------------------------------
 XML_ATTRIBUTE *XML_ELEMENT::FindAttribute(const char *pAttribName)
 {
@@ -196,7 +198,7 @@ int XML_ELEMENT::SaveToFile(FILE *pFile, int IndentLevel)
 }
 
 //-------------------------------------------------------------------------------
-XML_ELEMENT	*XML_ELEMENT::FindElement(const char *pName, int bRecursiveSearch)
+XML_ELEMENT	*XML_ELEMENT::FindElement(const char *pName, bool bRecursiveSearch)
 {
 	XML_ELEMENT	*pElem = (XML_ELEMENT*)_lChilds.GetHead();
 
