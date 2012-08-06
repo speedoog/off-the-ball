@@ -20,7 +20,7 @@
 #define __SMARTENUM_H__
 #pragma once
 
-#include "Base/Base.h"
+#include "Base.h"
 
 // ---------------------------- SMART ENUM ---------------------------- 
 

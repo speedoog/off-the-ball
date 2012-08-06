@@ -25,9 +25,9 @@
 #include "Player.h"
 #include "Ball.h"
 #include "Resources.h"
-#include "PcPad.h"
+#include "InputPcPadManager.h"
 #include "Rules.h"
-#include "CommandAbc.h"
+#include "Cmd/CommandAbc.h"
 
 class XML_PARSER;
 

@@ -193,14 +193,14 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Pad"
+			Name="Input"
 			>
 			<File
-				RelativePath=".\PcPad.cpp"
+				RelativePath=".\InputPcPadManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\PcPad.h"
+				RelativePath=".\InputPcPadManager.h"
 				>
 			</File>
 		</Filter>
@@ -208,19 +208,19 @@
 			Name="Xml"
 			>
 			<File
-				RelativePath=".\xml\DynamicBuffer.cpp"
+				RelativePath=".\Xml\DynamicBuffer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\xml\DynamicBuffer.h"
+				RelativePath=".\Xml\DynamicBuffer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\xml\XMLParser.cpp"
+				RelativePath=".\Xml\XMLParser.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\xml\XMLParser.h"
+				RelativePath=".\Xml\XMLParser.h"
 				>
 			</File>
 		</Filter>
@@ -236,7 +236,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SmartEnum.h"
+				RelativePath=".\Base\SmartEnum.h"
 				>
 			</File>
 			<File
@@ -289,38 +289,38 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="PlayerCommand"
+			Name="Cmd"
 			>
 			<File
-				RelativePath=".\CommandAbc.cpp"
+				RelativePath=".\Cmd\CommandAbc.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CommandAbc.h"
+				RelativePath=".\Cmd\CommandAbc.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CommandKbdMouse.cpp"
+				RelativePath=".\Cmd\CommandKbdMouse.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CommandKbdMouse.h"
+				RelativePath=".\Cmd\CommandKbdMouse.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CommandMouse.cpp"
+				RelativePath=".\Cmd\CommandMouse.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CommandMouse.h"
+				RelativePath=".\Cmd\CommandMouse.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CommandPad.cpp"
+				RelativePath=".\Cmd\CommandPad.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CommandPad.h"
+				RelativePath=".\Cmd\CommandPad.h"
 				>
 			</File>
 		</Filter>

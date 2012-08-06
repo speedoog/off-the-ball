@@ -16,27 +16,27 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __COMMANDKBDMOUSE_H__
-#define __COMMANDKBDMOUSE_H__
+#ifndef __COMMANDPAD_H__
+#define __COMMANDPAD_H__
 #pragma once
 
-#include "Base/Base.h"
+#include "../Base/Base.h"
 #include "CommandAbc.h"
 
-class CommandKbdMouse : public CommandAbc
+class PcPadManager;
+
+class CommandPad : public CommandAbc
 {
 public:
-					CommandKbdMouse();
-					~CommandKbdMouse();
+					CommandPad();
+					~CommandPad();
 
 protected:
 	virtual void	OnInit();
 	virtual void	OnUpdate(const float rDeltaTime);
 
 protected:
-	hgeVector	_vLastMousePosition;
-
-	hgeVector	_vCirclePos;
+	PcPadManager*	_pPadManager;
 };
 
-#endif	//__COMMANDKBDMOUSE_H__
+#endif	//__COMMANDPAD_H__

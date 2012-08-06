@@ -18,9 +18,9 @@
 
 #include "Game.h"
 
-#include "CommandPad.h"
-#include "CommandKbdMouse.h"
-#include "CommandMouse.h"
+#include "Cmd/CommandPad.h"
+#include "Cmd/CommandKbdMouse.h"
+#include "Cmd/CommandMouse.h"
 #include "xml/XMLParser.h"
 
 const char* XML_SECTION_GAME		="Game";
