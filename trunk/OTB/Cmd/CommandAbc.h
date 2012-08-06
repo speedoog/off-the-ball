@@ -16,27 +16,41 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __COMMANDPAD_H__
-#define __COMMANDPAD_H__
+#ifndef __COMMANDABC_H__
+#define __COMMANDABC_H__
 #pragma once
 
-#include "Base/Base.h"
-#include "CommandAbc.h"
+#include "../Base/Base.h"
+#include "../Base/SmartEnum.h"
 
-class PcPadManager;
+class Game;
+class Player;
 
-class CommandPad : public CommandAbc
+class CommandAbc
 {
 public:
-					CommandPad();
-					~CommandPad();
+	SMARTENUM_DECLARE(CmdType
+			, CMD_PAD
+			, CMD_KBDMOUSE
+			, CMD_TRACKPAD
+			);
+
+					CommandAbc();
+					~CommandAbc();
+
+			void	Init(Game* pGame, Player* pPlayer, const int nCmdId);
+			void	Update(const float rDeltaTime);
 
 protected:
-	virtual void	OnInit();
-	virtual void	OnUpdate(const float rDeltaTime);
+	// virtuals
+	virtual	void	OnInit()							{ };
+	virtual	void	OnUpdate(const float rDeltaTime)	{ };
 
 protected:
-	PcPadManager*	_pPadManager;
+	Game*		_pGame;
+	Player* 	_pPlayer;
+	int			_nCmdId;
 };
 
-#endif	//__COMMANDPAD_H__
+
+#endif	//__COMMANDABC_H__

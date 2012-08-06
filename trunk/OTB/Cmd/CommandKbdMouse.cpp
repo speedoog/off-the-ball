@@ -18,7 +18,7 @@
 
 
 #include "CommandKbdMouse.h"
-#include "Game.h"
+#include "../Game.h"
 
 // ********************************************
 //	Ctor

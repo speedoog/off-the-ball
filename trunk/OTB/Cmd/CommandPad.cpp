@@ -16,26 +16,56 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __COMMANDMOUSE_H__
-#define __COMMANDMOUSE_H__
-#pragma once
 
-#include "Base/Base.h"
-#include "CommandAbc.h"
+#include "CommandPad.h"
+#include "../Game.h"
 
-class CommandMouse : public CommandAbc
+// ********************************************
+//	Ctor
+// ********************************************
+CommandPad::CommandPad()
+: _pPadManager	(NULL)
 {
-public:
-					CommandMouse();
-					~CommandMouse();
+}
 
-protected:
-	virtual void	OnInit();
-	virtual void	OnUpdate(const float rDeltaTime);
+// ********************************************
+//	Dtor
+// ********************************************
+CommandPad::~CommandPad()
+{
 
-protected:
-	hgeVector	_vLastMousePosition;
-	hgeVector	_vCirclePos;
-};
+}
 
-#endif	//__COMMANDMOUSE_H__
+// ********************************************
+//	OnInit
+// ********************************************
+void CommandPad::OnInit()
+{
+	_pPadManager =&_pGame->GetPadManager();
+}
+
+// ********************************************
+//	OnUpdate
+// ********************************************
+void CommandPad::OnUpdate(const float rDeltaTime)
+{
+	hgeVector vAxisLeft =_pPadManager->GetAxisLeft(_nCmdId);
+	if (vAxisLeft.Length()>0.2f)						// deadzone
+	{
+		_pPlayer->SetInputMove(vAxisLeft);
+	}
+	else
+	{
+		_pPlayer->SetInputMove(hgeVector(0,0));
+	}
+
+	const hgeVector& vAxisRight =_pPadManager->GetAxisRight(_nCmdId);
+	if (vAxisRight.Length()>0.3f)						// deadzone
+	{
+		_pPlayer->SetInputRacket(vAxisRight);
+	}
+	else
+	{
+		_pPlayer->SetInputRacket(hgeVector(0,0));
+	}
+}

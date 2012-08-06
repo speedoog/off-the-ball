@@ -16,41 +16,26 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __COMMANDABC_H__
-#define __COMMANDABC_H__
+#ifndef __COMMANDMOUSE_H__
+#define __COMMANDMOUSE_H__
 #pragma once
 
-#include "Base/Base.h"
-#include "SmartEnum.h"
+#include "../Base/Base.h"
+#include "CommandAbc.h"
 
-class Game;
-class Player;
-
-class CommandAbc
+class CommandMouse : public CommandAbc
 {
 public:
-	SMARTENUM_DECLARE(CmdType
-			, CMD_PAD
-			, CMD_KBDMOUSE
-			, CMD_TRACKPAD
-			);
-
-					CommandAbc();
-					~CommandAbc();
-
-			void	Init(Game* pGame, Player* pPlayer, const int nCmdId);
-			void	Update(const float rDeltaTime);
+					CommandMouse();
+					~CommandMouse();
 
 protected:
-	// virtuals
-	virtual	void	OnInit()							{ };
-	virtual	void	OnUpdate(const float rDeltaTime)	{ };
+	virtual void	OnInit();
+	virtual void	OnUpdate(const float rDeltaTime);
 
 protected:
-	Game*		_pGame;
-	Player* 	_pPlayer;
-	int			_nCmdId;
+	hgeVector	_vLastMousePosition;
+	hgeVector	_vCirclePos;
 };
 
-
-#endif	//__COMMANDABC_H__
+#endif	//__COMMANDMOUSE_H__

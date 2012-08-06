@@ -16,7 +16,7 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#include "PcPad.h"
+#include "InputPcPadManager.h"
 #include "Base/Base.h"
 
 // ********************************************
