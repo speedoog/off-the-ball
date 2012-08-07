@@ -55,7 +55,8 @@ public:
 	// c type string conversion
 	operator char* ()					{ return m_pString; }
 	operator const char* ()	const		{ return m_pString; }
-	char* GetChar()						{ return m_pString; }
+	char*	GetChar()					{ return m_pString; }
+	int		GetAsInt() const			{ return atoi(m_pString); }
 
 	// numeric conversion
 	template <class T>

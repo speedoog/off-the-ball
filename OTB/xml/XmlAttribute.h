@@ -17,22 +17,23 @@
 
 #include <stdio.h>
 #include "../Base/TQuickList.h"
+#include "../Base/TString.h"
 
 class XML_ATTRIBUTE : public TQuickListElement
 {
 	public:
-		inline				XML_ATTRIBUTE(char *pName)			{ _pAttrName = _strdup(pName); }
-							~XML_ATTRIBUTE();
-		inline	void		SetValue(const char *pValue)		{ _pAttrValue = _strdup(pValue); }
-				int			WriteToFile(FILE *pFile);
+						XML_ATTRIBUTE(char* pName);
+						~XML_ATTRIBUTE();
+				void	SetName(const char* pName);
+				void	SetValue(const char* pValue);
+				int		WriteToFile(FILE* pFile);
 
-		inline	char		*GetValue(void)						{ return _pAttrValue; }
-		inline	int			GetValueAsInt(void)					{ return atoi(_pAttrValue); }
-		inline	char		*GetName(void)						{ return _pAttrName; }
+		inline	char*	GetName()						{ return _sName; }
+		inline	char*	GetValue()						{ return _sValue; }
+		inline	int		GetValueAsInt()					{ return _sValue.GetAsInt(); }
 
 	protected:
-		char		*_pAttrName;
-		char		*_pAttrValue;
+		TString	_sName, _sValue;
 };
 
 #endif	//__XML_XMLATTRIBUTE_H__
