@@ -109,6 +109,21 @@ inline void TSwap(T& a, T& b)
 	T c(a); a=b; b=c;
 }
 
+template <class C> static C	TBlend(const C Source, const C Destination, const float rRatio)
+{
+	return (Source+(Destination-Source)*rRatio);
+}
+
+// How to use this blend :
+// - This method returns the blended value corresponding to the inertia you should apply according to its inertial factor
+// and the elapsed time.
+// - rInertialFactor should vary from 0.0f to 1.0f : if 0.0f, no inertia, if 1.0f, no movement
+template <class C> static C TBlend(C Source, C Destination, const float rInertialFactor, const float rDeltaTime)
+{
+	const float rConservativeRatio =(1.0f-powf(rInertialFactor, rDeltaTime));
+	return TBlend(Source, Destination, rConservativeRatio);
+}
+
 // -------------------------------------------- Assert --------------------------------------------
 
 void Win32OSReport(char* pFormatedMsg, ...);

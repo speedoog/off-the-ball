@@ -60,8 +60,8 @@ void Rules::Render()
 	// render score (move it in another class ?)
 	hgeVector vLvlSize =level.GetSize();
 	hgeFont* pFontScore =resources._pFontScore;
-	pFontScore->printf(vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_RIGHT, "%d", _pGame->GetPlayer(0).ScoreGet());
-	pFontScore->printf(-vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_LEFT, "%d", _pGame->GetPlayer(1).ScoreGet());
+	pFontScore->printf(-vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_LEFT,  "%d", _pGame->GetPlayer(0).ScoreGet());
+	pFontScore->printf( vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_RIGHT, "%d", _pGame->GetPlayer(1).ScoreGet());
 
 	hgeFont* pFontMessages =resources._pFontMessages;
 	pFontMessages->SetScale(-0.005f);

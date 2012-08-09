@@ -51,19 +51,21 @@ void Player::Init(Game* pGame, const int nPlayerId)
 	_pGame =pGame;
 	_nPlayerId =nPlayerId;
 
+	const Float32 rFieldPosRatio =1.0f;		// back of the field
+
 	float rCenterX =pGame->GetLevel().GetSize().y / 2.0f;
 	_vInitialPos =hgeVector(0,0);
 	if (nPlayerId==0)
 	{
-		_vInitialPos.x =-rCenterX;
 		_rPosMin =-pGame->GetLevel().GetSize().x+_rRacketLen;
 		_rPosMax =-_rRacketLen;
+		_vInitialPos.x =TBlend(_rPosMin, _rPosMax, (1.0f-rFieldPosRatio));
 	}
 	else
 	{
 		_rPosMin =_rRacketLen;
 		_rPosMax =pGame->GetLevel().GetSize().x-_rRacketLen;
-		_vInitialPos.x =rCenterX;
+		_vInitialPos.x =TBlend(_rPosMin, _rPosMax, rFieldPosRatio);
 	}
 
 	_vRacketDir =hgeVector(-GetAt(), 0);
@@ -121,21 +123,27 @@ float SegmentDist(const hgeVector& v0, const hgeVector& v1, const hgeVector& p, 
 // ********************************************
 void Player::Update(const float rDeltaTime)
 {
+	Rules* pRules =&_pGame->GetRules();
+	const Bool bWaitServe =pRules->IsWaitingToServe(_nPlayerId);
+
 	// input char
-	const float rAcceleration =300.0f;
-	const float rDamping =40.0f;
-	if (fabsf(_vInputMove.x)>0.15f)						// deadzone
+	if (bWaitServe==false)
 	{
-		_vVelocity.x+=_vInputMove.x*rDeltaTime*rAcceleration;
-		if (_vVelocity.x>_rCharSpeedMax)		_vVelocity.x =_rCharSpeedMax;
-		if (_vVelocity.x<-_rCharSpeedMax)		_vVelocity.x =-_rCharSpeedMax;
+		const float rAcceleration =300.0f;
+		const float rDamping =40.0f;
+		if (fabsf(_vInputMove.x)>0.15f)						// deadzone
+		{
+			_vVelocity.x+=_vInputMove.x*rDeltaTime*rAcceleration;
+			if (_vVelocity.x>_rCharSpeedMax)		_vVelocity.x =_rCharSpeedMax;
+			if (_vVelocity.x<-_rCharSpeedMax)		_vVelocity.x =-_rCharSpeedMax;
+		}
+		else
+		{
+			_vVelocity -=_vVelocity*rDeltaTime*rDamping;
+		}
+		// Move
+		_vPos +=_vVelocity*rDeltaTime;
 	}
-	else
-	{
-		_vVelocity -=_vVelocity*rDeltaTime*rDamping;
-	}
-	// Move
-	_vPos +=_vVelocity*rDeltaTime;
 
 	// check wall/net collision
 	bool bHitWall =false;
@@ -176,13 +184,13 @@ void Player::Update(const float rDeltaTime)
 
 	// wait Serve
 	Ball& ball =_pGame->GetBall();
-	Rules* pRules =&_pGame->GetRules();
-	if (pRules->IsWaitingToServe(_nPlayerId))
+	if (bWaitServe)
 	{
-		ball.Reset(this);				// sync ball
-		if (_vInputMove.y>0.15f)						// deadzone
+		ball.Reset(this);					// sync ball
+		if (_vInputMove.Length()>0.5f)					// deadzone
 		{
 			pRules->EventServeStart();
+			ball.Launch(_vInputMove);
 		}
 	}
 	else
@@ -217,7 +225,7 @@ void Player::Update(const float rDeltaTime)
 				float rRacketSpeedAbs =fabsf(_rRacketRotationSpeed);
 				float rImpactSpeed =TClamp(rRacketSpeedAbs, 4.0f, 9.0f);
 
-				ball.Hit( vHit*rImpactSpeed);	// test
+				ball.RacketHit( vHit*rImpactSpeed);	// test
 				_rHitCooldown =0.5f;
 			}
 		}
