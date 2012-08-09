@@ -35,7 +35,9 @@ public:
 			void		Reset(Player* pPlayer);
 			void		Update(const float rDeltaTime);
 			void		Render();
-			void		Hit(const hgeVector& vVelocity);
+
+			void		Launch(const hgeVector& vDir);
+			void		RacketHit(const hgeVector& vVelocity);
 
 	// inline
 	inline	hgeVector&	GetPos() 						{ return _vPos;			}

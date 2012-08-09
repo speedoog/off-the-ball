@@ -59,9 +59,9 @@ void Ball::Init(Game* pGame)
 // ********************************************
 void Ball::Reset(Player* pPlayer)
 {
-	float rPosX =pPlayer->GetPosition().x + pPlayer->GetAt()*0.4f;
+	float rPosX =pPlayer->GetPosition().x + pPlayer->GetAt()*0.1f;
 
-	_vPos		=hgeVector(rPosX,2.5);
+	_vPos		=hgeVector(rPosX,1.8f);
 	_nSide		=pPlayer->GetPlayerId();
 	_vLastPos	=_vPos;
 
@@ -141,12 +141,29 @@ void Ball::Update(const float rDeltaTime)
 }
 
 // ********************************************
-//	Render
+//	RacketHit
 // ********************************************
-void Ball::Hit(const hgeVector& vVelocity)
+void Ball::RacketHit(const hgeVector& vVelocity)
 {
 	_vVelocity =vVelocity;
 	_pGame->GetRules().EventBallHitRacket();
+}
+
+// ********************************************
+//	Launch
+// ********************************************
+void Ball::Launch(const hgeVector& vDir)
+{
+	hgeVector vVelocity =vDir;
+	if (vVelocity.y<0.0f)
+	{
+		vVelocity.y =0.0f;
+	}
+
+	vVelocity.Normalize();
+	vVelocity*=1.25f;
+	vVelocity+=hgeVector(0.0f, 2.5f);	// y boost
+	_vVelocity =vVelocity;
 }
 
 // ********************************************
