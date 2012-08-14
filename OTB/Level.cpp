@@ -18,6 +18,7 @@
 
 
 #include "Level.h"
+#include "Game.h"
 
 // ********************************************
 //	Ctor
@@ -37,10 +38,11 @@ Level::~Level()
 // ********************************************
 //	Init
 // ********************************************
-void Level::Init(const hgeVector& vSize, const float rInitialNetY)
+void Level::Init(Game* pGame, const hgeVector& vSize, const float rInitialNetY)
 {
-	_vSize		  =vSize;
-	_rInitialNetY =rInitialNetY;
+	_pGame			=pGame;
+	_vSize		  	=vSize;
+	_rInitialNetY 	=rInitialNetY;
 	Reset();
 }
 
@@ -58,10 +60,13 @@ void Level::Reset()
 // ********************************************
 void Level::Update(const float rDeltaTime)
 {
-	_rCounter +=rDeltaTime;
-	if (_rCounter>15.0f)
+	if (_pGame->GetRules().IsWaitingToServe()==false)
 	{
-		_rNetY +=rDeltaTime*0.05f;
+		_rCounter +=rDeltaTime;
+		if (_rCounter>15.0f)
+		{
+			_rNetY +=rDeltaTime*0.05f;
+		}
 	}
 }
 

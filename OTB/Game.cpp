@@ -68,7 +68,7 @@ void Game::Init(XML_PARSER* pXml)
 
 	_Resources.Init();
 
-	_Level.Init(hgeVector(7.0f,7.5f), 1.3f);
+	_Level.Init(this, hgeVector(7.0f,7.5f), 1.3f);
 	_Players[0].Init(this, 0);
 	_Players[1].Init(this, 1);
 	_Ball.Init(this);

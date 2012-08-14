@@ -49,6 +49,8 @@ public:
 			void		EventServeStart();
 
 	inline	bool		IsWaitingToServe(int nPlayerId)	{ return _nServicePlayer==nPlayerId && _bWaitServe; }
+	inline	bool		IsWaitingToServe()				{ return _bWaitServe; }
+	inline	bool		IsServing()						{ return _bServing; }
 
 protected:
 	Game*	_pGame;
@@ -57,7 +59,7 @@ protected:
 	bool	_bSecondServe;
 	bool	_bWaitServe;
 	bool	_bRacketHit;
-	int		_nSide;
+	int		_nBallSide;
 	int		_nGroundTouch;
 	int		_nServicePlayer;
 };

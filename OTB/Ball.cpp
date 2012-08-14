@@ -123,8 +123,12 @@ void Ball::Update(const float rDeltaTime)
 	int nSide =(_vPos.x<0)?0:1;
 	if (nSide!=_nSide)
 	{
+		const Float32 rDiff  =_vPos.y-level.GetNetY();
+		const Bool	  bLet   =TAbs(rDiff)<0.1f && _pGame->GetRules().IsServing()==false;
+		const Bool	  bHitNet=rDiff<0.0f && !bLet;
+
 		// ball change side
-		if (_vPos.y<level.GetNetY())
+		if (bHitNet)
 		{
 			// hit net
 			_vVelocity.x *=-rNetResitution;
@@ -134,6 +138,10 @@ void Ball::Update(const float rDeltaTime)
 		}
 		else
 		{
+			if (bLet)
+			{
+				_vVelocity.y =-_vVelocity.y;
+			}
 			_pGame->GetRules().EventBallChangeSide(nSide);
 		}
 	}

@@ -22,13 +22,15 @@
 
 #include "Base/Base.h"
 
+class Game;
+
 class Level
 {
 public:
 								Level();
 								~Level();
 
-			void				Init(const hgeVector& vSize, const float rInitialNetY);
+			void				Init(Game* pGame, const hgeVector& vSize, const float rInitialNetY);
 			void				Reset();
 			void				Update(const float rDeltaTime);
 			void				Render();
@@ -38,6 +40,7 @@ public:
 	inline	float				GetNetY()	{ return _rNetY; }
 
 protected:
+	Game*		_pGame;
 	hgeVector	_vSize;
 	float		_rNetY;
 	float		_rInitialNetY;

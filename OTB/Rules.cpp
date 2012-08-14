@@ -70,17 +70,17 @@ void Rules::Render()
 	{
 		if (_bWaitServe)
 		{
-			pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Waiting for serve", _nSide+1);
+			pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Waiting for serve", _nServicePlayer+1);
 		}
 		else
 		{
 			if (_bSecondServe)
 			{
-				pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Second Serve", _nSide+1);
+				pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Second Serve", _nServicePlayer+1);
 			}
 			else
 			{
-				pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Serve", _nSide+1);
+				pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Serve", _nServicePlayer+1);
 			}
 		}
 	}
@@ -97,7 +97,6 @@ void Rules::Render()
 // ********************************************
 void Rules::ActionStartGame(int nPlayerStart)
 {
-	_bSecondServe	=false;
 	_nServicePlayer =nPlayerStart;
 	_pGame->GetPlayer(0).ScoreReset();
 	_pGame->GetPlayer(1).ScoreReset();
@@ -111,7 +110,7 @@ void Rules::ActionServiceStart(int nPlayerServe)
 {
 	_bServing		=true;
 	_bRacketHit 	=false;
-	_nSide			=nPlayerServe;
+	_nBallSide		=nPlayerServe;
 	_nGroundTouch	=0;
 
 	_pGame->GetLevel().Reset();
@@ -130,10 +129,11 @@ void Rules::ActionServiceStart(int nPlayerServe)
 void Rules::ActionFail()
 {
 	// update score
-	int nOtherPlayer =1-_nSide;
+	int nOtherPlayer =1-_nBallSide;
 	_pGame->GetPlayer(nOtherPlayer).ScoreInc();		// other player gain a point
 
 	_nServicePlayer =1-_nServicePlayer;				// change server
+	_bSecondServe	=false;
 	ActionServiceStart(_nServicePlayer);
 }
 
@@ -168,7 +168,7 @@ void Rules::EventBallChangeSide(int nSide)
 {
 	_bServing		=false;
 	_bRacketHit 	=false;
-	_nSide			=nSide;
+	_nBallSide		=nSide;
 	_nGroundTouch	=0;
 }
 
