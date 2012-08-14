@@ -109,6 +109,12 @@ inline void TSwap(T& a, T& b)
 	T c(a); a=b; b=c;
 }
 
+template<typename T>
+inline T TAbs(const T& _x)
+{
+	return (_x<0)?-_x:_x;
+}
+
 template <class C> static C	TBlend(const C Source, const C Destination, const float rRatio)
 {
 	return (Source+(Destination-Source)*rRatio);
