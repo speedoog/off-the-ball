@@ -138,11 +138,18 @@ void Game::Update(const float rDeltaTime)
 	_pCmd0->Update(rDeltaTime);
 	_pCmd1->Update(rDeltaTime);
 
-	_Level.Update(rDeltaTime);
-	_Ball.Update(rDeltaTime);
-	_Players[0].Update(rDeltaTime);
-	_Players[1].Update(rDeltaTime);
+	const UInt32 nSliceCount =10;
 
+	const Float32 rSliceTime =rDeltaTime/Float32(nSliceCount);
+	for(UInt32 i=0; i<nSliceCount; ++i)
+	{
+		_Level.Update(rSliceTime);
+		_Ball.Update(rSliceTime);
+		_Players[0].Update(rSliceTime);
+		_Players[1].Update(rSliceTime);
+	}
+
+	// Cheat to restart (select btn)
 	PcPadManager& Pad =GetPadManager();
 	if (Pad.GetCtrlState(0, PcPadManager::PAD_BTN_SELECT))
 	{
