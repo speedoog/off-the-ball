@@ -172,6 +172,12 @@ void PcPadManager::Update(void)
 			PadCurrent._vAxisRight.x =float(PadCurrent._JoyState.lZ&0xFF)/128.0f-1.0f;
 			PadCurrent._vAxisRight.y =float(255-(PadCurrent._JoyState.lRz&0xFF))/128.0f-1.0f;
 		}
+		else
+		{
+			// other
+			PadCurrent._vAxisRight.x =float(PadCurrent._JoyState.lRz&0xFF)/128.0f-1.0f;
+			PadCurrent._vAxisRight.y =float(255-(PadCurrent._JoyState.rglSlider[0]&0xFF))/128.0f-1.0f;
+		}
 	}
 }
 
@@ -262,7 +268,6 @@ BOOL CALLBACK PcPadManager::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidIn
 	else
 	{
 		PadCurrent._PadType =PT_OTHER;
-		return DIENUM_CONTINUE;
 	}
 
 	// Obtain an interface to the enumerated joystick.
