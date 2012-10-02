@@ -61,6 +61,15 @@ struct CInputEventList
 	CInputEventList*	next;
 };
 
+struct CScreenMode
+{
+	CScreenMode():nWidth(0), nHeight(0) {}
+	int	nWidth;
+	int	nHeight;
+};
+
+#define SCREEN_MODE_MAX	256
+
 
 void DInit();
 void DDone();
@@ -267,6 +276,8 @@ public:
 	IDirect3DDevice9*		pD3DDevice;
 	IDirect3DVertexBuffer9*	pVB;
 	IDirect3DIndexBuffer9*	pIB;
+
+	CScreenMode				pScreenModes[SCREEN_MODE_MAX];
 
 	IDirect3DSurface9*	pScreenSurf;
 	IDirect3DSurface9*	pScreenDepth;

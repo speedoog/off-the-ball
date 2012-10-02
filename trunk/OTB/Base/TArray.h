@@ -146,9 +146,9 @@ protected:
 	UInt8				_Raw[sizeof(TType)*TCapacity];	// Ned POD type here in order to avoid implicit call to TType::Ctor()
 	UInt32				_nSize;							// Current size (nb of items in container != TCapacity )
 
-#	ifndef OTB_MASTER
+#	ifndef T_MASTER
 	const TTypeArray&	_Debug;							// For debugging usage only !
-#	endif	//OTB_MASTER
+#	endif	//T_MASTER
 };
 
 #include "TArray.inl"

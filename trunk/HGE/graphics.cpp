@@ -709,9 +709,29 @@ bool HGE_Impl::_GfxInit()
 
 	nModes=pD3D->GetAdapterModeCount(nScreenAdapterID, Mode.Format);
 
+	UINT nModeStored =0;
 	for(i=0; i<nModes; i++)
 	{
 		pD3D->EnumAdapterModes(nScreenAdapterID, Mode.Format, i, &Mode);
+
+		if (nModeStored<SCREEN_MODE_MAX)
+		{
+			bool bFound=false;
+			for(UINT iFind=0; iFind<nModeStored; ++iFind)
+			{
+				if ((pScreenModes[iFind].nWidth==Mode.Width)&&(pScreenModes[iFind].nHeight==Mode.Height))
+				{
+					bFound =true;
+				}
+			}
+			if (bFound==false)
+			{
+				pScreenModes[nModeStored].nWidth =Mode.Width;
+				pScreenModes[nModeStored].nHeight=Mode.Height;
+				++nModeStored;
+			}
+		}
+
 		if(Mode.Width != (UINT)nScreenWidth || Mode.Height != (UINT)nScreenHeight) continue;
 		if(nScreenBPP==16 && (_format_id(Mode.Format) > _format_id(D3DFMT_A1R5G5B5))) continue;
 		if(_format_id(Mode.Format) > _format_id(Format)) Format=Mode.Format;

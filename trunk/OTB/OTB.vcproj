@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="OTB"
 	ProjectGUID="{05A63F5E-44E1-48F5-9391-93E691757A78}"
 	RootNamespace="OTB"
@@ -196,11 +196,19 @@
 			Name="Input"
 			>
 			<File
-				RelativePath=".\InputPcPadManager.cpp"
+				RelativePath=".\InputCommand.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\InputPcPadManager.h"
+				RelativePath=".\InputCommand.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InputDirectX.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\InputDirectX.h"
 				>
 			</File>
 		</Filter>
@@ -284,6 +292,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Base\TSignals.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Base\TSignals.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Base\TString.cpp"
 				>
 			</File>
@@ -352,28 +368,52 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\Ball.cpp"
+		<Filter
+			Name="Game"
 			>
-		</File>
+			<File
+				RelativePath=".\Ball.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Ball.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Game.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Level.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Level.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Player.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Player.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Rules.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Rules.h"
+				>
+			</File>
+		</Filter>
 		<File
-			RelativePath=".\Ball.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Game.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Game.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Level.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Level.h"
+			RelativePath=".\Main.cpp"
 			>
 		</File>
 		<File
@@ -385,27 +425,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\Player.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Player.h"
-			>
-		</File>
-		<File
 			RelativePath=".\Resources.cpp"
 			>
 		</File>
 		<File
 			RelativePath=".\Resources.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Rules.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Rules.h"
 			>
 		</File>
 	</Files>

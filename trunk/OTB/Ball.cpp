@@ -21,7 +21,6 @@
 #include "Game.h"
 
 float rGravity			=-7.0f;
-float rRadius			=0.075f;
 float rTimescale		=1.0f;
 float rGroundResitution	=0.6f;
 float rWallResitution	=0.6f;
@@ -35,6 +34,7 @@ Ball::Ball()
 : _nSide	(0)
 , _bPaused	(false)
 , _vVelocity(0,0)
+, _rRadius	(0.075f)
 {
 }
 
@@ -125,7 +125,7 @@ void Ball::Update(const float rDeltaTime)
 	{
 		const Float32 rDiff  =_vPos.y-level.GetNetY();
 		const Bool	  bLet   =TAbs(rDiff)<0.1f && _pGame->GetRules().IsServing()==false;
-		const Bool	  bHitNet=rDiff<0.0f && !bLet;
+		const Bool	  bHitNet=(rDiff<0.0f) && (!bLet) && (_vVelocity.y<0.0f);
 
 		// ball change side
 		if (bHitNet)
@@ -179,5 +179,5 @@ void Ball::Launch(const hgeVector& vDir)
 // ********************************************
 void Ball::Render()
 {
-	hge->Gfx_RenderCircle(_vPos.x, _vPos.y, rRadius, 0xFFFFFF00);
+	hge->Gfx_RenderCircle(_vPos.x, _vPos.y, _rRadius, 0xFFFFFF00);
 }

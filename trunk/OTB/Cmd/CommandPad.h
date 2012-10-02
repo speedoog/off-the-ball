@@ -23,7 +23,7 @@
 #include "../Base/Base.h"
 #include "CommandAbc.h"
 
-class PcPadManager;
+class InputCore;
 
 class CommandPad : public CommandAbc
 {
@@ -36,7 +36,7 @@ protected:
 	virtual void	OnUpdate(const float rDeltaTime);
 
 protected:
-	PcPadManager*	_pPadManager;
+	InputCore*	_pInput;
 };
 
 #endif	//__COMMANDPAD_H__

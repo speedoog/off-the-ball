@@ -50,6 +50,10 @@ public:
 	inline	void				SetInputRacket(const hgeVector& vInputRacket)	{ _vInputRacket =vInputRacket;		}
 
 protected:
+	hgeVector	GetRaquetPos0() const;
+	hgeVector	GetRaquetPos1() const;
+
+protected:
 	Game*		_pGame;
 
 	// Physic
@@ -63,6 +67,7 @@ protected:
 	float 		_rCharRacketY;
 	float 		_rRacketLen;
 	hgeVector	_vRacketDir;
+	float		_rRacketOffset;
 	float		_rPosMin, _rPosMax;
 	int			_nPlayerId;
 

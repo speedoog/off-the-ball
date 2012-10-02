@@ -64,7 +64,7 @@ CommandAbc* CreateCommand(const CommandAbc::CmdType cmd)
 void Game::Init(XML_PARSER* pXml)
 {
 	HWND hwnd =hge->System_GetState(HGE_HWND);
-	_PadManager.Init(hwnd);
+	_Input.Init(hwnd);
 
 	_Resources.Init();
 
@@ -125,7 +125,7 @@ void Game::Init(XML_PARSER* pXml)
 void Game::Kill()
 {
 	_Resources.Kill();
-	_PadManager.Kill();
+	_Input.Kill();
 }
 
 // ********************************************
@@ -133,7 +133,7 @@ void Game::Kill()
 // ********************************************
 void Game::Update(const float rDeltaTime)
 {
-	_PadManager.Update();
+	_Input.Update();
 
 	_pCmd0->Update(rDeltaTime);
 	_pCmd1->Update(rDeltaTime);
@@ -150,8 +150,8 @@ void Game::Update(const float rDeltaTime)
 	}
 
 	// Cheat to restart (select btn)
-	PcPadManager& Pad =GetPadManager();
-	if (Pad.GetCtrlState(0, PcPadManager::PAD_BTN_SELECT))
+	InputCore& Input =GetInputCommand();
+	if (Input.GetCtrlState(0, InputMapper::PAD_BTN_PAUSE))
 	{
 		_Rules.ActionServiceStart(0);
 	}

@@ -23,9 +23,9 @@
 template <class TType, UInt32 TCapacity>
 TArray<TType, TCapacity>::TArray()
 : _nSize(0)
-#ifndef OTB_MASTER
+#ifndef T_MASTER
 , _Debug((TTypeArray&)_Raw)
-#endif	//OTB_MASTER
+#endif	//T_MASTER
 {
 }
 

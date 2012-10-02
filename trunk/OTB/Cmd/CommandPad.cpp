@@ -24,7 +24,7 @@
 //	Ctor
 // ********************************************
 CommandPad::CommandPad()
-: _pPadManager	(NULL)
+: _pInput	(NULL)
 {
 }
 
@@ -41,7 +41,7 @@ CommandPad::~CommandPad()
 // ********************************************
 void CommandPad::OnInit()
 {
-	_pPadManager =&_pGame->GetPadManager();
+	_pInput =&_pGame->GetInputCommand();
 }
 
 // ********************************************
@@ -49,7 +49,7 @@ void CommandPad::OnInit()
 // ********************************************
 void CommandPad::OnUpdate(const float rDeltaTime)
 {
-	hgeVector vAxisLeft =_pPadManager->GetAxisLeft(_nCmdId);
+	hgeVector vAxisLeft =_pInput->GetAxisLeft(_nCmdId);
 	if (vAxisLeft.Length()>0.2f)						// deadzone
 	{
 		_pPlayer->SetInputMove(vAxisLeft);
@@ -59,7 +59,7 @@ void CommandPad::OnUpdate(const float rDeltaTime)
 		_pPlayer->SetInputMove(hgeVector(0,0));
 	}
 
-	const hgeVector& vAxisRight =_pPadManager->GetAxisRight(_nCmdId);
+	const hgeVector& vAxisRight =_pInput->GetAxisRight(_nCmdId);
 	if (vAxisRight.Length()>0.3f)						// deadzone
 	{
 		_pPlayer->SetInputRacket(vAxisRight);

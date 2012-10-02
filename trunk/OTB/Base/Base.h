@@ -21,12 +21,15 @@
 
 #pragma once
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "../../hge/hge.h"
 #include "../../hge/hgevector.h"
 
-
 // -------------------------------------------- global HGE --------------------------------------------
 
+class HGE;
 extern HGE* hge;
 
 // -------------------------------------------- Base types --------------------------------------------
@@ -130,27 +133,55 @@ template <class C> static C TBlend(C Source, C Destination, const float rInertia
 	return TBlend(Source, Destination, rConservativeRatio);
 }
 
+template <class C> static C TChangeRange(C SourceRangeMin, C SourceRangeMax, C DestinationRangeMin, C DestinationRangeMax, Float32 Value)
+{
+	C dx=SourceRangeMax-SourceRangeMin;
+	C dy=DestinationRangeMax-DestinationRangeMin;
+	C k=(Value-SourceRangeMin)/dx;
+	return DestinationRangeMin+dy*k;
+}
+
+#define FOR_EACH(_CONTAINER_, _ITER_, _CONTAINER_TYPE_)					\
+	for (_CONTAINER_TYPE_::Iterator _ITER_ = (_CONTAINER_).GetHead(),	\
+	_ITEND_ = (_CONTAINER_).GetTail(); _ITER_!=_ITEND_; ++_ITER_)
+
+
+// Attribute & methods offsets
+// class CHEAT_ON_COMPILER
+// {
+// public:
+// 	static void* pCheatOnCompiler;
+// };
+// #define GET_ATTR_OFFSET(BaseClass, Attribute)					(UInt32)(&(((BaseClass*)CHEAT_ON_COMPILER::pCheatOnCompiler)->Attribute))
+//#define GET_ATTR_OFFSET_FROM_METHOD(ClassInstance, Attribute)	(UInt32)((IntPtr)(&Attribute) - (IntPtr)(&ClassInstance))
+#define GET_ATTR_OFFSET(st, m)									((size_t) ( (char *)&((st *)0)->m - (char *)0 ))
+
+#define GET_CONTAINER_OF(_ptr_, _type_, _member_)				(_type_*) ( (IntPtr)(_ptr_)-GET_ATTR_OFFSET(_type_, _member_) )
+
 // -------------------------------------------- Assert --------------------------------------------
 
-void Win32OSReport(char* pFormatedMsg, ...);
+void TPrintMessage(char* pFormatedMsg, ...);
+void TPrintWarning(char* pFormatedMsg, ...);
+void TPrintError(char* pFormatedMsg, ...);
+void TAssertFunction(char* msg, const char* file, int line);
 
 #ifdef NDEBUG
-// -------------------------------------------------------
-// -                       Release                       - 
-// -------------------------------------------------------
-#	define	TAssert(a)      		{}
-#	define	TFail()      			{}
+// ************************* Release *************************
+#	define	TAssert(a)      	{}
+#	define	TFail()      		{}
 #else
-
-// -------------------------------------------------------
-// -                        Debug                        - 
-// -------------------------------------------------------
-	void	TAssertPC(char* msg, const char* file, int line);
-#	define TAssert(a)			if	(!(a))	TAssertPC(#a, __FILE__, __LINE__)
-#	define TFail()				TAssertPC("Fail", __FILE__, __LINE__)
+// ************************* Debug *************************
+#	define TAssert(a)			if	(!(a))	TAssertFunction(#a, __FILE__, __LINE__)
+#	define TFail()				TAssertFunction("Fail", __FILE__, __LINE__)
 #	define T_DEBUG				1
-
 #endif
+
+// Helper macro T_JOIN:
+// The following piece of macro magic joins the two arguments together, even when one of the arguments is itself a macro 
+// The key is that macro expansion of macro arguments does not occur in T_DO_JOIN2 but does in T_DO_JOIN.
+#define T_JOIN(_part1_, _part2_)		T_DO_JOIN(_part1_, _part2_)
+#define T_DO_JOIN(_part1_, _part2_)		T_DO_JOIN2(_part1_, _part2_)
+#define T_DO_JOIN2(_part1_, _part2_)	_part1_##_part2_
 
 static const char* UID_BUILD = "Build : "__DATE__" "__TIME__;
 
