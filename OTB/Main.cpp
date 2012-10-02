@@ -16,39 +16,14 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __OTB_H__
-#define __OTB_H__
+#include "..\HGE\hge.h"
+#include "Otb.h"
 
-#pragma once
+Otb _Otb;
 
-
-#include "Base/Base.h"
-#include "Game.h"
-#include "InputDirectX.h"
-#include "xml/XMLParser.h"
-
-class Otb
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-public:
-					Otb();
-					~Otb();
-	void			Start();
+	_Otb.Start();
 
-	bool			Update(const float rDeltaTime);
-	bool			Render();
-
-protected:
-	void			DrawInputs();
-	void			LoadSettings();
-
-protected:
-	XML_PARSER		_XmlParser;
-	Game			_Game;
-	InputDirectX	_PadManager;
-
-	Bool			_bExitApp;
-	Bool			_bChangeVideoSettings;
-};
-
-
-#endif //__OTB_H__
+	return 0;
+}

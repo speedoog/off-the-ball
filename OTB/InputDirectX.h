@@ -16,8 +16,8 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __PCPAD_H__
-#define __PCPAD_H__
+#ifndef __INPUTDIRECTX_H__
+#define __INPUTDIRECTX_H__
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <windows.h>
@@ -28,15 +28,16 @@
 #include "Base/SmartEnum.h"
 #include "../hge/hgevector.h"
 
+typedef unsigned char	CtrlStatus;
+typedef int				DeviceIdx;
 
-class PcPadManager
+class InputDirectX
 {
 public:
-    typedef int PadIdx;
 
 	enum
 	{
-		MAX_PAD_COUNT =4
+		MAX_DEVICE_COUNT =4
 	};
 
 	SMARTENUM_DECLARE(PadType,
@@ -47,10 +48,10 @@ public:
 		PT_MAX,
 		);
 
-	class PcPad
+	class Device
 	{
 	public:
-		PcPad()
+		Device()
 		{
 			_pDInputDevice =NULL;
 			_PadType =PT_INVALID;
@@ -59,59 +60,15 @@ public:
 
 		LPDIRECTINPUTDEVICE8	_pDInputDevice;				// DInput Joystick
 		DIJOYSTATE2				_JoyState;					// DInput joystick state
-		hgeVector				_vAxisLeft, _vAxisRight;
 		PadType					_PadType;
 	};
 
-    SMARTENUM_DECLARE(CtrlIdx,
-		PAD_BTN_A,
-		PAD_BTN_B,
-		PAD_BTN_X,
-		PAD_BTN_Y,
-
-		PAD_BTN_LEFT_BTN,
-		PAD_BTN_RIGHT_BTN,
-
-		PAD_BTN_SELECT,
-		PAD_BTN_START,
-		PAD_BTN_THUMB_L,
-		PAD_BTN_THUMB_R,
-
-// 		PAD_LEFTPAD_AXIS_X,
-// 		PAD_LEFTPAD_AXIS_Y,
-// 		PAD_RIGHTPAD_AXIS_X,
-// 		PAD_RIGHTPAD_AXIS_Y,
-
-		PAD_BTN_UP,
-		PAD_BTN_DOWN,
-		PAD_BTN_LEFT,
-		PAD_BTN_RIGHT,
-		PAD_BTN_OVER_AXIS1,
-		PAD_BTN_OVER_AXIS2,
-
-		PAD_AXIS_X,
-		PAD_AXIS_Y,
-		PAD_AXIS_Z,
-		PAD_AXIS_RX,
-		PAD_AXIS_RY,
-		PAD_AXIS_RZ,
-
-		PAD_SLIDER0,
-		PAD_SLIDER1,
-
-		PAD_MAX_ENTRIES,
-    );
-
-	typedef unsigned char CtrlStatus;
-
-						PcPadManager();
-						~PcPadManager();
+						InputDirectX();
+						~InputDirectX();
 	int					Init(HWND hWnd);
 	void				Kill();
 	void				Update();
-	CtrlStatus  		GetCtrlState(PadIdx iPadIdx, CtrlIdx iControl) const;
-	const hgeVector&	GetAxisLeft(PadIdx iPadIdx) const		{ return _Pad[iPadIdx]._vAxisLeft;  }
-	const hgeVector&	GetAxisRight(PadIdx iPadIdx) const		{ return _Pad[iPadIdx]._vAxisRight; }
+	const Device&		GetDevice(DeviceIdx iDeviceIdx) const			{ return _Device[iDeviceIdx]; }
 
 private:
 	static	BOOL CALLBACK	EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, void* pContext);
@@ -121,9 +78,9 @@ private:
 	bool			_bInited;					// Has been inited ?
 	LPDIRECTINPUT8	_pDirectInput;				// DInput Device interface
 	HWND			_hWnd;						// Main window hWnd
-	PcPad			_Pad[MAX_PAD_COUNT];
-	PadIdx			_nPadCount;					// Managed Pads
-	PadIdx			_nPadCurrent;				// used in enumeration
+	Device			_Device[MAX_DEVICE_COUNT];
+	DeviceIdx		_nPadCount;					// Managed Pads
+	DeviceIdx		_nPadCurrent;				// used in enumeration
 };
 
-#endif	//__PCPAD_H__
+#endif	//__INPUTDIRECTX_H__

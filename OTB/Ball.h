@@ -41,13 +41,16 @@ public:
 
 	// inline
 	inline	hgeVector&	GetPos() 						{ return _vPos;			}
+	inline	hgeVector&	GetVelocity() 					{ return _vVelocity;	}
 	inline	int			GetSide()						{ return _nSide;		}
+	inline	Float32		GetRadius() 					{ return _rRadius;		}
 	inline	void		SetPaused(const bool bPaused)	{ _bPaused =bPaused;	}
 
 protected:
 	Game*		_pGame;
 	hgeVector	_vPos, _vLastPos;
 	hgeVector	_vVelocity;
+	Float32		_rRadius;
 	int			_nSide;				// 0 or 1
 	bool		_bPaused;
 };

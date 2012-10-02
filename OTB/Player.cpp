@@ -20,6 +20,10 @@
 
 #include "Game.h"
 
+const float rRacketInputDeadZone	=0.3f;
+const float rRacketRestitution		=0.75;
+const float rRacketOffsetMin		=0.0f;
+const float rRacketOffsetMax		=0.4f;
 const float rRacketRotationSpeedMax =8.0f*M_PI;
 
 // ********************************************
@@ -30,9 +34,10 @@ Player::Player()
 	_rCharSpeedMax 	=7.0f;
 	_vCharSize 		=hgeVector(0.35f, 1.8f)*0.75f;
 	_rCharRacketY	=_vCharSize.y*0.75f;
-	_rRacketLen		=_vCharSize.y*1.0f;
+	_rRacketLen		=_vCharSize.y*0.6f;
 	_nScore			=0;
 	_vInitialPos	=hgeVector(0,0);
+	_rRacketOffset	=0.0f;
 }
 
 // ********************************************
@@ -84,6 +89,7 @@ void Player::ResetPosition()
 	_rHitCooldown	=0.0f;
 	_vInputMove		=hgeVector(0,0);
 	_vInputRacket	=hgeVector(0,0);
+	_rRacketOffset	=0.0f;
 }
 
 float SegmentDist(const hgeVector& v0, const hgeVector& v1, const hgeVector& p, hgeVector* pProj=NULL, float* pRatio=NULL)
@@ -116,6 +122,21 @@ float SegmentDist(const hgeVector& v0, const hgeVector& v1, const hgeVector& p, 
 		*pRatio =rParam;
 
 	return (vProj-p).Length();
+}
+
+hgeVector LineProj(const hgeVector& v0, const hgeVector& v1, const hgeVector& p)
+{
+	hgeVector vAB =p-v0;
+	hgeVector vCD =v1-v0;
+
+	float rDot	 =vAB.Dot(vCD);
+	float rLenSq =vCD.LengthSq();
+	float rParam =rDot/rLenSq;
+
+	hgeVector vProj;
+	vProj =v0+rParam*vCD;
+
+	return vProj;
 }
 
 // ********************************************
@@ -163,7 +184,8 @@ void Player::Update(const float rDeltaTime)
 	}
 
 	// Rotate racket
-	if (_vInputRacket.Length()>0.3f)						// deadzone
+	Float32	rInputLen =_vInputRacket.Length();
+	if (rInputLen>rRacketInputDeadZone)						// deadzone
 	{
 		hgeVector vInputRacketNorm(_vInputRacket);
 		vInputRacketNorm.Normalize();
@@ -176,10 +198,13 @@ void Player::Update(const float rDeltaTime)
 
 		_rRacketRotationSpeed =rAngleDiff*rRacketRotationSpeedMax;
 		_vRacketDir.Rotate(_rRacketRotationSpeed*rDeltaTime);
+
+		_rRacketOffset =TChangeRange(rRacketInputDeadZone, 1.0f, rRacketOffsetMin, rRacketOffsetMax, rInputLen);
 	}
 	else
 	{
 		_rRacketRotationSpeed =0.0f;
+		_rRacketOffset =rRacketOffsetMin;
 	}
 
 	// wait Serve
@@ -196,7 +221,8 @@ void Player::Update(const float rDeltaTime)
 	else
 	{
 		// check ball collide
-		hgeVector vBall		=ball.GetPos();
+		hgeVector vBallPos		=ball.GetPos();
+		/*
 		hgeVector vRacket0 	=_vPos+hgeVector(0, _rCharRacketY);
 		hgeVector vRacket1 	=vRacket0+_vRacketDir*_rRacketLen;
 
@@ -230,8 +256,52 @@ void Player::Update(const float rDeltaTime)
 			}
 		}
 		_rHitCooldown -=rDeltaTime;
-	}
+		*/
 
+		if (_rHitCooldown<=0.0f)
+		{
+			hgeVector 	vRaquet0=GetRaquetPos0();
+			hgeVector 	vRaquet1=GetRaquetPos1();
+			hgeVector 	vProj;
+			Float32		rProjRatio;
+			Float32		rDist =SegmentDist(vRaquet0, vRaquet1, vBallPos, &vProj, &rProjRatio);
+
+			Float32		rBallRadius =ball.GetRadius();
+
+			if (rDist<rBallRadius)
+			{
+				hgeVector vBallVelocity =ball.GetVelocity();
+
+				// Compute ball bounce
+				hgeVector vBallPrev =vBallPos-vBallVelocity;
+
+				hgeVector vBallProj =LineProj(vRaquet0, vRaquet1, vBallPrev);
+
+				hgeVector vBallPrjX =vBallPos-vBallProj;
+				hgeVector vBallPrjY =vBallPrev-vBallProj;
+
+				hgeVector vReturnVel =(vBallPrjX+vBallPrjY)*rRacketRestitution;
+
+				// Compute racket Impact
+				hgeVector vRacketDirNext =_vRacketDir;
+				vRacketDirNext.Rotate(_rRacketRotationSpeed*rDeltaTime);
+
+				hgeVector vRacketNorm=vRacketDirNext-_vRacketDir;
+				//vRacketNorm.Normalize();
+				vRacketNorm *=(rProjRatio/rDeltaTime);
+
+//				Float32 rRacketSpeedAbs =TAbs(_rRacketRotationSpeed);
+//				Float32 rImpactSpeed	=TClamp(rRacketSpeedAbs, 4.0f, 9.0f);
+
+				hgeVector vNewVel =vReturnVel+vRacketNorm;
+
+				ball.RacketHit(vNewVel);	// test
+				_rHitCooldown =0.3f;
+			}
+		}
+		_rHitCooldown -=rDeltaTime;
+
+	}
 }
 
 // ********************************************
@@ -256,6 +326,31 @@ void Player::Render()
 // 	hge->Gfx_RenderCircle(vPosIris.x, vPosIris.y, rEyeRadius*0.3333f, 0xFFC20004);
 
 	// Racket
-	hge->Gfx_RenderLine(_vPos.x, _rCharRacketY,
-						_vPos.x+_vRacketDir.x*_rRacketLen, _rCharRacketY+_vRacketDir.y*_rRacketLen, 0xFF60FF60);
+	hgeVector vRaquet0=GetRaquetPos0();
+	hgeVector vRaquet1=GetRaquetPos1();
+
+	hge->Gfx_RenderLine(vRaquet0.x, vRaquet0.y,
+						vRaquet1.x, vRaquet1.y, 0xFF60FF60);
+}
+
+// ********************************************
+//	GetRaquetPos0
+// ********************************************
+hgeVector Player::GetRaquetPos0() const
+{
+	hgeVector vRotationCenter(_vPos.x, _rCharRacketY);
+	hgeVector vRaquet0=vRotationCenter;
+	vRaquet0 +=_vRacketDir*_rRacketOffset;
+	return vRaquet0;
+}
+
+// ********************************************
+//	GetRaquetPos1
+// ********************************************
+hgeVector Player::GetRaquetPos1() const
+{
+	hgeVector vRotationCenter(_vPos.x, _rCharRacketY);
+	hgeVector vRaquet1=vRotationCenter;
+	vRaquet1 +=_vRacketDir*(_rRacketOffset+_rRacketLen);
+	return vRaquet1;
 }

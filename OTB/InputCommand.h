@@ -16,39 +16,80 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __OTB_H__
-#define __OTB_H__
-
-#pragma once
-
+#ifndef __INPUTCOMMAND_H__
+#define __INPUTCOMMAND_H__
 
 #include "Base/Base.h"
-#include "Game.h"
 #include "InputDirectX.h"
-#include "xml/XMLParser.h"
 
-class Otb
+class InputControl
 {
 public:
-					Otb();
-					~Otb();
-	void			Start();
+	InputControl(){}
+	InputControl(int nOffset, bool bInvert):_nOffset(nOffset), _bInvert(bInvert) {}
 
-	bool			Update(const float rDeltaTime);
-	bool			Render();
-
-protected:
-	void			DrawInputs();
-	void			LoadSettings();
-
-protected:
-	XML_PARSER		_XmlParser;
-	Game			_Game;
-	InputDirectX	_PadManager;
-
-	Bool			_bExitApp;
-	Bool			_bChangeVideoSettings;
+	int		_nOffset;
+	bool	_bInvert;
 };
 
+class InputMapper
+{
+public:
+	SMARTENUM_DECLARE(CtrlIdx,
+		PAD_BTN_VALIDATE,
+		PAD_BTN_CANCEL,
+		PAD_BTN_PAUSE,
 
-#endif //__OTB_H__
+		PAD_LEFTPAD_AXIS_X,
+		PAD_LEFTPAD_AXIS_Y,
+		PAD_RIGHTPAD_AXIS_X,
+		PAD_RIGHTPAD_AXIS_Y,
+
+		PAD_BTN_UP,
+		PAD_BTN_DOWN,
+		PAD_BTN_LEFT,
+		PAD_BTN_RIGHT,
+
+		PAD_MAX_ENTRIES,
+		);
+
+	InputMapper()	{}
+	~InputMapper()	{}
+
+	void	SetDeviceIdx(Int32 nDeviceIdx)	{ _nDeviceIdx =nDeviceIdx;	}
+	Int32	GetDeviceIdx() const			{ return _nDeviceIdx;		}
+	void	InitForXbox();
+	void	InitForPS3();
+	void	InitForOther();
+
+	const InputControl& GetInputControl(CtrlIdx iControl) const { return _Controls[iControl]; }
+
+protected:
+	InputControl	_Controls[PAD_MAX_ENTRIES];
+	Int32			_nDeviceIdx;
+};
+
+class InputCore
+{
+public:
+
+						InputCore();
+						~InputCore();
+
+	int					Init(HWND hWnd);
+	void				Kill();
+
+	void				Update();
+
+	const CtrlStatus  	GetCtrlState(int iPlayerIdx, InputMapper::CtrlIdx iControl) const;
+	const Float32		GetCtrlStateFloat(int iPlayerIdx, InputMapper::CtrlIdx iControl) const;
+
+	hgeVector			GetAxisLeft(int iPlayerIdx) const;
+	hgeVector			GetAxisRight(int iPlayerIdx) const;
+
+protected:
+	InputDirectX	_InputDirectX;
+	InputMapper		_Mapper[2];
+};
+
+#endif	//__INPUTCOMMAND_H__

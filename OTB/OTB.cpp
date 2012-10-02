@@ -18,17 +18,12 @@
 
 #include "..\HGE\hge.h"
 #include "..\HGE\hgeparticle.h"
-#include "Game.h"
-#include "xml/XMLParser.h"
+#include "Otb.h"
 
 #include "Base/TList.h"
 
-HGE*			hge =0;
-// hgeSprite*			spt =0;
-// hgeParticleSystem*	par =0;
-// HTEXTURE			tex;
-
-Game			_Game;
+HGE*			hge	  =0;
+Otb*			pThis =NULL;
 
 // normal window
 int  _nScreenSizeX =1280;
@@ -56,7 +51,7 @@ void ApplyWorldTransform()
 	static float rCenterDx	=float(_nScreenSizeX)/2.0f;
 	static float rCenterDy	=float(_nScreenSizeY)/2.0f;
 	static float rRotation	=0;
-//	rRotation+=0.02f;
+	//	rRotation+=0.02f;
 
 	float rGlobalScale =float(_nScreenSizeY)/rSizeY;
 
@@ -64,43 +59,90 @@ void ApplyWorldTransform()
 	hge->Gfx_SetTransform(rCenterX, rCenterY, rCenterDx, rCenterDy, rRotation, rGlobalScale, -rGlobalScale);
 }
 
+const char* XML_SECTION_VIDEO			="Video";
+const char* XML_ATTRIB_VIDEO_SCREENX	="ScreenSizeX";
+const char* XML_ATTRIB_VIDEO_SCREENY	="ScreenSizeY";
+const char* XML_ATTRIB_VIDEO_WINDOWED	="Windowed";
+
+const int  DEFAULT_SCREENSIZEX 		=1280;
+const int  DEFAULT_SCREENSIZEY 		=720;
+const bool DEFAULT_SCREENWINDOWED   =true;
+
 bool FrameFunc()
 {
 	const float rDeltaTime =hge->Timer_GetDelta();
 
+	return pThis->Update(rDeltaTime);
+}
+
+bool RenderFunc()
+{
+	return pThis->Render();
+}
+
+Otb::Otb()
+: _bExitApp(false)
+, _bChangeVideoSettings(false)
+{
+	pThis =this;
+}
+
+Otb::~Otb()
+{
+
+}
+
+void Otb::Start()
+{
+	LoadSettings();
+
+	hge = hgeCreate(HGE_VERSION);
+
+	// Init HGE
+	hge->System_SetState(HGE_FRAMEFUNC,		FrameFunc);
+	hge->System_SetState(HGE_RENDERFUNC,	RenderFunc);
+	hge->System_SetState(HGE_SHOWSPLASH,	false);
+	hge->System_SetState(HGE_SCREENWIDTH,	_nScreenSizeX);
+	hge->System_SetState(HGE_SCREENHEIGHT,	_nScreenSizeY);
+	hge->System_SetState(HGE_TITLE,			"Off the Ball");
+	hge->System_SetState(HGE_WINDOWED,		_bWindowed);
+
+	hge->System_SetState(HGE_FPS,			HGEFPS_VSYNC);
+	//	hge->System_SetState(HGE_FPS,			HGEFPS_UNLIMITED);
+	//	hge->System_SetState(HGE_FPS,			60);
+
+	// Tries to initiate HGE
+	if (hge->System_Initiate())
+	{
+		_Game.Init(&_XmlParser);
+
+		Bool bSuccess =hge->System_Start();
+
+		_Game.Kill();
+	}
+	else
+	{
+		// If HGE initialization failed show error message
+		MessageBox(NULL, hge->System_GetErrorMessage(), "Error", MB_OK | MB_ICONERROR | MB_APPLMODAL);
+	}
+
+	// Now ESC has been pressed or the user has closed the window by other means.
+	// Restore video mode and free all allocated resources
+	hge->System_Shutdown();
+
+	// Release the HGE interface. If there are no more references, the HGE object will be deleted.
+	hge->Release();
+}
+
+bool Otb::Update(const float rDeltaTime)
+{
 	_Game.Update(rDeltaTime);
 
 	// Exit w/ Esc
 	return (hge->Input_GetKeyState(HGEK_ESCAPE));
 }
 
-
-void DrawInputs() 
-{
-	PcPadManager& PadManager =_Game.GetPadManager();
-	hgeFont*	  pFont		 =_Game.GetResources()._pFontDebug;
-
-	float rTextPosY=7.6f;
-	for (int i=0; i<PcPadManager::PAD_MAX_ENTRIES; ++i)
-	{
-		pFont->SetColor(0xFFFFA000);
-		pFont->printf(-7.4f, rTextPosY, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(PcPadManager::CtrlIdx, i)+4);
-
-		pFont->SetColor(0xFFFF00A0);
-		{
-			PcPadManager::CtrlStatus status =PadManager.GetCtrlState(0, (PcPadManager::CtrlIdx)i);
-			pFont->printf(-3, rTextPosY, HGETEXT_LEFT, "%d", status);
-		}
-		{
-			PcPadManager::CtrlStatus status =PadManager.GetCtrlState(1, (PcPadManager::CtrlIdx)i);
-			pFont->printf(0, rTextPosY, HGETEXT_LEFT, "%d", status);
-		}
-		rTextPosY-=0.3f;
-	}
-}
-
-
-bool RenderFunc()
+bool Otb::Render()
 {
 	ApplyWorldTransform();
 
@@ -116,27 +158,42 @@ bool RenderFunc()
 //	par->Render();
 
 	hge->Gfx_EndScene();
-
 	return false;
 }
 
-const char* XML_SECTION_VIDEO			="Video";
-const char* XML_ATTRIB_VIDEO_SCREENX	="ScreenSizeX";
-const char* XML_ATTRIB_VIDEO_SCREENY	="ScreenSizeY";
-const char* XML_ATTRIB_VIDEO_WINDOWED	="Windowed";
 
-const int  DEFAULT_SCREENSIZEX 		=1280;
-const int  DEFAULT_SCREENSIZEY 		=720;
-const bool DEFAULT_SCREENWINDOWED   =true;
-
-XML_PARSER XmlParser;
-
-void LoadSettings()
+void Otb::DrawInputs()
 {
-	XML_PARSER::XMLRC rc =XmlParser.LoadFromFile("OTB.xml");
+	/*
+	InputCommand& Input =_Game.GetInputCommand();
+	hgeFont*	  pFont	 =_Game.GetResources()._pFontDebug;
+
+	float rTextPosY=7.6f;
+	for (int i=0; i<InputDirectX::PAD_MAX_ENTRIES; ++i)
+	{
+		pFont->SetColor(0xFFFFA000);
+		pFont->printf(-7.4f, rTextPosY, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(InputDirectX::CtrlIdx, i)+4);
+
+		pFont->SetColor(0xFFFF00A0);
+		{
+			InputDirectX::CtrlStatus status =Input.GetCtrlState(0, (InputDirectX::CtrlIdx)i);
+			pFont->printf(-3, rTextPosY, HGETEXT_LEFT, "%d", status);
+		}
+		{
+			InputDirectX::CtrlStatus status =Input.GetCtrlState(1, (InputDirectX::CtrlIdx)i);
+			pFont->printf(0, rTextPosY, HGETEXT_LEFT, "%d", status);
+		}
+		rTextPosY-=0.3f;
+	}
+	*/
+}
+
+void Otb::LoadSettings()
+{
+	XML_PARSER::XMLRC rc =_XmlParser.LoadFromFile("OTB.xml");
 	if (rc==XML_PARSER::XP_NO_ERROR)
 	{
-		XML_ELEMENT* pRoot =XmlParser.GetRoot();
+		XML_ELEMENT* pRoot =_XmlParser.GetRoot();
 
 		// Read Video
 		{
@@ -153,49 +210,4 @@ void LoadSettings()
 	{
 		MessageBox(NULL, "Failed to load OTB.xml", "Error", MB_OK | MB_ICONERROR | MB_APPLMODAL);
 	}
-}
-
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
-{
-	LoadSettings();
-
-	hge = hgeCreate(HGE_VERSION);
-
-	// Init HGE
-	hge->System_SetState(HGE_FRAMEFUNC,		FrameFunc);
-	hge->System_SetState(HGE_RENDERFUNC,	RenderFunc);
-	hge->System_SetState(HGE_SHOWSPLASH,	false);
-	hge->System_SetState(HGE_SCREENWIDTH,	_nScreenSizeX);
-	hge->System_SetState(HGE_SCREENHEIGHT,	_nScreenSizeY);
-	hge->System_SetState(HGE_TITLE,			"Off the Ball");
-	hge->System_SetState(HGE_WINDOWED,		_bWindowed);
-
-	hge->System_SetState(HGE_FPS,			HGEFPS_VSYNC);
-//	hge->System_SetState(HGE_FPS,			HGEFPS_UNLIMITED);
-//	hge->System_SetState(HGE_FPS,			60);
-
-	// Tries to initiate HGE
-	if (hge->System_Initiate())
-	{
-		_Game.Init(&XmlParser);
-
-		hge->System_Start();
-
-		_Game.Kill();
-	}
-	else
-	{	
-		// If HGE initialization failed show error message
-		MessageBox(NULL, hge->System_GetErrorMessage(), "Error", MB_OK | MB_ICONERROR | MB_APPLMODAL);
-	}
-
-
-	// Now ESC has been pressed or the user has closed the window by other means.
-	// Restore video mode and free all allocated resources
-	hge->System_Shutdown();
-
-	// Release the HGE interface. If there are no more references, the HGE object will be deleted.
-	hge->Release();
-
-	return 0;
 }

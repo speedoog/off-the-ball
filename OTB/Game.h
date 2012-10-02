@@ -25,7 +25,7 @@
 #include "Player.h"
 #include "Ball.h"
 #include "Resources.h"
-#include "InputPcPadManager.h"
+#include "InputCommand.h"
 #include "Rules.h"
 #include "Cmd/CommandAbc.h"
 
@@ -44,7 +44,7 @@ public:
 
 	// Accessors
 	inline	Resources&		GetResources()		{ return _Resources;  	}
-	inline	PcPadManager&	GetPadManager()		{ return _PadManager; 	}
+	inline	InputCore&	GetInputCommand()	{ return _Input;	 	}
 	inline	Player&			GetPlayer(int i)	{ return _Players[i]; 	}
 	inline	Ball&			GetBall()			{ return _Ball;			}
 	inline	Level&			GetLevel()			{ return _Level;		}
@@ -55,7 +55,7 @@ protected:
 	Player			_Players[2];
 	Ball			_Ball;
 	Resources		_Resources;
-	PcPadManager	_PadManager;
+	InputCore	_Input;
 	Rules			_Rules;
 
 	// temp ...

@@ -16,13 +16,13 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#include "InputPcPadManager.h"
+#include "InputDirectX.h"
 #include "Base/Base.h"
 
 // ********************************************
 //	Ctor
 // ********************************************
-PcPadManager::PcPadManager()
+InputDirectX::InputDirectX()
 {
 	_hWnd			=NULL;
 	_pDirectInput	=NULL;
@@ -32,7 +32,7 @@ PcPadManager::PcPadManager()
 // ********************************************
 //	Dtor
 // ********************************************
-PcPadManager::~PcPadManager()
+InputDirectX::~InputDirectX()
 {
 	TAssert(!_bInited);
 }
@@ -40,7 +40,7 @@ PcPadManager::~PcPadManager()
 // ********************************************
 //	Init
 // ********************************************
-int	PcPadManager::Init(HWND	hWnd)
+int	InputDirectX::Init(HWND	hWnd)
 {
 	TAssert(!_bInited);
 
@@ -68,9 +68,9 @@ int	PcPadManager::Init(HWND	hWnd)
 	_nPadCount =_nPadCurrent;
 	_nPadCurrent =0;
 
-	for(PadIdx iPadIdx=0; iPadIdx<_nPadCount; ++iPadIdx)
+	for(DeviceIdx iPadIdx=0; iPadIdx<_nPadCount; ++iPadIdx)
 	{
-		PcPad& PadCurrent =_Pad[iPadIdx];
+		Device& PadCurrent =_Device[iPadIdx];
 
 		if (PadCurrent._PadType!=PT_INVALID)
 		{
@@ -100,13 +100,13 @@ int	PcPadManager::Init(HWND	hWnd)
 // ********************************************
 //	Kill
 // ********************************************
-void PcPadManager::Kill()
+void InputDirectX::Kill()
 {
 	TAssert(_bInited);
 
-	for(PadIdx iPadIdx=0; iPadIdx<_nPadCount; ++iPadIdx)
+	for(DeviceIdx iPadIdx=0; iPadIdx<_nPadCount; ++iPadIdx)
 	{
-		PcPad& PadCurrent =_Pad[iPadIdx];
+		Device& PadCurrent =_Device[iPadIdx];
 		// Unacquire the device one last time just in case  the app tried to exit while the device is still acquired.
 		if (PadCurrent._pDInputDevice) 
 		{
@@ -125,13 +125,13 @@ void PcPadManager::Kill()
 // ********************************************
 //	Update
 // ********************************************
-void PcPadManager::Update(void)
+void InputDirectX::Update(void)
 {
 	TAssert(_bInited);
 
-	for(PadIdx iPadIdx=0; iPadIdx<_nPadCount; ++iPadIdx)
+	for(DeviceIdx iPadIdx=0; iPadIdx<_nPadCount; ++iPadIdx)
 	{
-		PcPad& PadCurrent =_Pad[iPadIdx];
+		Device& PadCurrent =_Device[iPadIdx];
 		HRESULT hr;
 		TAssert(PadCurrent._pDInputDevice);
 		if (!PadCurrent._pDInputDevice)
@@ -159,6 +159,7 @@ void PcPadManager::Update(void)
 		// Get the input's device state
 		PadCurrent._pDInputDevice->GetDeviceState(sizeof(DIJOYSTATE2),&PadCurrent._JoyState);
 
+		/*
 		PadCurrent._vAxisLeft.x =float(PadCurrent._JoyState.lX&0xFF)/128.0f-1.0f;
 		PadCurrent._vAxisLeft.y =float(255-(PadCurrent._JoyState.lY&0xFF))/128.0f-1.0f;
 
@@ -178,13 +179,15 @@ void PcPadManager::Update(void)
 			PadCurrent._vAxisRight.x =float(PadCurrent._JoyState.lRz&0xFF)/128.0f-1.0f;
 			PadCurrent._vAxisRight.y =float(255-(PadCurrent._JoyState.rglSlider[0]&0xFF))/128.0f-1.0f;
 		}
+		*/
 	}
 }
 
+/*
 // ********************************************
 //	GetCtrlState
 // ********************************************
-PcPadManager::CtrlStatus PcPadManager::GetCtrlState(PadIdx iPadIdx, CtrlIdx iControl) const
+InputDirectX::CtrlStatus InputDirectX::GetCtrlState(PadIdx iPadIdx, CtrlIdx iControl) const
 {
 	const PcPad& PadCurrent =_Pad[iPadIdx];
 
@@ -232,6 +235,7 @@ PcPadManager::CtrlStatus PcPadManager::GetCtrlState(PadIdx iPadIdx, CtrlIdx iCon
 	}
 	return	0;
 }
+*/
 
 bool IsXboxPad(const DIDEVICEINSTANCE* pCurrentDevice)
 {
@@ -252,10 +256,10 @@ bool IsPs3Pad(const DIDEVICEINSTANCE* pCurrentDevice)
 //	Desc: Called once for each enumerated joystick. If we find one, create a
 //       device interface on it so we can play with it.
 // ********************************************
-BOOL CALLBACK PcPadManager::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, void* pContext)
+BOOL CALLBACK InputDirectX::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, void* pContext)
 {
-	PcPadManager* pthis =(PcPadManager*)pContext;
-	PcPad& PadCurrent =pthis->_Pad[pthis->_nPadCurrent];
+	InputDirectX* pthis =(InputDirectX*)pContext;
+	Device& PadCurrent =pthis->_Device[pthis->_nPadCurrent];
 
 	if (IsPs3Pad(pdidInstance))
 	{
@@ -278,7 +282,7 @@ BOOL CALLBACK PcPadManager::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidIn
 	}
 
 	++pthis->_nPadCurrent;
-	if (pthis->_nPadCount>=MAX_PAD_COUNT)
+	if (pthis->_nPadCount>=MAX_DEVICE_COUNT)
 	{
 		return DIENUM_STOP;											// Stop enumeration. Note: we're just taking the first joystick we get. You could store all the enumerated joysticks and let the user pick.
 	}
@@ -292,10 +296,10 @@ BOOL CALLBACK PcPadManager::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidIn
 //       joystick. This function enables user interface elements for objects
 //       that are found to exist, and scales axes min/max values.
 // ********************************************
-BOOL CALLBACK PcPadManager::EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, void* pContext)
+BOOL CALLBACK InputDirectX::EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, void* pContext)
 {
-	PcPadManager* pthis=(PcPadManager*)pContext;
-	PcPad& PadCurrent =pthis->_Pad[pthis->_nPadCurrent];
+	InputDirectX* pthis=(InputDirectX*)pContext;
+	Device& PadCurrent =pthis->_Device[pthis->_nPadCurrent];
 
 	static int nSliderCount =0;		// Number of returned slider controls
 	static int nPOVCount	=0;		// Number of returned POV controls
