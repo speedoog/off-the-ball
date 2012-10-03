@@ -31,6 +31,7 @@ void InputMapper::InitForXbox()
 	_Controls[PAD_LEFTPAD_AXIS_Y	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lY			), true	 );
 	_Controls[PAD_RIGHTPAD_AXIS_X	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lRx			), false );
 	_Controls[PAD_RIGHTPAD_AXIS_Y	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lRy			), true  );
+	_Controls[PAD_TIME_SCALE		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lZ			), true	 );
 	_Controls[PAD_BTN_UP			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgdwPOV[0]	), false );
 	_Controls[PAD_BTN_DOWN			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgdwPOV[1]	), false );
 	_Controls[PAD_BTN_LEFT			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgdwPOV[2]	), false );
@@ -49,6 +50,7 @@ void InputMapper::InitForPS3()
 	_Controls[PAD_LEFTPAD_AXIS_Y	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lY		   	), true	 );
 	_Controls[PAD_RIGHTPAD_AXIS_X	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lZ		   	), false );
 	_Controls[PAD_RIGHTPAD_AXIS_Y	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lRz		   	), true  );
+	_Controls[PAD_TIME_SCALE		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rglSlider[0]	), false );
 	_Controls[PAD_BTN_UP			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgdwPOV[0]   	), false );
 	_Controls[PAD_BTN_DOWN			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgdwPOV[1]   	), false );
 	_Controls[PAD_BTN_LEFT			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgdwPOV[2]   	), false );
@@ -67,6 +69,7 @@ void InputMapper::InitForOther()
 	_Controls[PAD_LEFTPAD_AXIS_Y	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lY		   	), true	 );
 	_Controls[PAD_RIGHTPAD_AXIS_X	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lRz		   	), false );
 	_Controls[PAD_RIGHTPAD_AXIS_Y	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rglSlider[0]  ), true  );
+	_Controls[PAD_TIME_SCALE		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rglSlider[0]	), false );
 	_Controls[PAD_BTN_UP			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgdwPOV[0]   	), false );
 	_Controls[PAD_BTN_DOWN			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgdwPOV[1]   	), false );
 	_Controls[PAD_BTN_LEFT			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgdwPOV[2]   	), false );
@@ -158,6 +161,15 @@ const CtrlStatus InputCore::GetCtrlState(int iPlayerIdx, InputMapper::CtrlIdx iC
 const Float32 InputCore::GetCtrlStateFloat(int iPlayerIdx, InputMapper::CtrlIdx iControl) const
 {
 	CtrlStatus status =GetCtrlState(iPlayerIdx, iControl);
+	return Float32(status)/255.0f;
+}
+
+// ********************************************
+//	GetCtrlStateFloatSymetric
+// ********************************************
+const Float32 InputCore::GetCtrlStateFloatSymetric(int iPlayerIdx, InputMapper::CtrlIdx iControl) const
+{
+	CtrlStatus status =GetCtrlState(iPlayerIdx, iControl);
 	return Float32(status)/128.0f-1.0f;
 }
 
@@ -167,8 +179,8 @@ const Float32 InputCore::GetCtrlStateFloat(int iPlayerIdx, InputMapper::CtrlIdx 
 hgeVector InputCore::GetAxisLeft(int iPlayerIdx) const
 {
 	hgeVector vAxisLeft;
-	vAxisLeft.x =GetCtrlStateFloat(iPlayerIdx, InputMapper::PAD_LEFTPAD_AXIS_X);
-	vAxisLeft.y =GetCtrlStateFloat(iPlayerIdx, InputMapper::PAD_LEFTPAD_AXIS_Y);
+	vAxisLeft.x =GetCtrlStateFloatSymetric(iPlayerIdx, InputMapper::PAD_LEFTPAD_AXIS_X);
+	vAxisLeft.y =GetCtrlStateFloatSymetric(iPlayerIdx, InputMapper::PAD_LEFTPAD_AXIS_Y);
 	return vAxisLeft;
 }
 
@@ -178,7 +190,7 @@ hgeVector InputCore::GetAxisLeft(int iPlayerIdx) const
 hgeVector InputCore::GetAxisRight(DeviceIdx iPlayerIdx) const
 {
 	hgeVector vAxisRight;
-	vAxisRight.x =GetCtrlStateFloat(iPlayerIdx, InputMapper::PAD_RIGHTPAD_AXIS_X);
-	vAxisRight.y =GetCtrlStateFloat(iPlayerIdx, InputMapper::PAD_RIGHTPAD_AXIS_Y);
+	vAxisRight.x =GetCtrlStateFloatSymetric(iPlayerIdx, InputMapper::PAD_RIGHTPAD_AXIS_X);
+	vAxisRight.y =GetCtrlStateFloatSymetric(iPlayerIdx, InputMapper::PAD_RIGHTPAD_AXIS_Y);
 	return vAxisRight;
 }

@@ -380,6 +380,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BallHistory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BallHistory.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Game.cpp"
 				>
 			</File>
