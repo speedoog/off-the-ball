@@ -56,6 +56,12 @@ void Resources::Init()
 	_pFontDebug		=LoadFont("Data/font1.fnt");
 	_pFontScore		=LoadFont("Data/FontScore.fnt");
 	_pFontMessages	=LoadFont("Data/Lucida70.fnt");
+
+	_BallTexture =hge->Texture_Load("Data/TennisBall3.png");
+	_pSpriteBall =new hgeSprite(_BallTexture,0,0,16,16);
+	_pSpriteBall->SetHotSpot(8,8);
+
+	_pSpriteBallTrail =new hgeSprite(*_pSpriteBall);
 }
 
 // ********************************************
@@ -65,4 +71,7 @@ void Resources::Kill()
 {
 	// delete all
 	delete _pFontDebug;
+
+	hge->Texture_Free(_BallTexture);
+
 }

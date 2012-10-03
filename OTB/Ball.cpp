@@ -20,22 +20,23 @@
 #include "Ball.h"
 #include "Game.h"
 
-float rGravity			=-7.0f;
-float rTimescale		=1.0f;
-float rGroundResitution	=0.6f;
-float rWallResitution	=0.6f;
-float rCeilResitution	=0.8f;
-float rNetResitution	=0.1f;
+Float32 rGravity			=-9.0f;
+Float32 rGroundResitution	=0.6f;
+Float32 rWallResitution		=0.6f;
+Float32 rCeilResitution		=0.8f;
+Float32 rNetResitution		=0.1f;
+Float32 rAirFriction		=0.6f;
 
 // ********************************************
 //	Ctor
 // ********************************************
 Ball::Ball()
-: _nSide	(0)
-, _bPaused	(false)
-, _vVelocity(0,0)
-, _rRadius	(0.075f)
-, _History	(0.01f, 0.5f, 200)
+: _nSide		(0)
+, _bPaused		(false)
+, _vVelocity	(0,0)
+, _rRadius		(0.1f)
+, _rSpriteAngle	(0.0f)
+, _History		(0.005f, 2.3f, 1000)
 {
 }
 
@@ -68,6 +69,8 @@ void Ball::Reset(Player* pPlayer)
 
 	float rVelX =pPlayer->GetAt()*-1.0f;
 	_vVelocity	=hgeVector(rVelX,4);
+
+	_History.Reset();
 }
 
 // ********************************************
@@ -80,17 +83,20 @@ void Ball::Update(const float rDeltaTime)
 
 	// update ball physic
 	{
-		float rBallPhysicDeltaTime =rDeltaTime*rTimescale;
 		_vLastPos	=_vPos;
 		hgeVector vOldVelocity =_vVelocity;
-		_vVelocity.y+=rGravity*rBallPhysicDeltaTime;
-		_vPos		+=(vOldVelocity+_vVelocity)*0.5f*rBallPhysicDeltaTime;
+		_vVelocity.y+=rGravity*rDeltaTime;
+		_vPos		+=(vOldVelocity+_vVelocity)*0.5f*rDeltaTime;
+
+		// air friction
+		hgeVector vForce =-_vVelocity;
+		_vVelocity +=rAirFriction*vForce*rDeltaTime;
 	}
 
 	// Collision GND
-	if (_vPos.y<0)
+	if (_vPos.y<_rRadius)
 	{
-		_vPos.y =0;
+		_vPos.y =_rRadius;
 		_vVelocity.y =-rGroundResitution*_vVelocity.y;
 
 		_pGame->GetRules().EventBallHitGround();
@@ -98,7 +104,7 @@ void Ball::Update(const float rDeltaTime)
 
 	// Collision Walls
 	Level& level=_pGame->GetLevel();
-	const float rWall =level.GetSize().x;
+	const float rWall =level.GetSize().x-_rRadius;
 	if (_vPos.x>rWall)
 	{
 		_vPos.x =rWall;
@@ -113,7 +119,7 @@ void Ball::Update(const float rDeltaTime)
 	}
 
 	// Collision ceil
-	const float rCeil =level.GetSize().y;
+	const float rCeil =level.GetSize().y-_rRadius;
 	if (_vPos.y>rCeil)
 	{
 		_vPos.y =rCeil;
@@ -148,7 +154,9 @@ void Ball::Update(const float rDeltaTime)
 	}
 	_nSide =nSide;
 
-	_History.Update(_vPos, rDeltaTime);
+	_rSpriteAngle +=_vVelocity.Length()*rDeltaTime;
+
+	_History.Update(_vPos, _rSpriteAngle, rDeltaTime);
 }
 
 // ********************************************
@@ -182,7 +190,11 @@ void Ball::Launch(const hgeVector& vDir)
 // ********************************************
 void Ball::Render()
 {
-	hge->Gfx_RenderCircle(_vPos.x, _vPos.y, _rRadius, 0xFFFFFF00);
+	_History.Draw(_pGame->GetResources()._pSpriteBallTrail);
 
-	_History.Draw();
+	hgeSprite* spriteBall =_pGame->GetResources()._pSpriteBall;
+	Float32 rScale =_rRadius/8.0f;
+	spriteBall->RenderEx(_vPos.x, _vPos.y, _rSpriteAngle, rScale, rScale);
+
+// 	hge->Gfx_RenderCircle(_vPos.x, _vPos.y, _rRadius, 0xFFFFFF00);
 }

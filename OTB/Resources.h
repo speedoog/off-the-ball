@@ -32,12 +32,16 @@ public:
 	void		Init();
 	void		Kill();
 
-	hgeFont* _pFontDebug;
-	hgeFont* _pFontScore;
-	hgeFont* _pFontMessages;
+	hgeFont* 	_pFontDebug;
+	hgeFont* 	_pFontScore;
+	hgeFont* 	_pFontMessages;
+
+	HTEXTURE	_BallTexture;
+	hgeSprite*	_pSpriteBall;
+	hgeSprite*	_pSpriteBallTrail;
 
 protected:
-	hgeFont* LoadFont(const char* filename);
+	hgeFont*	LoadFont(const char* filename);
 };
 
 #endif	//__RESOURCES_H__
