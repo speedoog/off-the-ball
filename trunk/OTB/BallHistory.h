@@ -16,83 +16,47 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __INPUTCOMMAND_H__
-#define __INPUTCOMMAND_H__
+#ifndef __BALL_HISTORY_H__
+#define __BALL_HISTORY_H__
+#pragma once
 
 #include "Base/Base.h"
-#include "InputDirectX.h"
+#include "Base/TQuickList.h"
 
-class InputControl
+class BallFrame : public TQuickListElement
 {
 public:
-	InputControl(){}
-	InputControl(int nOffset, bool bInvert):_nOffset(nOffset), _bInvert(bInvert) {}
+	BallFrame(const hgeVector& vPosition, const Bool bTeleport, const Bool bBlink, const Float32 rTime)
+		: _vPosition(vPosition), _bTeleport(bTeleport), _bBlink(bBlink), _rTime(rTime) { }
 
-	int		_nOffset;
-	bool	_bInvert;
+	hgeVector	_vPosition;
+	Bool		_bTeleport;
+	Bool		_bBlink;
+	Float32		_rTime;
 };
 
-class InputMapper
+class BallHistory
 {
 public:
-	SMARTENUM_DECLARE(CtrlIdx,
-		PAD_BTN_VALIDATE,
-		PAD_BTN_CANCEL,
-		PAD_BTN_PAUSE,
+					BallHistory(const Float32 rMinTimeBetweenSamples, const Float32 rMaxRecordingTime, const UInt32 nMaxFrameCount);
+					~BallHistory();
 
-		PAD_LEFTPAD_AXIS_X,
-		PAD_LEFTPAD_AXIS_Y,
-		PAD_RIGHTPAD_AXIS_X,
-		PAD_RIGHTPAD_AXIS_Y,
-
-		PAD_TIME_SCALE,
-
-		PAD_BTN_UP,
-		PAD_BTN_DOWN,
-		PAD_BTN_LEFT,
-		PAD_BTN_RIGHT,
-
-		PAD_MAX_ENTRIES,
-		);
-
-	InputMapper()	{}
-	~InputMapper()	{}
-
-	void	SetDeviceIdx(Int32 nDeviceIdx)	{ _nDeviceIdx =nDeviceIdx;	}
-	Int32	GetDeviceIdx() const			{ return _nDeviceIdx;		}
-	void	InitForXbox();
-	void	InitForPS3();
-	void	InitForOther();
-
-	const InputControl& GetInputControl(CtrlIdx iControl) const { return _Controls[iControl]; }
+			 void	Update(const hgeVector& vBallPos, const Float32 rTimeElapsed);
+			 void	Draw();
 
 protected:
-	InputControl	_Controls[PAD_MAX_ENTRIES];
-	Int32			_nDeviceIdx;
-};
-
-class InputCore
-{
-public:
-
-						InputCore();
-						~InputCore();
-
-	int					Init(HWND hWnd);
-	void				Kill();
-
-	void				Update();
-
-	const CtrlStatus  	GetCtrlState(int iPlayerIdx, InputMapper::CtrlIdx iControl) const;
-	const Float32		GetCtrlStateFloat(int iPlayerIdx, InputMapper::CtrlIdx iControl) const;
-	const Float32		GetCtrlStateFloatSymetric(int iPlayerIdx, InputMapper::CtrlIdx iControl) const;
-
-	hgeVector			GetAxisLeft(int iPlayerIdx) const;
-	hgeVector			GetAxisRight(int iPlayerIdx) const;
+			 void	ClearOldFrames();
 
 protected:
-	InputDirectX	_InputDirectX;
-	InputMapper		_Mapper[2];
+	Float32		_rMaxRecordingTime;
+	UInt32		_nMaxFrameCount;
+	Float32		_rMinTimeBetweenSamples;
+
+	Float32		_rCurrentTime;
+	TQuickList	_lFrames;
+
+	Bool		_bTeleport;
+	Bool		_bBlink;
 };
 
-#endif	//__INPUTCOMMAND_H__
+#endif //__BALL_HISTORY_H__

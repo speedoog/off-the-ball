@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Base/Base.h"
+#include "BallHistory.h"
 
 class Game;
 class Player;
@@ -53,6 +54,8 @@ protected:
 	Float32		_rRadius;
 	int			_nSide;				// 0 or 1
 	bool		_bPaused;
+
+	BallHistory	_History;
 };
 
 #endif	//__BALL_H__

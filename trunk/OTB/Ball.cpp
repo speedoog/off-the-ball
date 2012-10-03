@@ -35,6 +35,7 @@ Ball::Ball()
 , _bPaused	(false)
 , _vVelocity(0,0)
 , _rRadius	(0.075f)
+, _History	(0.01f, 0.5f, 200)
 {
 }
 
@@ -124,8 +125,8 @@ void Ball::Update(const float rDeltaTime)
 	if (nSide!=_nSide)
 	{
 		const Float32 rDiff  =_vPos.y-level.GetNetY();
-		const Bool	  bLet   =TAbs(rDiff)<0.1f && _pGame->GetRules().IsServing()==false;
-		const Bool	  bHitNet=(rDiff<0.0f) && (!bLet) && (_vVelocity.y<0.0f);
+		const Bool	  bLet   =(TAbs(rDiff)<0.1f) && (_pGame->GetRules().IsServing()==false) && (_vVelocity.y<0.0f);
+		const Bool	  bHitNet=(rDiff<0.0f) && (!bLet);
 
 		// ball change side
 		if (bHitNet)
@@ -146,6 +147,8 @@ void Ball::Update(const float rDeltaTime)
 		}
 	}
 	_nSide =nSide;
+
+	_History.Update(_vPos, rDeltaTime);
 }
 
 // ********************************************
@@ -180,4 +183,6 @@ void Ball::Launch(const hgeVector& vDir)
 void Ball::Render()
 {
 	hge->Gfx_RenderCircle(_vPos.x, _vPos.y, _rRadius, 0xFFFFFF00);
+
+	_History.Draw();
 }

@@ -24,7 +24,7 @@ const float rRacketInputDeadZone	=0.3f;
 const float rRacketRestitution		=0.75;
 const float rRacketOffsetMin		=0.0f;
 const float rRacketOffsetMax		=0.4f;
-const float rRacketRotationSpeedMax =8.0f*M_PI;
+const float rRacketRotationSpeedMax =4.0f*M_PI;
 
 // ********************************************
 //	Ctor
@@ -222,41 +222,6 @@ void Player::Update(const float rDeltaTime)
 	{
 		// check ball collide
 		hgeVector vBallPos		=ball.GetPos();
-		/*
-		hgeVector vRacket0 	=_vPos+hgeVector(0, _rCharRacketY);
-		hgeVector vRacket1 	=vRacket0+_vRacketDir*_rRacketLen;
-
-		hgeVector vBallDiff=vRacket0-vBall;
-		float rCross =0.0f;
-		if (vBallDiff.Length()<_rRacketLen)
-		{
-			hgeVector vRacketD	=vRacket1-vRacket0;
-			hgeVector vRacketB	=vBall-vRacket0;
-			rCross =vRacketD.Cross(vRacketB);
-		}
-
-		float rCrossMul =_rCrossLast*rCross;
-		_rCrossLast =rCross;
-		if (rCrossMul<0 && _rHitCooldown<=0.0f)
-		{
-			hgeVector vProjection;
-			float rRatio;
-			SegmentDist(vRacket0, vRacket1, vBall, &vProjection, &rRatio);
-			if (rRatio>0 && rRatio<1)
-			{
-				hgeVector vHit =vProjection-vBall;
-				vHit.Normalize();
-
-				// temp version
-				float rRacketSpeedAbs =fabsf(_rRacketRotationSpeed);
-				float rImpactSpeed =TClamp(rRacketSpeedAbs, 4.0f, 9.0f);
-
-				ball.RacketHit( vHit*rImpactSpeed);	// test
-				_rHitCooldown =0.5f;
-			}
-		}
-		_rHitCooldown -=rDeltaTime;
-		*/
 
 		if (_rHitCooldown<=0.0f)
 		{
@@ -317,13 +282,6 @@ void Player::Render()
 	float rEyeRadius =_vCharSize.x*0.25f;
 	hgeVector vEyeCenter(_vPos.x+_vCharSize.x*0.75f*GetAt(), _vPos.y+_vCharSize.y*0.85f);
 	hge->Gfx_RenderCircle(vEyeCenter.x, vEyeCenter.y, rEyeRadius, 0xFFFFFFFF);
-
-// 	Ball& ball =_pGame->GetBall();
-// 	const hgeVector& vBallPos =ball.GetPos();
-// 	hgeVector vDiff =vBallPos-vEyeCenter;
-// 	vDiff.Normalize();
-// 	hgeVector vPosIris =vEyeCenter+rEyeRadius*0.666f*vDiff;
-// 	hge->Gfx_RenderCircle(vPosIris.x, vPosIris.y, rEyeRadius*0.3333f, 0xFFC20004);
 
 	// Racket
 	hgeVector vRaquet0=GetRaquetPos0();
