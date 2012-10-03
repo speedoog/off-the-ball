@@ -23,16 +23,19 @@
 #include "Base/Base.h"
 #include "Base/TQuickList.h"
 
+class hgeSprite;
+
 class BallFrame : public TQuickListElement
 {
 public:
-	BallFrame(const hgeVector& vPosition, const Bool bTeleport, const Bool bBlink, const Float32 rTime)
-		: _vPosition(vPosition), _bTeleport(bTeleport), _bBlink(bBlink), _rTime(rTime) { }
+	BallFrame(const hgeVector& vPosition, const Bool bTeleport, const Bool bBlink, const Float32 rTime, const Float32 rAngle)
+		: _vPosition(vPosition), _bTeleport(bTeleport), _bBlink(bBlink), _rTime(rTime), _rAngle(rAngle) { }
 
 	hgeVector	_vPosition;
 	Bool		_bTeleport;
 	Bool		_bBlink;
 	Float32		_rTime;
+	Float32		_rAngle;
 };
 
 class BallHistory
@@ -41,8 +44,9 @@ public:
 					BallHistory(const Float32 rMinTimeBetweenSamples, const Float32 rMaxRecordingTime, const UInt32 nMaxFrameCount);
 					~BallHistory();
 
-			 void	Update(const hgeVector& vBallPos, const Float32 rTimeElapsed);
-			 void	Draw();
+			 void	Update(const hgeVector& vBallPos, const Float32 rAngle, const Float32 rTimeElapsed);
+			 void	Draw(hgeSprite*	pSpriteBallTrail);
+			 void	Reset();
 
 protected:
 			 void	ClearOldFrames();

@@ -18,6 +18,10 @@
 
 #include "BallHistory.h"
 
+
+#include "../hge/hgeColor.h"
+#include "../hge/hgeSprite.h"
+
 //-----------------------------------------------------------------------------
 BallHistory::BallHistory(const Float32 rMinTimeBetweenSamples, const Float32 rMaxRecordingTime, const UInt32 nMaxFrameCount)
 : _rMaxRecordingTime		(rMaxRecordingTime)
@@ -35,7 +39,7 @@ BallHistory::~BallHistory()
 }
 
 //-----------------------------------------------------------------------------
-void BallHistory::Update(const hgeVector& vPosition, const Float32 rDeltaTime)
+void BallHistory::Update(const hgeVector& vPosition, const Float32 rAngle, const Float32 rDeltaTime)
 {
 	if (rDeltaTime>0.0f)
 	{
@@ -50,7 +54,7 @@ void BallHistory::Update(const hgeVector& vPosition, const Float32 rDeltaTime)
 			_bBlink =!_bBlink;
 
 			// Push new frame
-			BallFrame* pFrame =new BallFrame(vPosition, _bTeleport, _bBlink, _rCurrentTime);
+			BallFrame* pFrame =new BallFrame(vPosition, _bTeleport, _bBlink, _rCurrentTime, rAngle);
 			_lFrames.InsertQueue(pFrame);
 		}
 	}
@@ -86,17 +90,39 @@ void BallHistory::ClearOldFrames()
 }
 
 //-----------------------------------------------------------------------------
-void BallHistory::Draw()
+void BallHistory::Reset()
 {
+	_lFrames.DeleteAllElements();
+}
+
+//-----------------------------------------------------------------------------
+void BallHistory::Draw(hgeSprite* pSpriteBallTrail)
+{
+	UInt32 nElementCount =_lFrames.GetNbElements();
 	BallFrame* pPrev =NULL;
+
+	hgeColorRGB clSrc(0.0f, 0.0f, 0.0f, 0.0f);
+	hgeColorRGB clDst(0.0f, 0.7f, 0.0f, 0.1f);
+
+	UInt32 nCurrentElement =0;
+
+	Float32 rScale =0.1f/8.0f;
+
 	FOR_EACH_ELEMENT(_lFrames, pFrame, BallFrame)
 	{
 		if (pPrev!=NULL)
 		{
 			if (!pFrame->_bTeleport)
 			{
-				hge->Gfx_RenderLine(pPrev->_vPosition.x,	pPrev->_vPosition.y,
-									pFrame->_vPosition.x,	pFrame->_vPosition.y, 0x50FFFF00);
+				Float32 rRatio =Float32(nCurrentElement)/Float32(nElementCount);
+				hgeColorRGB clCurrent =TBlend(clSrc, clDst, rRatio);
+
+				pSpriteBallTrail->SetColor(clCurrent.GetHWColor());
+				pSpriteBallTrail->RenderEx(pPrev->_vPosition.x, pPrev->_vPosition.y, pPrev->_rAngle, rScale*rRatio, rScale*rRatio);
+// 				hge->Gfx_RenderLine(pPrev->_vPosition.x,	pPrev->_vPosition.y,
+// 									pFrame->_vPosition.x,	pFrame->_vPosition.y, clCurrent.GetHWColor());
+
+				++nCurrentElement;
 			}
 		}
 		pPrev =pFrame;

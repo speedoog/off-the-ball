@@ -21,7 +21,7 @@
 #include "Game.h"
 
 const float rRacketInputDeadZone	=0.3f;
-const float rRacketRestitution		=0.75;
+const float rRacketRestitution		=0.75f;
 const float rRacketOffsetMin		=0.0f;
 const float rRacketOffsetMax		=0.4f;
 const float rRacketRotationSpeedMax =4.0f*M_PI;
@@ -253,7 +253,7 @@ void Player::Update(const float rDeltaTime)
 
 				hgeVector vRacketNorm=vRacketDirNext-_vRacketDir;
 				//vRacketNorm.Normalize();
-				vRacketNorm *=(rProjRatio/rDeltaTime);
+				vRacketNorm *=0.75f*(rProjRatio/rDeltaTime);
 
 //				Float32 rRacketSpeedAbs =TAbs(_rRacketRotationSpeed);
 //				Float32 rImpactSpeed	=TClamp(rRacketSpeedAbs, 4.0f, 9.0f);

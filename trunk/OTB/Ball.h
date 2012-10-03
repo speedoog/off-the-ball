@@ -52,6 +52,7 @@ protected:
 	hgeVector	_vPos, _vLastPos;
 	hgeVector	_vVelocity;
 	Float32		_rRadius;
+	Float32		_rSpriteAngle;
 	int			_nSide;				// 0 or 1
 	bool		_bPaused;
 
