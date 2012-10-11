@@ -22,8 +22,8 @@
 
 const float rRacketInputDeadZone	=0.3f;
 const float rRacketRestitution		=0.75f;
-const float rRacketOffsetMin		=0.0f;
-const float rRacketOffsetMax		=0.4f;
+const float rRacketOffsetMin		=0.35f;
+const float rRacketOffsetMax		=0.35f;
 const float rRacketRotationSpeedMax =4.0f*M_PI;
 const float rPlayerStrenght			=0.65f;
 
@@ -74,7 +74,7 @@ void Player::Init(Game* pGame, const int nPlayerId)
 		_vInitialPos.x =TBlend(_rPosMin, _rPosMax, rFieldPosRatio);
 	}
 
-	_vRacketDir =hgeVector(-GetAt(), 0);
+//	_vRacketDir =hgeVector(-GetAt(), 0);
 
 	_PowerBar.Init(nPlayerId, pGame);
 	_bUseTimeScale =false;
@@ -91,8 +91,10 @@ void Player::ResetPosition()
 	_vVelocity		=hgeVector(0,0);
 	_rHitCooldown	=0.0f;
 	_vInputMove		=hgeVector(0,0);
-	_vInputRacket	=hgeVector(0,0);
+	_vInputRacket	=hgeVector(_nPlayerId==0?-1.0f:1.0f, 0);
 	_rRacketOffset	=0.0f;
+	_rRacketRotationSpeed =0.0f;
+	_vRacketDir =hgeVector(-GetAt(), 0);
 
 	_PowerBar.Reset();
 	_bUseTimeScale =false;
@@ -320,7 +322,7 @@ void Player::Render()
 // ********************************************
 hgeVector Player::GetRaquetPos0() const
 {
-	hgeVector vRotationCenter(_vPos.x, _rCharRacketY);
+	hgeVector vRotationCenter =GetRotationCenter();
 	hgeVector vRaquet0=vRotationCenter;
 	vRaquet0 +=_vRacketDir*_rRacketOffset;
 	return vRaquet0;
@@ -331,7 +333,7 @@ hgeVector Player::GetRaquetPos0() const
 // ********************************************
 hgeVector Player::GetRaquetPos1() const
 {
-	hgeVector vRotationCenter(_vPos.x, _rCharRacketY);
+	hgeVector vRotationCenter =GetRotationCenter();
 	hgeVector vRaquet1=vRotationCenter;
 	vRaquet1 +=_vRacketDir*(_rRacketOffset+_rRacketLen);
 	return vRaquet1;

@@ -101,7 +101,7 @@ int	InputCore::Init(HWND	hWnd)
 		_Mapper[0].SetDeviceIdx(0);
 		_Mapper[0].InitForXbox();
 
-		_Mapper[1].SetDeviceIdx(0);
+		_Mapper[1].SetDeviceIdx(1);
 		_Mapper[1].InitForXbox();
 	}
 

@@ -33,6 +33,7 @@ public:
 			, CMD_PAD
 			, CMD_KBDMOUSE
 			, CMD_TRACKPAD
+			, CMD_CPU
 			);
 
 					CommandAbc();
@@ -43,7 +44,7 @@ public:
 
 protected:
 	// virtuals
-	virtual	void	OnInit()							{ };
+	virtual	void	OnInit(const UInt32 nPlayerId)		{ };
 	virtual	void	OnUpdate(const float rDeltaTime)	{ };
 
 protected:

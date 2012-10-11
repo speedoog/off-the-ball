@@ -16,56 +16,28 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
+#ifndef __COMMANDCPU_H__
+#define __COMMANDCPU_H__
+#pragma once
 
-#include "CommandMouse.h"
-#include "../Game.h"
+#include "../Base/Base.h"
+#include "CommandAbc.h"
 
-// ********************************************
-//	Ctor
-// ********************************************
-CommandMouse::CommandMouse()
+class InputCore;
+
+class CommandCpu : public CommandAbc
 {
-}
+public:
+					CommandCpu();
+					~CommandCpu();
 
-// ********************************************
-//	Dtor
-// ********************************************
-CommandMouse::~CommandMouse()
-{
-}
+protected:
+	virtual void	OnInit(const UInt32 nPlayerId);
+	virtual void	OnUpdate(const float rDeltaTime);
 
-// ********************************************
-//	OnInit
-// ********************************************
-void CommandMouse::OnInit(const UInt32 nPlayerId)
-{
-	hge->Input_GetMousePos(&_vLastMousePosition.x, &_vLastMousePosition.y);
-	_vCirclePos =hgeVector(0,0);
-}
+protected:
+	UInt32	_nPlayerId;
+	Float32	_rTimeCurrent;
+};
 
-// ********************************************
-//	OnUpdate
-// ********************************************
-void CommandMouse::OnUpdate(const float rDeltaTime)
-{
-	float rLeft =hge->Input_GetKeyState(HGEK_LBUTTON)?1.0f:0.0f;
-	float rRight=hge->Input_GetKeyState(HGEK_LBUTTON)?1.0f:0.0f;
-	float rUp	=hge->Input_GetKeyState(HGEK_SPACE)?1.0f:0.0f;
-	_pPlayer->SetInputMove(hgeVector(rRight-rLeft, rUp));
-
-	hgeVector vMousePos;
-	hge->Input_GetMousePos(&vMousePos.x, &vMousePos.y);
-	hgeVector vDelta=vMousePos-_vLastMousePosition;
-	vDelta.y =-vDelta.y;
-	_vLastMousePosition =vMousePos;
-
-	_vCirclePos+=vDelta/30.0f;
-	if (_vCirclePos.Length()!=0.0f)
-	{
-		if (_vCirclePos.Length()>1.0f)
-		{
-			_vCirclePos.Normalize();
-		}
-		_pPlayer->SetInputRacket(_vCirclePos);
-	}
-}
+#endif	//__COMMANDCPU_H__

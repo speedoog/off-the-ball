@@ -39,7 +39,7 @@ CommandPad::~CommandPad()
 // ********************************************
 //	OnInit
 // ********************************************
-void CommandPad::OnInit()
+void CommandPad::OnInit(const UInt32 nPlayerId)
 {
 	_pInput =&_pGame->GetInputCommand();
 }
@@ -64,8 +64,8 @@ void CommandPad::OnUpdate(const float rDeltaTime)
 	{
 		_pPlayer->SetInputRacket(vAxisRight);
 	}
-	else
-	{
-		_pPlayer->SetInputRacket(hgeVector(0,0));
-	}
+// 	else
+// 	{
+// 		_pPlayer->SetInputRacket(hgeVector(0,0));
+// 	}
 }

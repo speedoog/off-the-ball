@@ -17,55 +17,115 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
-#include "CommandMouse.h"
+#include "CommandCpu.h"
 #include "../Game.h"
 
 // ********************************************
 //	Ctor
 // ********************************************
-CommandMouse::CommandMouse()
+CommandCpu::CommandCpu()
+: _nPlayerId (666)
 {
 }
 
 // ********************************************
 //	Dtor
 // ********************************************
-CommandMouse::~CommandMouse()
+CommandCpu::~CommandCpu()
 {
+
 }
 
 // ********************************************
 //	OnInit
 // ********************************************
-void CommandMouse::OnInit(const UInt32 nPlayerId)
+void CommandCpu::OnInit(const UInt32 nPlayerId)
 {
-	hge->Input_GetMousePos(&_vLastMousePosition.x, &_vLastMousePosition.y);
-	_vCirclePos =hgeVector(0,0);
+	_nPlayerId =nPlayerId;
+	_rTimeCurrent =0.0f;
 }
 
 // ********************************************
 //	OnUpdate
 // ********************************************
-void CommandMouse::OnUpdate(const float rDeltaTime)
+void CommandCpu::OnUpdate(const float rDeltaTime)
 {
-	float rLeft =hge->Input_GetKeyState(HGEK_LBUTTON)?1.0f:0.0f;
-	float rRight=hge->Input_GetKeyState(HGEK_LBUTTON)?1.0f:0.0f;
-	float rUp	=hge->Input_GetKeyState(HGEK_SPACE)?1.0f:0.0f;
-	_pPlayer->SetInputMove(hgeVector(rRight-rLeft, rUp));
+	// reset previous cmd
+	hgeVector vInputRacket(0.0f, 0.0f);
+	hgeVector vInputMove(0.0f, 0.0f);
 
-	hgeVector vMousePos;
-	hge->Input_GetMousePos(&vMousePos.x, &vMousePos.y);
-	hgeVector vDelta=vMousePos-_vLastMousePosition;
-	vDelta.y =-vDelta.y;
-	_vLastMousePosition =vMousePos;
+	_rTimeCurrent+= rDeltaTime;
 
-	_vCirclePos+=vDelta/30.0f;
-	if (_vCirclePos.Length()!=0.0f)
+	// fetch context
+	UInt32 nOtherPlayerId =1-_nPlayerId;
+	Ball& ball =_pGame->GetBall();
+	hgeVector vBallPos =ball.GetPos();
+
+	Player&	playerCPU =_pGame->GetPlayer(_nPlayerId);
+	hgeVector vPlayerPos		=playerCPU.GetPosition();
+	hgeVector vPlayerRotation	=playerCPU.GetRotationCenter();
+
+	Rules&	rules =_pGame->GetRules();
+
+	UInt32	nBallSide  =rules.GetBallSide();
+	Bool	bRacketHit =rules.GetRacketHit();
+
+	if (rules.IsWaitingToServe(_nPlayerId))
 	{
-		if (_vCirclePos.Length()>1.0f)
-		{
-			_vCirclePos.Normalize();
-		}
-		_pPlayer->SetInputRacket(_vCirclePos);
+		// wait for my serve
+		vInputMove	 =hgeVector(1.0f, 1.0f);
+		vInputRacket =hgeVector(1.0f, 1.0f);
+		_rTimeCurrent =0.0f;
 	}
+	else
+	{
+		if (rules.IsServing())
+		{
+			if (nBallSide==_nPlayerId)
+			{
+				if (_rTimeCurrent>0.8f)
+				{
+					vInputRacket =hgeVector(-1.0f, 1.0f);
+				}
+				else
+				{
+					vInputRacket =hgeVector(1.0f, 1.0f);
+				}
+			}
+			else
+			{
+				if (bRacketHit==false)
+				{
+					vInputMove.SetPolar(1.0f, _rTimeCurrent*4.0f);
+					vInputRacket.SetPolar(1.0f, _rTimeCurrent*10.0f);
+				}
+			}
+		}
+		else
+		{
+			// ----------------- in game ---------------
+			if (nBallSide==_nPlayerId)
+			{
+				Float32 rDiffX =vBallPos.x-vPlayerPos.x;
+
+				vInputRacket =hgeVector(1.0f, 1.0f);
+
+				hgeVector vDistRacketBall =vBallPos-vPlayerRotation;
+				if (vDistRacketBall.Length()<0.9f)
+				{
+					vInputRacket =hgeVector(-1.0f, 1.0f);			// shoot
+				}
+
+				vInputMove =hgeVector(rDiffX, 0.0f);
+			}
+			else
+			{
+				vInputRacket =hgeVector(1.0f, 1.0f);
+				vInputMove.SetPolar(1.0f, _rTimeCurrent*10.0f);
+			}
+		}
+	}
+
+	_pPlayer->SetInputMove(vInputMove);
+	_pPlayer->SetInputRacket(vInputRacket);
 }
