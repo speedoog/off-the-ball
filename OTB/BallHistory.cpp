@@ -103,6 +103,7 @@ void BallHistory::Draw(hgeSprite* pSpriteBallTrail)
 
 	hgeColorRGB clSrc(0.0f, 0.0f, 0.0f, 0.0f);
 	hgeColorRGB clDst(0.0f, 0.7f, 0.0f, 0.1f);
+	hgeColorRGB clDst2(1.0f, 1.0f, 1.0f, 0.2f);
 
 	UInt32 nCurrentElement =0;
 
@@ -119,6 +120,25 @@ void BallHistory::Draw(hgeSprite* pSpriteBallTrail)
 
 				pSpriteBallTrail->SetColor(clCurrent.GetHWColor());
 				pSpriteBallTrail->RenderEx(pPrev->_vPosition.x, pPrev->_vPosition.y, pPrev->_rAngle, rScale*rRatio, rScale*rRatio);
+
+				hgeVector vDiff(pFrame->_vPosition-pPrev->_vPosition);
+				hgeVector vNorm(vDiff.y, -vDiff.x);
+				vNorm.Normalize();
+
+				hgeColorRGB clCurrent2 =TBlend(clSrc, clDst2, rRatio);
+
+				for(UInt32 i=0; i<4; ++i)
+				{
+					Float32 rOffsetAngle =Float32(i)*M_PI_2;
+					Float32 rSin1 =sinf(pPrev->_rAngle+rOffsetAngle)*rRatio;
+					Float32 rSin2 =sinf(pFrame->_rAngle+rOffsetAngle)*rRatio;
+
+					hgeVector v0 =pPrev->_vPosition+vNorm*0.1f*0.9f*rSin1;
+					hgeVector v1 =pFrame->_vPosition+vNorm*0.1f*0.9f*rSin2;
+
+					hge->Gfx_RenderLine(v0.x, v0.y, v1.x, v1.y, clCurrent2.GetHWColor());
+				}
+
 // 				hge->Gfx_RenderLine(pPrev->_vPosition.x,	pPrev->_vPosition.y,
 // 									pFrame->_vPosition.x,	pFrame->_vPosition.y, clCurrent.GetHWColor());
 

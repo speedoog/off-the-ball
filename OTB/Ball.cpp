@@ -20,12 +20,12 @@
 #include "Ball.h"
 #include "Game.h"
 
-Float32 rGravity			=-9.0f;
-Float32 rGroundResitution	=0.6f;
-Float32 rWallResitution		=0.6f;
-Float32 rCeilResitution		=0.8f;
+Float32 rGravity			=-8.0f;
+Float32 rGroundResitution	=1.0f;
+Float32 rWallResitution		=0.75f;
+Float32 rCeilResitution		=0.5f;
 Float32 rNetResitution		=0.1f;
-Float32 rAirFriction		=0.6f;
+Float32 rAirFriction		=0.075f;
 
 // ********************************************
 //	Ctor
@@ -89,8 +89,9 @@ void Ball::Update(const float rDeltaTime)
 		_vPos		+=(vOldVelocity+_vVelocity)*0.5f*rDeltaTime;
 
 		// air friction
-		hgeVector vForce =-_vVelocity;
-		_vVelocity +=rAirFriction*vForce*rDeltaTime;
+		hgeVector	vForceDir		=-_vVelocity;
+		Float32		rForceIntensity =/*sqrtf*/(_vVelocity.Length());
+		_vVelocity +=rAirFriction*vForceDir*rForceIntensity*rDeltaTime;
 	}
 
 	// Collision GND

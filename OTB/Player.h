@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Base/Base.h"
+#include "PowerBar.h"
 class Game;
 
 class Player
@@ -45,6 +46,8 @@ public:
 	inline	void				ScoreReset()									{ _nScore =0;						}
 	inline	int					ScoreGet()										{ return _nScore;					}
 
+	inline	bool				UseTimeScale()									{ return _bUseTimeScale;			}
+
 	// inputs
 	inline	void				SetInputMove(const hgeVector& vInputMove)		{ _vInputMove	=vInputMove;		}
 	inline	void				SetInputRacket(const hgeVector& vInputRacket)	{ _vInputRacket =vInputRacket;		}
@@ -55,6 +58,8 @@ protected:
 
 protected:
 	Game*		_pGame;
+
+	PowerBar	_PowerBar;
 
 	// Physic
 	hgeVector	_vPos, _vInitialPos;
@@ -72,9 +77,9 @@ protected:
 	int			_nPlayerId;
 
 	// runtime values
-	float		_rCrossLast;
 	float		_rHitCooldown;
 	int			_nScore;
+	bool		_bUseTimeScale;
 
 	// Input
 	hgeVector	_vInputMove, _vInputRacket;

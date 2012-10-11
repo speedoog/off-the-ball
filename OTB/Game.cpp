@@ -138,10 +138,8 @@ void Game::Update(const float rDeltaTime)
 	_pCmd0->Update(rDeltaTime);
 	_pCmd1->Update(rDeltaTime);
 
-	InputCore& Input =GetInputCommand();
-
-	const Float32 rTimeFactor =TChangeRange(0.5f, 1.0f, 1.0f, 0.3f, Input.GetCtrlStateFloat(0, InputMapper::PAD_TIME_SCALE));
-
+//	const Float32 rTimeFactor =TChangeRange(0.5f, 1.0f, 1.0f, 0.3f, Input.GetCtrlStateFloat(0, InputMapper::PAD_TIME_SCALE));
+	const Float32 rTimeFactor =(UseTimeScale()==true)?0.3f:1.0f;
 	const Float32 rTimeScaled =rDeltaTime*rTimeFactor;
 
 	const UInt32 nSliceCount =10;
@@ -155,6 +153,7 @@ void Game::Update(const float rDeltaTime)
 	}
 
 	// Cheat to restart (select btn)
+	InputCore& Input =GetInputCommand();
 	if (Input.GetCtrlState(0, InputMapper::PAD_BTN_PAUSE))
 	{
 		_Rules.ActionServiceStart(0);

@@ -412,6 +412,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PowerBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PowerBar.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Rules.cpp"
 				>
 			</File>
