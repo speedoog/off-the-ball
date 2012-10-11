@@ -30,7 +30,7 @@ public:
 					~CommandMouse();
 
 protected:
-	virtual void	OnInit();
+	virtual void	OnInit(const UInt32 nPlayerId);
 	virtual void	OnUpdate(const float rDeltaTime);
 
 protected:

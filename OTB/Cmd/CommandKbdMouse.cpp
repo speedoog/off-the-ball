@@ -37,7 +37,7 @@ CommandKbdMouse::~CommandKbdMouse()
 // ********************************************
 //	OnInit
 // ********************************************
-void CommandKbdMouse::OnInit()
+void CommandKbdMouse::OnInit(const UInt32 nPlayerId)
 {
 	hge->Input_GetMousePos(&_vLastMousePosition.x, &_vLastMousePosition.y);
 	_vCirclePos =hgeVector(0,0);

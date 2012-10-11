@@ -18,6 +18,7 @@
 
 
 #include "CommandAbc.h"
+#include "../Player.h"
 
 // ********************************************
 //	Ctor
@@ -42,7 +43,7 @@ void CommandAbc::Init(Game* pGame, Player* pPlayer, const int nCmdId)
 	_pGame	 =pGame;
 	_pPlayer =pPlayer;
 	_nCmdId	 =nCmdId;
-	OnInit();
+	OnInit(pPlayer->GetPlayerId());
 }
 
 // ********************************************

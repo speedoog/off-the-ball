@@ -37,6 +37,7 @@ public:
 
 	inline	void				SetPosition(const hgeVector& vPos)				{ _vPos =vPos;						}
 	inline	const hgeVector&	GetPosition() const								{ return _vPos;						}
+	inline	hgeVector			GetRotationCenter() const						{ return hgeVector(_vPos.x, _rCharRacketY);}
 	inline	void				SetVelocity(const hgeVector& vVel)				{ _vVelocity=vVel;					}
 	inline	const hgeVector&	GetVelocity() const								{ return _vVelocity;				}
 	inline	float				GetAt() const									{ return _nPlayerId==0?1.0f:-1.0f;	}
@@ -49,8 +50,8 @@ public:
 	inline	bool				UseTimeScale()									{ return _bUseTimeScale;			}
 
 	// inputs
-	inline	void				SetInputMove(const hgeVector& vInputMove)		{ _vInputMove	=vInputMove;		}
-	inline	void				SetInputRacket(const hgeVector& vInputRacket)	{ _vInputRacket =vInputRacket;		}
+	inline	void				SetInputMove(const hgeVector& vInputMove)		{ _vInputMove	=vInputMove;	if (_vInputMove.LengthSq()>1.0f)	_vInputMove.Normalize();	}
+	inline	void				SetInputRacket(const hgeVector& vInputRacket)	{ _vInputRacket =vInputRacket;	if (_vInputRacket.LengthSq()>1.0f)	_vInputRacket.Normalize(); 	}
 
 protected:
 	hgeVector	GetRaquetPos0() const;

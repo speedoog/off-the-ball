@@ -332,6 +332,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Cmd\CommandCpu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Cmd\CommandCpu.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Cmd\CommandKbdMouse.cpp"
 				>
 			</File>

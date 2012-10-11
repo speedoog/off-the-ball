@@ -51,6 +51,8 @@ public:
 	inline	bool		IsWaitingToServe(int nPlayerId)	{ return _nServicePlayer==nPlayerId && _bWaitServe; }
 	inline	bool		IsWaitingToServe()				{ return _bWaitServe; }
 	inline	bool		IsServing()						{ return _bServing; }
+	inline	int			GetBallSide() const				{ return _nBallSide; }
+	inline	bool		GetRacketHit() const			{ return _bRacketHit; }
 
 protected:
 	Game*	_pGame;

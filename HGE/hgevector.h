@@ -49,6 +49,7 @@ public:
 	inline	void		Clamp(const float max)					{ if(Length() > max)	{ Normalize(); x *= max; y *= max; } }
 	inline	hgeVector*	Normalize()								{ float rc=InvSqrt(Dot(*this)); x*=rc; y*=rc; return this; }
 			hgeVector*	Rotate(float a);
+	inline	void		SetPolar(const float rAmplitude, const float rAngle)	{ x =rAmplitude*cosf(rAngle); y =rAmplitude*sinf(rAngle); }
 };
 
 inline hgeVector operator* (const float s, const hgeVector &v)		{ return v*s; }
