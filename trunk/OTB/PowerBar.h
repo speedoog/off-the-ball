@@ -16,34 +16,31 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __RESOURCES_H__
-#define __RESOURCES_H__
+#ifndef __POWERBAR_H__
+#define __POWERBAR_H__
 #pragma once
 
 #include "Base/Base.h"
-#include "../HGE/hgefont.h"
 
-class Resources
+class Game;
+
+class PowerBar
 {
 public:
-				Resources();
-				~Resources();
+								PowerBar();
+								~PowerBar();
 
-	void		Init();
-	void		Kill();
-
-	hgeFont* 	_pFontDebug;
-	hgeFont* 	_pFontScore;
-	hgeFont* 	_pFontMessages;
-
-	HTEXTURE	_BallTexture;
-	hgeSprite*	_pSpriteBall;
-	hgeSprite*	_pSpriteBallTrail;
-
-	HTEXTURE	_texPowerBar;
+			void				Init(const UInt32 nPlayerId, Game* pGame);
+			void				Reset();
+			Bool				Update(const float rDeltaTime, const Bool bUse);
+			void				ChangeSide();
+			void				Render();
 
 protected:
-	hgeFont*	LoadFont(const char* filename);
+	UInt32		_nPlayerId;
+	Float32		_rValue;
+	Game*		_pGame;
 };
 
-#endif	//__RESOURCES_H__
+
+#endif	//__POWERBAR_H__

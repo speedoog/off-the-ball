@@ -25,6 +25,7 @@ const float rRacketRestitution		=0.75f;
 const float rRacketOffsetMin		=0.0f;
 const float rRacketOffsetMax		=0.4f;
 const float rRacketRotationSpeedMax =4.0f*M_PI;
+const float rPlayerStrenght			=0.65f;
 
 // ********************************************
 //	Ctor
@@ -75,6 +76,9 @@ void Player::Init(Game* pGame, const int nPlayerId)
 
 	_vRacketDir =hgeVector(-GetAt(), 0);
 
+	_PowerBar.Init(nPlayerId, pGame);
+	_bUseTimeScale =false;
+
 	ResetPosition();
 }
 
@@ -85,11 +89,13 @@ void Player::ResetPosition()
 {
 	_vPos			=_vInitialPos;
 	_vVelocity		=hgeVector(0,0);
-	_rCrossLast		=0.0f;
 	_rHitCooldown	=0.0f;
 	_vInputMove		=hgeVector(0,0);
 	_vInputRacket	=hgeVector(0,0);
 	_rRacketOffset	=0.0f;
+
+	_PowerBar.Reset();
+	_bUseTimeScale =false;
 }
 
 float SegmentDist(const hgeVector& v0, const hgeVector& v1, const hgeVector& p, hgeVector* pProj=NULL, float* pRatio=NULL)
@@ -253,7 +259,7 @@ void Player::Update(const float rDeltaTime)
 
 				hgeVector vRacketNorm=vRacketDirNext-_vRacketDir;
 				//vRacketNorm.Normalize();
-				vRacketNorm *=0.75f*(rProjRatio/rDeltaTime);
+				vRacketNorm *=rPlayerStrenght*(1.0f/rDeltaTime);
 
 //				Float32 rRacketSpeedAbs =TAbs(_rRacketRotationSpeed);
 //				Float32 rImpactSpeed	=TClamp(rRacketSpeedAbs, 4.0f, 9.0f);
@@ -266,6 +272,22 @@ void Player::Update(const float rDeltaTime)
 		}
 		_rHitCooldown -=rDeltaTime;
 
+	}
+
+	if (pRules->IsWaitingToServe()==false)
+	{
+		// power
+		_bUseTimeScale =false;
+		if (ball.GetSide()==_nPlayerId)
+		{
+			InputCore& Input =_pGame->GetInputCommand();
+			const Float32 rInputTimeScale =Input.GetCtrlStateFloat(_nPlayerId, InputMapper::PAD_TIME_SCALE);
+			if (rInputTimeScale>0.75f)
+			{
+				_bUseTimeScale =true;
+			}
+		}
+		_bUseTimeScale =_PowerBar.Update(rDeltaTime, _bUseTimeScale);
 	}
 }
 
@@ -289,6 +311,8 @@ void Player::Render()
 
 	hge->Gfx_RenderLine(vRaquet0.x, vRaquet0.y,
 						vRaquet1.x, vRaquet1.y, 0xFF60FF60);
+
+	_PowerBar.Render();
 }
 
 // ********************************************

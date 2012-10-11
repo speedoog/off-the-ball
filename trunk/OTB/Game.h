@@ -44,19 +44,21 @@ public:
 
 	// Accessors
 	inline	Resources&		GetResources()		{ return _Resources;  	}
-	inline	InputCore&	GetInputCommand()	{ return _Input;	 	}
+	inline	InputCore&		GetInputCommand()	{ return _Input;	 	}
 	inline	Player&			GetPlayer(int i)	{ return _Players[i]; 	}
 	inline	Ball&			GetBall()			{ return _Ball;			}
 	inline	Level&			GetLevel()			{ return _Level;		}
 	inline	Rules&			GetRules()			{ return _Rules;		}
+	inline	Bool			UseTimeScale()		{ return _Players[0].UseTimeScale() || _Players[1].UseTimeScale();	}
 
 protected:
 	Level			_Level;
 	Player			_Players[2];
 	Ball			_Ball;
 	Resources		_Resources;
-	InputCore	_Input;
+	InputCore		_Input;
 	Rules			_Rules;
+//	Bool			_bUseTimeScale;
 
 	// temp ...
 	CommandAbc*		_pCmd0;
