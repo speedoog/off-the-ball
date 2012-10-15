@@ -61,13 +61,13 @@ void Ball::Init(Game* pGame)
 // ********************************************
 void Ball::Reset(Player* pPlayer)
 {
-	float rPosX =pPlayer->GetPosition().x + pPlayer->GetAt()*0.1f;
+	float rPosX =pPlayer->GetPosition().x + pPlayer->GetFront()*0.1f;
 
 	_vPos		=hgeVector(rPosX,1.8f);
 	_nSide		=pPlayer->GetPlayerId();
 	_vLastPos	=_vPos;
 
-	float rVelX =pPlayer->GetAt()*-1.0f;
+	float rVelX =pPlayer->GetFront()*-1.0f;
 	_vVelocity	=hgeVector(rVelX,4);
 
 	_History.Reset();

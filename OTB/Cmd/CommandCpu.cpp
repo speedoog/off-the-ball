@@ -50,6 +50,8 @@ void CommandCpu::OnInit(const UInt32 nPlayerId)
 // ********************************************
 void CommandCpu::OnUpdate(const float rDeltaTime)
 {
+	static const Float32 rAnticipationTime =0.1f;
+
 	// reset previous cmd
 	hgeVector vInputRacket(0.0f, 0.0f);
 	hgeVector vInputMove(0.0f, 0.0f);
@@ -60,39 +62,41 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 	UInt32 nOtherPlayerId =1-_nPlayerId;
 	Ball& ball =_pGame->GetBall();
 	hgeVector vBallPos =ball.GetPos();
+	hgeVector vBallFuturePos =vBallPos+ball.GetVelocity()*rAnticipationTime;
 
 	Player&	playerCPU =_pGame->GetPlayer(_nPlayerId);
 	hgeVector vPlayerPos		=playerCPU.GetPosition();
 	hgeVector vPlayerRotation	=playerCPU.GetRotationCenter();
+	const Float32 rFront=playerCPU.GetFront();
+	const Float32 rBack =playerCPU.GetBack();
 
 	Rules&	rules =_pGame->GetRules();
 
 	UInt32	nBallSide  =rules.GetBallSide();
 	Bool	bRacketHit =rules.GetRacketHit();
 
-	if (rules.IsWaitingToServe(_nPlayerId))
+	if (rules.IsWaitingToServe(_nPlayerId))								// Waiting for my serve
 	{
-		// wait for my serve
-		vInputMove	 =hgeVector(1.0f, 1.0f);
-		vInputRacket =hgeVector(1.0f, 1.0f);
+		vInputMove	 =hgeVector(rBack, 1.0f);
+		vInputRacket =hgeVector(rBack, 1.0f);
 		_rTimeCurrent =0.0f;
 	}
 	else
 	{
-		if (rules.IsServing())
+		if (rules.IsServing())											// ----------------- in Service ---------------
 		{
-			if (nBallSide==_nPlayerId)
+			if (nBallSide==_nPlayerId)									// Service : my side
 			{
 				if (_rTimeCurrent>0.8f)
 				{
-					vInputRacket =hgeVector(-1.0f, 1.0f);
+					vInputRacket =hgeVector(rFront, 1.0f);				// shoot !
 				}
 				else
 				{
-					vInputRacket =hgeVector(1.0f, 1.0f);
+					vInputRacket =hgeVector(rBack, 1.0f);
 				}
 			}
-			else
+			else														// Service : other side
 			{
 				if (bRacketHit==false)
 				{
@@ -101,26 +105,35 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 				}
 			}
 		}
-		else
+		else															// ----------------- in game ---------------
 		{
-			// ----------------- in game ---------------
-			if (nBallSide==_nPlayerId)
+			if (nBallSide==_nPlayerId)									// my side
 			{
-				Float32 rDiffX =vBallPos.x-vPlayerPos.x;
-
-				vInputRacket =hgeVector(1.0f, 1.0f);
-
-				hgeVector vDistRacketBall =vBallPos-vPlayerRotation;
-				if (vDistRacketBall.Length()<0.9f)
+				if (vBallFuturePos.y<vPlayerRotation.y)					// low ball
 				{
-					vInputRacket =hgeVector(-1.0f, 1.0f);			// shoot
+					vInputRacket =hgeVector(0.0f, -1.0f);
+					hgeVector vDistRacketBall =vBallPos-vPlayerRotation;
+					if (vDistRacketBall.Length()<0.5f)
+					{
+						vInputRacket =hgeVector(rBack, 0.0f);			// shoot ! raise ball
+					}
+				}
+				else
+				{
+					vInputRacket =hgeVector(rBack, 1.0f);
+					hgeVector vDistRacketBall =vBallPos-vPlayerRotation;
+					if (vDistRacketBall.Length()<1.0f)
+					{
+						vInputRacket =hgeVector(rFront, 1.0f);			// shoot !
+					}
 				}
 
+				Float32 rDiffX =vBallFuturePos.x-(vPlayerPos.x+rBack*0.5f);
 				vInputMove =hgeVector(rDiffX, 0.0f);
 			}
 			else
 			{
-				vInputRacket =hgeVector(1.0f, 1.0f);
+				vInputRacket =hgeVector(rBack, 1.0f);
 				vInputMove.SetPolar(1.0f, _rTimeCurrent*10.0f);
 			}
 		}
