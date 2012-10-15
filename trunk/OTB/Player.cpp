@@ -94,7 +94,7 @@ void Player::ResetPosition()
 	_vInputRacket	=hgeVector(_nPlayerId==0?-1.0f:1.0f, 0);
 	_rRacketOffset	=0.0f;
 	_rRacketRotationSpeed =0.0f;
-	_vRacketDir =hgeVector(-GetAt(), 0);
+	_vRacketDir =hgeVector(-GetFront(), 0);
 
 	_PowerBar.Reset();
 	_bUseTimeScale =false;
@@ -304,7 +304,7 @@ void Player::Render()
 
 	// Eye test
 	float rEyeRadius =_vCharSize.x*0.25f;
-	hgeVector vEyeCenter(_vPos.x+_vCharSize.x*0.75f*GetAt(), _vPos.y+_vCharSize.y*0.85f);
+	hgeVector vEyeCenter(_vPos.x+_vCharSize.x*0.75f*GetFront(), _vPos.y+_vCharSize.y*0.85f);
 	hge->Gfx_RenderCircle(vEyeCenter.x, vEyeCenter.y, rEyeRadius, 0xFFFFFFFF);
 
 	// Racket

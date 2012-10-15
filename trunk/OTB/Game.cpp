@@ -138,21 +138,24 @@ void Game::Update(const float rDeltaTime)
 {
 	_Input.Update();
 
-	const Float32 rTimeFactor =TChangeRange(0.5f, 1.0f, 1.0f, 0.3f, GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_TIME_SCALE));
-//	const Float32 rTimeFactor =(UseTimeScale()==true)?0.3f:1.0f;
-	const Float32 rTimeScaled =rDeltaTime*rTimeFactor;
-
-	_pCmd0->Update(rTimeScaled);
-	_pCmd1->Update(rTimeScaled);
-
-	const UInt32 nSliceCount =10;
-	const Float32 rSliceTime =rTimeScaled/Float32(nSliceCount);
-	for(UInt32 i=0; i<nSliceCount; ++i)
+	if (GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_BTN_VALIDATE)<0.5f)
 	{
-		_Level.Update(rSliceTime);
-		_Ball.Update(rSliceTime);
-		_Players[0].Update(rSliceTime);
-		_Players[1].Update(rSliceTime);
+		const Float32 rTimeFactor =TChangeRange(0.5f, 1.0f, 1.0f, 0.3f, GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_TIME_SCALE));
+		//	const Float32 rTimeFactor =(UseTimeScale()==true)?0.3f:1.0f;
+		const Float32 rTimeScaled =rDeltaTime*rTimeFactor;
+
+		_pCmd0->Update(rTimeScaled);
+		_pCmd1->Update(rTimeScaled);
+
+		const UInt32 nSliceCount =10;
+		const Float32 rSliceTime =rTimeScaled/Float32(nSliceCount);
+		for(UInt32 i=0; i<nSliceCount; ++i)
+		{
+			_Level.Update(rSliceTime);
+			_Ball.Update(rSliceTime);
+			_Players[0].Update(rSliceTime);
+			_Players[1].Update(rSliceTime);
+		}
 	}
 
 	// Cheat to restart (select btn)

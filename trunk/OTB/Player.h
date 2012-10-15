@@ -40,7 +40,8 @@ public:
 	inline	hgeVector			GetRotationCenter() const						{ return hgeVector(_vPos.x, _rCharRacketY);}
 	inline	void				SetVelocity(const hgeVector& vVel)				{ _vVelocity=vVel;					}
 	inline	const hgeVector&	GetVelocity() const								{ return _vVelocity;				}
-	inline	float				GetAt() const									{ return _nPlayerId==0?1.0f:-1.0f;	}
+	inline	Float32				GetFront() const								{ return (_nPlayerId*-2.0f)+1.0f;	}
+	inline	Float32				GetBack() const									{ return (_nPlayerId*2.0f)-1.0f;	}
 	inline	int					GetPlayerId() const								{ return _nPlayerId;				}
 
 	inline	void				ScoreInc()										{ ++_nScore;						}
