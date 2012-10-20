@@ -16,47 +16,55 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BALL_H__
-#define __BALL_H__
+#ifndef __RULES_H__
+#define __RULES_H__
 #pragma once
 
-#include "Base/Base.h"
-#include "BallHistory.h"
+#include "../Base/Base.h"
 
 class Game;
-class Player;
 
-class Ball
+class Rules
 {
 public:
-						Ball();
-						~Ball();
-			void		Init(Game* pGame);
+						Rules();
+						~Rules();
 
-			void		Reset(Player* pPlayer);
+			void		Init(Game* pGame);
 			void		Update(const float rDeltaTime);
 			void		Render();
 
-			void		Launch(const hgeVector& vDir);
-			void		RacketHit(const hgeVector& vVelocity);
+	// Actions
+			void		ActionStartGame(int nPlayerStart);
+			void		ActionServiceStart(int nPlayerServe);
+			void		ActionFail();
+			void		ActionServiceFailed();
 
-	// inline
-	inline	hgeVector&	GetPos() 						{ return _vPos;			}
-	inline	hgeVector&	GetVelocity() 					{ return _vVelocity;	}
-	inline	int			GetSide()						{ return _nSide;		}
-	inline	Float32		GetRadius() 					{ return _rRadius;		}
-	inline	void		SetPaused(const bool bPaused)	{ _bPaused =bPaused;	}
+	// Events
+			void		EventBallChangeSide(int nSide);
+			void		EventBallHitGround();
+			void		EventBallHitWall();
+			void		EventBallHitRacket();
+			void		EventBallHitNet();
+			void		EventServeStart();
+
+	inline	bool		IsWaitingToServe(int nPlayerId)	{ return _nServicePlayer==nPlayerId && _bWaitServe; }
+	inline	bool		IsWaitingToServe()				{ return _bWaitServe; }
+	inline	bool		IsServing()						{ return _bServing; }
+	inline	int			GetBallSide() const				{ return _nBallSide; }
+	inline	bool		GetRacketHit() const			{ return _bRacketHit; }
 
 protected:
-	Game*		_pGame;
-	hgeVector	_vPos, _vLastPos;
-	hgeVector	_vVelocity;
-	Float32		_rRadius;
-	Float32		_rSpriteAngle;
-	int			_nSide;				// 0 or 1
-	bool		_bPaused;
+	Game*	_pGame;
 
-	BallHistory	_History;
+	bool	_bServing;
+	bool	_bSecondServe;
+	bool	_bWaitServe;
+	bool	_bRacketHit;
+	int		_nBallSide;
+	int		_nGroundTouch;
+	int		_nServicePlayer;
 };
 
-#endif	//__BALL_H__
+
+#endif	//__RULES_H__

@@ -20,14 +20,14 @@
 #define __GAME_H__
 #pragma once
 
-#include "Base/Base.h"
+#include "../Base/Base.h"
 #include "Level.h"
 #include "Player.h"
 #include "Ball.h"
-#include "Resources.h"
-#include "InputCommand.h"
+#include "../Resources.h"
+#include "../Input/InputCommand.h"
 #include "Rules.h"
-#include "Cmd/CommandAbc.h"
+#include "../Cmd/CommandAbc.h"
 
 class XML_PARSER;
 

@@ -16,55 +16,71 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __RULES_H__
-#define __RULES_H__
-#pragma once
+#ifndef __INPUTDIRECTX_H__
+#define __INPUTDIRECTX_H__
 
-#include "Base/Base.h"
+#define DIRECTINPUT_VERSION 0x0800
+#include <windows.h>
+#include <basetsd.h>
 
-class Game;
+#include "DirectX10Sdk/Include/dinput.h"            //DirectInput header (NEW)
+#include "../Base/Base.h"
+#include "../Base/SmartEnum.h"
+#include "../../hge/hgevector.h"
 
-class Rules
+typedef unsigned char	CtrlStatus;
+typedef int				DeviceIdx;
+
+class InputDirectX
 {
 public:
-						Rules();
-						~Rules();
 
-			void		Init(Game* pGame);
-			void		Update(const float rDeltaTime);
-			void		Render();
+	enum
+	{
+		MAX_DEVICE_COUNT =4
+	};
 
-	// Actions
-			void		ActionStartGame(int nPlayerStart);
-			void		ActionServiceStart(int nPlayerServe);
-			void		ActionFail();
-			void		ActionServiceFailed();
+	SMARTENUM_DECLARE(PadType,
+		PT_INVALID,
+		PT_XBOX,
+		PT_PS3,
+		PT_OTHER,
+		PT_MAX,
+		);
 
-	// Events
-			void		EventBallChangeSide(int nSide);
-			void		EventBallHitGround();
-			void		EventBallHitWall();
-			void		EventBallHitRacket();
-			void		EventBallHitNet();
-			void		EventServeStart();
+	class Device
+	{
+	public:
+		Device()
+		{
+			_pDInputDevice =NULL;
+			_PadType =PT_INVALID;
+			memset(&_JoyState,0,sizeof(DIJOYSTATE2));
+		}
 
-	inline	bool		IsWaitingToServe(int nPlayerId)	{ return _nServicePlayer==nPlayerId && _bWaitServe; }
-	inline	bool		IsWaitingToServe()				{ return _bWaitServe; }
-	inline	bool		IsServing()						{ return _bServing; }
-	inline	int			GetBallSide() const				{ return _nBallSide; }
-	inline	bool		GetRacketHit() const			{ return _bRacketHit; }
+		LPDIRECTINPUTDEVICE8	_pDInputDevice;				// DInput Joystick
+		DIJOYSTATE2				_JoyState;					// DInput joystick state
+		PadType					_PadType;
+	};
 
-protected:
-	Game*	_pGame;
+						InputDirectX();
+						~InputDirectX();
+	int					Init(HWND hWnd);
+	void				Kill();
+	void				Update();
+	const Device&		GetDevice(DeviceIdx iDeviceIdx) const			{ return _Device[iDeviceIdx]; }
 
-	bool	_bServing;
-	bool	_bSecondServe;
-	bool	_bWaitServe;
-	bool	_bRacketHit;
-	int		_nBallSide;
-	int		_nGroundTouch;
-	int		_nServicePlayer;
+private:
+	static	BOOL CALLBACK	EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, void* pContext);
+	static	BOOL CALLBACK	EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, void* pContext);
+
+private:
+	bool			_bInited;					// Has been inited ?
+	LPDIRECTINPUT8	_pDirectInput;				// DInput Device interface
+	HWND			_hWnd;						// Main window hWnd
+	Device			_Device[MAX_DEVICE_COUNT];
+	DeviceIdx		_nPadCount;					// Managed Pads
+	DeviceIdx		_nPadCurrent;				// used in enumeration
 };
 
-
-#endif	//__RULES_H__
+#endif	//__INPUTDIRECTX_H__

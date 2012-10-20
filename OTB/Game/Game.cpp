@@ -18,11 +18,11 @@
 
 #include "Game.h"
 
-#include "Cmd/CommandPad.h"
-#include "Cmd/CommandKbdMouse.h"
-#include "Cmd/CommandMouse.h"
-#include "Cmd/CommandCpu.h"
-#include "xml/XMLParser.h"
+#include "../Cmd/CommandPad.h"
+#include "../Cmd/CommandKbdMouse.h"
+#include "../Cmd/CommandMouse.h"
+#include "../Cmd/CommandCpu.h"
+#include "../Xml/XMLParser.h"
 
 const char* XML_SECTION_GAME		="Game";
 const char* XML_SECTION_GAME_P1		="P1";

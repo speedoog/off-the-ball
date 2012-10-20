@@ -16,51 +16,47 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BALL_HISTORY_H__
-#define __BALL_HISTORY_H__
+#ifndef __BALL_H__
+#define __BALL_H__
 #pragma once
 
-#include "Base/Base.h"
-#include "Base/TQuickList.h"
+#include "../Base/Base.h"
+#include "BallHistory.h"
 
-class hgeSprite;
+class Game;
+class Player;
 
-class BallFrame : public TQuickListElement
+class Ball
 {
 public:
-	BallFrame(const hgeVector& vPosition, const Bool bTeleport, const Bool bBlink, const Float32 rTime, const Float32 rAngle)
-		: _vPosition(vPosition), _bTeleport(bTeleport), _bBlink(bBlink), _rTime(rTime), _rAngle(rAngle) { }
+						Ball();
+						~Ball();
+			void		Init(Game* pGame);
 
-	hgeVector	_vPosition;
-	Bool		_bTeleport;
-	Bool		_bBlink;
-	Float32		_rTime;
-	Float32		_rAngle;
-};
+			void		Reset(Player* pPlayer);
+			void		Update(const float rDeltaTime);
+			void		Render();
 
-class BallHistory
-{
-public:
-					BallHistory(const Float32 rMinTimeBetweenSamples, const Float32 rMaxRecordingTime, const UInt32 nMaxFrameCount);
-					~BallHistory();
+			void		Launch(const hgeVector& vDir);
+			void		RacketHit(const hgeVector& vVelocity);
 
-			 void	Update(const hgeVector& vBallPos, const Float32 rAngle, const Float32 rTimeElapsed);
-			 void	Draw(hgeSprite*	pSpriteBallTrail);
-			 void	Reset();
+	// inline
+	inline	hgeVector&	GetPos() 						{ return _vPos;			}
+	inline	hgeVector&	GetVelocity() 					{ return _vVelocity;	}
+	inline	int			GetSide()						{ return _nSide;		}
+	inline	Float32		GetRadius() 					{ return _rRadius;		}
+	inline	void		SetPaused(const bool bPaused)	{ _bPaused =bPaused;	}
 
 protected:
-			 void	ClearOldFrames();
+	Game*		_pGame;
+	hgeVector	_vPos, _vLastPos;
+	hgeVector	_vVelocity;
+	Float32		_rRadius;
+	Float32		_rSpriteAngle;
+	int			_nSide;				// 0 or 1
+	bool		_bPaused;
 
-protected:
-	Float32		_rMaxRecordingTime;
-	UInt32		_nMaxFrameCount;
-	Float32		_rMinTimeBetweenSamples;
-
-	Float32		_rCurrentTime;
-	TQuickList	_lFrames;
-
-	Bool		_bTeleport;
-	Bool		_bBlink;
+	BallHistory	_History;
 };
 
-#endif //__BALL_HISTORY_H__
+#endif	//__BALL_H__
