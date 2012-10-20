@@ -57,7 +57,8 @@ typedef UInt32				IntPtr;
 
 // new override / placement
 
-inline void* operator new(size_t, void *_P)	{return (_P); }	// new with placement
+inline void* operator new	(size_t, void *_P)		{ return (_P); }	// new with placement
+inline void	 operator delete(void*,void*)			{ };
 
 #define	TNewPlaced(_ptr_, _type_)		new (_ptr_) _type_
 #define	TDeletePlaced(_ptr_, _type_)	(_ptr_)->_type_::~_type_()

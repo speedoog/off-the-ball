@@ -75,6 +75,7 @@ void Game::Init(XML_PARSER* pXml)
 	_Players[0].Init(this, 0);
 	_Players[1].Init(this, 1);
 	_Ball.Init(this);
+	_BallRecorder.Init(this);
 	_Rules.Init(this);
 
 	const int nOffset =4;
@@ -156,6 +157,8 @@ void Game::Update(const float rDeltaTime)
 			_Players[0].Update(rSliceTime);
 			_Players[1].Update(rSliceTime);
 		}
+
+		_BallRecorder.Update(rTimeScaled);
 	}
 
 	// Cheat to restart (select btn)
@@ -173,6 +176,7 @@ void Game::Render()
 {
 	_Level.Render();
 	_Ball.Render();
+	_BallRecorder.Render();
 	_Players[0].Render();
 	_Players[1].Render();
 

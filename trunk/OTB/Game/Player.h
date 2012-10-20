@@ -53,6 +53,8 @@ public:
 	// inputs
 	inline	void				SetInputMove(const hgeVector& vInputMove)		{ _vInputMove	=vInputMove;	if (_vInputMove.LengthSq()>1.0f)	_vInputMove.Normalize();	}
 	inline	void				SetInputRacket(const hgeVector& vInputRacket)	{ _vInputRacket =vInputRacket;	if (_vInputRacket.LengthSq()>1.0f)	_vInputRacket.Normalize(); 	}
+	inline	const hgeVector&	GetInputMove()	 const							{ return _vInputMove;	}
+	inline	const hgeVector&	GetInputRacket() const							{ return _vInputRacket;	}
 
 protected:
 	hgeVector	GetRaquetPos0() const;

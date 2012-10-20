@@ -48,13 +48,13 @@ void BallHistory::Update(const hgeVector& vPosition, const Float32 rAngle, const
 		// CleanUp oldies
 		ClearOldFrames();
 
-		BallFrame* pLastFrame =(BallFrame*)_lFrames.GetQueue();
+		BallHistoryFrame* pLastFrame =(BallHistoryFrame*)_lFrames.GetQueue();
 		if ( !pLastFrame || _rCurrentTime>=(pLastFrame->_rTime+_rMinTimeBetweenSamples) || _bTeleport)
 		{
 			_bBlink =!_bBlink;
 
 			// Push new frame
-			BallFrame* pFrame =new BallFrame(vPosition, _bTeleport, _bBlink, _rCurrentTime, rAngle);
+			BallHistoryFrame* pFrame =new BallHistoryFrame(vPosition, _bTeleport, _bBlink, _rCurrentTime, rAngle);
 			_lFrames.InsertQueue(pFrame);
 		}
 	}
@@ -67,10 +67,10 @@ void BallHistory::ClearOldFrames()
 {
 	const Float32 rTimeOut =_rCurrentTime-_rMaxRecordingTime;
 
-	BallFrame* pFrame =(BallFrame*)_lFrames.GetHead();
+	BallHistoryFrame* pFrame =(BallHistoryFrame*)_lFrames.GetHead();
 	while (pFrame!=NULL)
 	{
-		BallFrame* pNextFrame =(BallFrame*)pFrame->GetNext();
+		BallHistoryFrame* pNextFrame =(BallHistoryFrame*)pFrame->GetNext();
 		if (pFrame->_rTime<rTimeOut)			// Too old ... drop Head
 		{
 			_lFrames.DeleteElement(pFrame);
@@ -99,7 +99,7 @@ void BallHistory::Reset()
 void BallHistory::Draw(hgeSprite* pSpriteBallTrail)
 {
 	UInt32 nElementCount =_lFrames.GetNbElements();
-	BallFrame* pPrev =NULL;
+	BallHistoryFrame* pPrev =NULL;
 
 	hgeColorRGB clSrc(0.0f, 0.0f, 0.0f, 0.0f);
 	hgeColorRGB clDst(0.0f, 0.7f, 0.0f, 0.1f);
@@ -109,7 +109,7 @@ void BallHistory::Draw(hgeSprite* pSpriteBallTrail)
 
 	Float32 rScale =0.1f/8.0f;
 
-	FOR_EACH_ELEMENT(_lFrames, pFrame, BallFrame)
+	FOR_EACH_ELEMENT(_lFrames, pFrame, BallHistoryFrame)
 	{
 		if (pPrev!=NULL)
 		{
