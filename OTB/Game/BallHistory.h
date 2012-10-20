@@ -25,10 +25,10 @@
 
 class hgeSprite;
 
-class BallFrame : public TQuickListElement
+class BallHistoryFrame : public TQuickListElement
 {
 public:
-	BallFrame(const hgeVector& vPosition, const Bool bTeleport, const Bool bBlink, const Float32 rTime, const Float32 rAngle)
+	BallHistoryFrame(const hgeVector& vPosition, const Bool bTeleport, const Bool bBlink, const Float32 rTime, const Float32 rAngle)
 		: _vPosition(vPosition), _bTeleport(bTeleport), _bBlink(bBlink), _rTime(rTime), _rAngle(rAngle) { }
 
 	hgeVector	_vPosition;

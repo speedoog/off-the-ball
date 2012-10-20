@@ -128,6 +128,8 @@ void Rules::ActionServiceStart(int nPlayerServe)
 // ********************************************
 void Rules::ActionFail()
 {
+	_pGame->GetBallRecorder().StopRecord(false);
+
 	// update score
 	int nOtherPlayer =1-_nBallSide;
 	_pGame->GetPlayer(nOtherPlayer).ScoreInc();		// other player gain a point
@@ -170,6 +172,9 @@ void Rules::EventBallChangeSide(int nSide)
 	_bRacketHit 	=false;
 	_nBallSide		=nSide;
 	_nGroundTouch	=0;
+
+	_pGame->GetBallRecorder().StopRecord(true);
+	_pGame->GetBallRecorder().StartRecord();
 }
 
 // ********************************************
