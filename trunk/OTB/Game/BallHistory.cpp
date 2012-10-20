@@ -19,8 +19,8 @@
 #include "BallHistory.h"
 
 
-#include "../hge/hgeColor.h"
-#include "../hge/hgeSprite.h"
+#include "../../hge/hgeColor.h"
+#include "../../hge/hgeSprite.h"
 
 //-----------------------------------------------------------------------------
 BallHistory::BallHistory(const Float32 rMinTimeBetweenSamples, const Float32 rMaxRecordingTime, const UInt32 nMaxFrameCount)

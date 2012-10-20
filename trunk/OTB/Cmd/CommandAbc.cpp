@@ -18,7 +18,7 @@
 
 
 #include "CommandAbc.h"
-#include "../Player.h"
+#include "../Game/Player.h"
 
 // ********************************************
 //	Ctor

@@ -23,9 +23,9 @@
 
 
 #include "Base/Base.h"
-#include "Game.h"
-#include "InputDirectX.h"
-#include "xml/XMLParser.h"
+#include "Game/Game.h"
+#include "Input/InputDirectX.h"
+#include "Xml/XMLParser.h"
 
 class Otb
 {

@@ -20,7 +20,7 @@
 #define __PLAYER_H__
 #pragma once
 
-#include "Base/Base.h"
+#include "../Base/Base.h"
 #include "PowerBar.h"
 class Game;
 

@@ -18,7 +18,7 @@
 
 
 #include "CommandMouse.h"
-#include "../Game.h"
+#include "../Game/Game.h"
 
 // ********************************************
 //	Ctor

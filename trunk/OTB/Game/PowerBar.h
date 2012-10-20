@@ -16,36 +16,31 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __LEVEL_H__
-#define __LEVEL_H__
+#ifndef __POWERBAR_H__
+#define __POWERBAR_H__
 #pragma once
 
-#include "Base/Base.h"
+#include "../Base/Base.h"
 
 class Game;
 
-class Level
+class PowerBar
 {
 public:
-								Level();
-								~Level();
+								PowerBar();
+								~PowerBar();
 
-			void				Init(Game* pGame, const hgeVector& vSize, const float rInitialNetY);
+			void				Init(const UInt32 nPlayerId, Game* pGame);
 			void				Reset();
-			void				Update(const float rDeltaTime);
+			Bool				Update(const float rDeltaTime, const Bool bUse);
+			void				ChangeSide();
 			void				Render();
 
-	// inlines
-	inline	const hgeVector&	GetSize()	{ return _vSize; }
-	inline	float				GetNetY()	{ return _rNetY; }
-
 protected:
+	UInt32		_nPlayerId;
+	Float32		_rValue;
 	Game*		_pGame;
-	hgeVector	_vSize;
-	float		_rNetY;
-	float		_rInitialNetY;
-	float		_rCounter;
 };
 
 
-#endif	//__LEVEL_H__
+#endif	//__POWERBAR_H__

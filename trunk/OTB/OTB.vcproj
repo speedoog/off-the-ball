@@ -196,19 +196,19 @@
 			Name="Input"
 			>
 			<File
-				RelativePath=".\InputCommand.cpp"
+				RelativePath=".\Input\InputCommand.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\InputCommand.h"
+				RelativePath=".\Input\InputCommand.h"
 				>
 			</File>
 			<File
-				RelativePath=".\InputDirectX.cpp"
+				RelativePath=".\Input\InputDirectX.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\InputDirectX.h"
+				RelativePath=".\Input\InputDirectX.h"
 				>
 			</File>
 		</Filter>
@@ -380,59 +380,59 @@
 			Name="Game"
 			>
 			<File
-				RelativePath=".\Ball.cpp"
+				RelativePath=".\Game\Ball.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Ball.h"
+				RelativePath=".\Game\Ball.h"
 				>
 			</File>
 			<File
-				RelativePath=".\BallHistory.cpp"
+				RelativePath=".\Game\BallHistory.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\BallHistory.h"
+				RelativePath=".\Game\BallHistory.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Game.cpp"
+				RelativePath=".\Game\Game.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Game.h"
+				RelativePath=".\Game\Game.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Level.cpp"
+				RelativePath=".\Game\Level.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Level.h"
+				RelativePath=".\Game\Level.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Player.cpp"
+				RelativePath=".\Game\Player.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Player.h"
+				RelativePath=".\Game\Player.h"
 				>
 			</File>
 			<File
-				RelativePath=".\PowerBar.cpp"
+				RelativePath=".\Game\PowerBar.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\PowerBar.h"
+				RelativePath=".\Game\PowerBar.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Rules.cpp"
+				RelativePath=".\Game\Rules.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Rules.h"
+				RelativePath=".\Game\Rules.h"
 				>
 			</File>
 		</Filter>

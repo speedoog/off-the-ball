@@ -20,7 +20,7 @@
 #include "PowerBar.h"
 
 #include "Game.h"
-#include "../hge/hgeColor.h"
+#include "../../hge/hgeColor.h"
 
 // ********************************************
 //	Ctor
