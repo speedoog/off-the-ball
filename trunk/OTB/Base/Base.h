@@ -23,6 +23,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "../../hge/hge.h"
 #include "../../hge/hgevector.h"

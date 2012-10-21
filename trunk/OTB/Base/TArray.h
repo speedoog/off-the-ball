@@ -23,6 +23,7 @@
 #pragma once
 
 #include "Base.h"
+#include "TStream.h"
 
 template <class TType, UInt32 TCapacity>
 class TArray
@@ -135,6 +136,32 @@ public:
 
 	// Helper
 	inline UInt32				GetMemoryUsed() const					{ return sizeof(TTypeContainer); }
+
+	// Stream
+	inline friend void	operator << (TStream& Stream, const TTypeContainer& Array)
+	{
+		Stream << Array.GetSize();
+		TType* p =Array.GetArray();
+		for (UInt32 i=0; i<Array.GetSize(); ++i)
+		{
+			Stream << (*p);
+			++p;
+		}
+	}
+
+	inline friend void	operator >> (TStream& Stream, TTypeContainer& Array)
+	{
+		UInt32 nSize;
+		Stream >> nSize;
+
+		Array.Resize(nSize);
+		TType* p =Array.GetArray();
+		for (UInt32 i=0; i<nSize; ++i)
+		{
+			Stream >> (*p);
+			++p;
+		}
+	}
 
 protected:
 	template <Bool TCompare(const TType& a0, const TType& a1)>

@@ -31,6 +31,7 @@ public:
 								~Level();
 
 			void				Init(Game* pGame, const hgeVector& vSize, const float rInitialNetY);
+			void				Kill();
 			void				Reset();
 			void				Update(const float rDeltaTime);
 			void				Render();

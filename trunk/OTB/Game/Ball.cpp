@@ -49,11 +49,18 @@ Ball::~Ball()
 }
 
 // ********************************************
-//	Reset
+//	Init
 // ********************************************
 void Ball::Init(Game* pGame)
 {
 	_pGame =pGame;
+}
+
+// ********************************************
+//	Kill
+// ********************************************
+void Ball::Kill()
+{
 }
 
 // ********************************************
@@ -150,10 +157,10 @@ void Ball::Update(const float rDeltaTime)
 			{
 				_vVelocity.y =-_vVelocity.y;
 			}
+			_nSide =nSide;
 			_pGame->GetRules().EventBallChangeSide(nSide);
 		}
 	}
-	_nSide =nSide;
 
 	_rSpriteAngle +=_vVelocity.Length()*rDeltaTime;
 

@@ -47,6 +47,13 @@ void Level::Init(Game* pGame, const hgeVector& vSize, const float rInitialNetY)
 }
 
 // ********************************************
+//	Kill
+// ********************************************
+void Level::Kill()
+{
+}
+
+// ********************************************
 //	Reset
 // ********************************************
 void Level::Reset()
