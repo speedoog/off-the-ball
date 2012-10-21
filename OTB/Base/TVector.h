@@ -22,6 +22,7 @@
 #pragma once
 
 #include "Base.h"
+#include "TStream.h"
 
 typedef Bool (*COMPARISON_CALLBACK)(void* pParam1, void* pParam2);
 
@@ -139,6 +140,32 @@ public:
 	inline Int32		Partition(Int32 Left, Int32 Right, Int32 Pivot);
 	inline void			Swap(Int32 X, Int32 Y);
 	inline void			Swap(TVector<TType> & V);
+
+	// Stream
+	inline friend void	operator << (TStream& Stream, const TVector<TType>& Vector)
+	{
+		Stream << Vector.GetSize();
+		TType* p =Vector.GetArray();
+		for (UInt32 i=0; i<Vector.GetSize(); ++i)
+		{
+			Stream << (*p);
+			++p;
+		}
+	}
+
+	inline friend void	operator >> (TStream& Stream, TVector<TType>& Vector)
+	{
+		UInt32 nSize;
+		Stream >> nSize;
+
+		Vector.Resize(nSize);
+		TType* p =Vector.GetArray();
+		for (UInt32 i=0; i<nSize; ++i)
+		{
+			Stream >> (*p);
+			++p;
+		}
+	}
 
 protected:
 	inline void			Grow(const UInt32 nGrowSize);

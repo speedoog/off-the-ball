@@ -28,15 +28,15 @@ TString::TString(const char* str)
 {
 	if(str == 0)
 	{
-		m_nLength = 0;
-		m_pString = 0;
+		_nLength = 0;
+		_pString = 0;
 	}
 	else
 	{
-		m_nLength = strlen(str);
-		m_pString = new char[m_nLength + 1];
-		assert(m_pString != 0);
-		strcpy_s(m_pString, m_nLength+1, str);
+		_nLength = strlen(str);
+		_pString = new char[_nLength + 1];
+		assert(_pString != 0);
+		strcpy_s(_pString, _nLength+1, str);
 	}
 }
 
@@ -44,38 +44,38 @@ TString::TString(const TString& str)
 { 
 	if(str == 0)
 	{
-		m_nLength = 0;
-		m_pString = 0;
+		_nLength = 0;
+		_pString = 0;
 	}
 	else
 	{
-		m_nLength = str.m_nLength; 
-		m_pString = new char[m_nLength + 1];
-		assert(m_pString != 0);
-		strcpy_s(m_pString, m_nLength+1, str.m_pString); 
+		_nLength = str._nLength; 
+		_pString = new char[_nLength + 1];
+		assert(_pString != 0);
+		strcpy_s(_pString, _nLength+1, str._pString); 
 	}
 }
 
 TString& TString::operator +=(const TString& str)
 {
-	m_nLength += str.m_nLength;
-	char* pNew = new char[m_nLength + 1];
+	_nLength += str._nLength;
+	char* pNew = new char[_nLength + 1];
 	assert(pNew != 0);
-	strcpy_s(pNew, m_nLength+1, m_pString);
-	strcat_s(pNew, m_nLength+1, str.m_pString);
-	delete m_pString;
-	m_pString = pNew;
+	strcpy_s(pNew, _nLength+1, _pString);
+	strcat_s(pNew, _nLength+1, str._pString);
+	delete _pString;
+	_pString = pNew;
 
 	return *this;
 }
 
 TString& TString::operator =(const char* str)
 {
-	if (m_pString) delete m_pString;
-	m_nLength = strlen(str);
-	m_pString = new char[m_nLength + 1]; 
-	assert(m_pString != 0);
-	strcpy_s(m_pString, m_nLength+1, str);
+	if (_pString) delete _pString;
+	_nLength = strlen(str);
+	_pString = new char[_nLength + 1]; 
+	assert(_pString != 0);
+	strcpy_s(_pString, _nLength+1, str);
 
 	return *this;
 }
@@ -83,11 +83,11 @@ TString& TString::operator =(const char* str)
 TString& TString::operator =(const TString& str)
 {
 	assert(str != 0);
-	if (m_pString) delete m_pString;
-	m_nLength = strlen(str.m_pString);
-	m_pString = new char[m_nLength + 1]; 
-	assert(m_pString != 0);
-	strcpy_s(m_pString, m_nLength+1, str.m_pString);
+	if (_pString) delete _pString;
+	_nLength = strlen(str._pString);
+	_pString = new char[_nLength + 1]; 
+	assert(_pString != 0);
+	strcpy_s(_pString, _nLength+1, str._pString);
 
 	return *this;
 }
@@ -100,16 +100,16 @@ void TString::VarToString(const double var)
 	//gcvt(var, 16, str);
 	_gcvt_s(str, MAX_SIZE, var, 16);
 
-	m_nLength = strlen(str);
-	if (str[m_nLength - 1] == '.')
+	_nLength = strlen(str);
+	if (str[_nLength - 1] == '.')
 	{
-		str[m_nLength - 1] = '\0';
-		m_nLength --;
+		str[_nLength - 1] = '\0';
+		_nLength --;
 	}
-	m_nLength = strlen(str);
-	m_pString = new char[m_nLength + 1];
-	assert(m_pString != 0);
-	strcpy_s(m_pString, m_nLength+1, str);
+	_nLength = strlen(str);
+	_pString = new char[_nLength + 1];
+	assert(_pString != 0);
+	strcpy_s(_pString, _nLength+1, str);
 }
 
 int TString::Format(const char* format, ...)
@@ -130,19 +130,19 @@ int TString::Format(const char* format, ...)
 		if (len == 0) return 0;
 	}
 
-	if (!m_pString)
+	if (!_pString)
 	{
-		m_nLength = len;
-		m_pString = new char[m_nLength + 1];
+		_nLength = len;
+		_pString = new char[_nLength + 1];
 	}
-	else if (m_nLength < len)
+	else if (_nLength < len)
 	{
-		delete m_pString;
-		m_nLength = len;
-		m_pString = new char[m_nLength + 1];
+		delete _pString;
+		_nLength = len;
+		_pString = new char[_nLength + 1];
 	}
-	if (m_pString) 
-		strcpy_s(m_pString, m_nLength+1, MaxBuf);
+	if (_pString) 
+		strcpy_s(_pString, _nLength+1, MaxBuf);
 	else
 		len = 0;
 	delete []MaxBuf;
@@ -211,8 +211,8 @@ bool TString::Scan(char*& Wildcards, char*& str)
 
 bool TString::NumericParse(void* pvar, char flag)
 {
-	assert(m_pString != 0);
-	char* pTmpStr = m_pString;
+	assert(_pString != 0);
+	char* pTmpStr = _pString;
 
 	// remove the leading ' ' and '\t' at the beginning
 	while (*pTmpStr == ' ' || *pTmpStr == '\t')
@@ -368,4 +368,6 @@ void TString::_Test_Me_()
 	bool b1 =sTest.Search("test");
 	sTest =3.14f;
 	char* pBuff =sTest.GetChar();
+
+	sTest.Clear();
 }

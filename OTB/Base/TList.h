@@ -23,6 +23,7 @@
 #pragma once
 
 #include "Base.h"
+#include "TStream.h"
 
 typedef Bool (*DLIST_COMPARISON_CALLBACK)(void* pParam1, void* pParam2);
 
@@ -144,6 +145,29 @@ public:
 	inline TList&		operator =	(const TList& List);
 	inline Bool			operator == (const TList& List) const;
 	inline Bool			operator != (const TList& List) const;
+
+	// Stream
+	inline friend void	operator << (TStream& Stream, const TList<TType>& List)
+	{
+		Stream << List.GetSize();
+		FOR_EACH(List, it, TList<TType>)
+		{
+			Stream << (*it);
+		}
+	}
+
+	inline friend void	operator >> (TStream& Stream, TList<TType>& List)
+	{
+		UInt32 nSize;
+		Stream >> nSize;
+
+		for (UInt32 i=0; i<nSize; ++i)
+		{
+			TType t;
+			Stream >> t;
+			List.PushTail(t);
+		}
+	}
 
 private:
 	Node*  	_pHead;

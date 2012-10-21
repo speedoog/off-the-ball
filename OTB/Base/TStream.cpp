@@ -16,48 +16,67 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BALL_H__
-#define __BALL_H__
-#pragma once
+#include "TStream.h"
 
-#include "../Base/Base.h"
-#include "BallHistory.h"
-
-class Game;
-class Player;
-
-class Ball
+// ********************************************
+//	Ctor
+// ********************************************
+TStream::TStream()
+: _pFile (NULL)
 {
-public:
-						Ball();
-						~Ball();
-			void		Init(Game* pGame);
-			void		Kill();
+}
 
-			void		Reset(Player* pPlayer);
-			void		Update(const float rDeltaTime);
-			void		Render();
+// ********************************************
+//	Dtor
+// ********************************************
+TStream::~TStream()
+{
+}
 
-			void		Launch(const hgeVector& vDir);
-			void		RacketHit(const hgeVector& vVelocity);
+// ********************************************
+//	OpenFile
+// ********************************************
+Bool TStream::OpenFile(const TString& sFilename, const TStream::TStreamOpenMode OpenMode)
+{
+	_OpenMode =OpenMode;
+	const char*	pFilename =sFilename;
+	static const char* pModes[] = { "rb", "wb", "ab" };
 
-	// inline
-	inline	hgeVector&	GetPos() 						{ return _vPos;			}
-	inline	hgeVector&	GetVelocity() 					{ return _vVelocity;	}
-	inline	int			GetSide()						{ return _nSide;		}
-	inline	Float32		GetRadius() 					{ return _rRadius;		}
-	inline	void		SetPaused(const bool bPaused)	{ _bPaused =bPaused;	}
+	errno_t err;
+	err = fopen_s(&_pFile, pFilename, pModes[OpenMode]);
 
-protected:
-	Game*		_pGame;
-	hgeVector	_vPos, _vLastPos;
-	hgeVector	_vVelocity;
-	Float32		_rRadius;
-	Float32		_rSpriteAngle;
-	int			_nSide;				// 0 or 1
-	bool		_bPaused;
+	if (_pFile==NULL)
+		return false;
 
-	BallHistory	_History;
-};
+	return true;
+}
 
-#endif	//__BALL_H__
+// ********************************************
+//	OpenFile
+// ********************************************
+void TStream::CloseFile()
+{
+	fclose(_pFile);
+	_pFile =NULL;
+	_sFilename.Clear();
+}
+
+// ********************************************
+//	Write
+// ********************************************
+void TStream::Write(const void* pBuffer, const UInt32 nSize)
+{
+	TAssert(_OpenMode==SM_WRITE || _OpenMode==SM_APPEND);
+
+	fwrite((UInt8*)pBuffer, nSize, 1, _pFile);
+}
+
+// ********************************************
+//	Read
+// ********************************************
+void TStream::Read(void* pBuffer, const UInt32 nSize)
+{
+	TAssert(_OpenMode==SM_READ);
+
+	fread((UInt8*)pBuffer, nSize, 1, _pFile);
+}

@@ -27,12 +27,14 @@
 class TString
 {
 public:
-	// constructors and destructor
-	TString(const TString& str);
-	TString(const char* str);
-	TString(const double var)				{ VarToString(var); }
-	TString()								{ m_nLength = 0; m_pString = 0; }
-	virtual ~TString()						{ if (m_pString) delete m_pString; }
+	// Ctor & Dtor
+			TString(const TString& str);
+			TString(const char* str);
+			TString(const double var)				{ VarToString(var); }
+			TString()								{ _nLength = 0; _pString = NULL; }
+			~TString()								{ Clear(); }
+
+	void	Clear()									{ if (_pString) delete _pString; _pString =NULL; }
 
 	// operator overloading helper
 	template <class T> friend TString _cdecl operator +(T var, const TString& str);
@@ -42,20 +44,19 @@ public:
 	TString& operator  =(const TString& str);
 	TString& operator  =(const double var)	{ VarToString(var); return *this; }
 	template <class T>
-	TString  operator  +(T var)			{ TString tstr = *this; return tstr += var; }
+	TString  operator  +(T var)				{ TString tstr = *this; return tstr += var; }
 	TString& operator +=(double str)		{ return *this += (TString)str; }
 	TString& operator +=(const char* str)	{ return *this += (TString)str; }
 	TString& operator +=(const TString& str);
 
-
 	// add more logic comparison operators as following, for example, although not efficient
-	virtual bool operator !=(char* str)	{ return strcmp(str, m_pString) != 0; }
+	virtual bool operator !=(char* str)	{ return strcmp(str, _pString) != 0; }
 
 	// c type string conversion
-	operator char* ()					{ return m_pString; }
-	operator const char* ()	const		{ return m_pString; }
-	char*	GetChar()					{ return m_pString; }
-	int		GetAsInt() const			{ return atoi(m_pString); }
+	operator char* ()					{ return _pString; }
+	operator const char* ()	const		{ return _pString; }
+	char*	GetChar()					{ return _pString; }
+	int		GetAsInt() const			{ return atoi(_pString); }
 
 	// numeric conversion
 	template <class T>
@@ -63,7 +64,7 @@ public:
 
 	// search the match string : WildCards can be '?' and '*' combination
 	// return value : true (pattern matchs string), false (no match)
-	bool Search(const char* WildCards)	{ return Match((char*)WildCards, m_pString); }
+	bool Search(const char* WildCards)	{ return Match((char*)WildCards, _pString); }
 
 	// format string
 	int Format(const char* format, ...);
@@ -94,8 +95,8 @@ protected:
 
 protected:
 	// data block
-	int   m_nLength;
-	char* m_pString;
+	int   _nLength;
+	char* _pString;
 };
 
 template <class T>

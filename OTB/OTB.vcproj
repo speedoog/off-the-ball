@@ -300,6 +300,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Base\TStream.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Base\TStream.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Base\TString.cpp"
 				>
 			</File>

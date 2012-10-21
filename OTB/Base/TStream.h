@@ -16,48 +16,64 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BALL_H__
-#define __BALL_H__
+#ifndef __TSTREAM_H__
+#define __TSTREAM_H__
 #pragma once
 
-#include "../Base/Base.h"
-#include "BallHistory.h"
+#include "Base.h"
+#include "TString.h"
+//#include "TVector.h"
 
-class Game;
-class Player;
+//class TVector;
 
-class Ball
+class TStream
 {
 public:
-						Ball();
-						~Ball();
-			void		Init(Game* pGame);
-			void		Kill();
+	enum TStreamType
+	{
+		ST_MEMORY =0,
+		ST_FILE
+	};
 
-			void		Reset(Player* pPlayer);
-			void		Update(const float rDeltaTime);
-			void		Render();
+	enum TStreamOpenMode
+	{
+		SM_READ	=0,
+		SM_WRITE,
+		SM_APPEND,
+	};
 
-			void		Launch(const hgeVector& vDir);
-			void		RacketHit(const hgeVector& vVelocity);
+				TStream();
+				~TStream();
 
-	// inline
-	inline	hgeVector&	GetPos() 						{ return _vPos;			}
-	inline	hgeVector&	GetVelocity() 					{ return _vVelocity;	}
-	inline	int			GetSide()						{ return _nSide;		}
-	inline	Float32		GetRadius() 					{ return _rRadius;		}
-	inline	void		SetPaused(const bool bPaused)	{ _bPaused =bPaused;	}
+	Bool		OpenFile(const TString& sFilename, const TStreamOpenMode OpenMode);
+	void		CloseFile();
+
+	void		Write(const void* pBuffer, const UInt32 nSize);
+	void		Read(void* pBuffer, const UInt32 nSize);
+
+	template<class TData>
+	inline void	operator << (const TData& Data)
+	{
+		Write(&Data, sizeof(Data));
+	}
+	template<class TData>
+	inline void	operator >> (TData& Data)
+	{
+		Read(&Data, sizeof(Data));
+	}
 
 protected:
-	Game*		_pGame;
-	hgeVector	_vPos, _vLastPos;
-	hgeVector	_vVelocity;
-	Float32		_rRadius;
-	Float32		_rSpriteAngle;
-	int			_nSide;				// 0 or 1
-	bool		_bPaused;
+	
+protected:
+	TStreamOpenMode _OpenMode;
 
-	BallHistory	_History;
+	// File mode
+	TString 		_sFilename;
+	FILE*			_pFile;
+
+	// Memory mode
+// 	typedef TVector<UInt8>	MemBuffer;
+// 	MemBuffer*		_pMemBuffer;
 };
 
-#endif	//__BALL_H__
+#endif	//__TSTREAM_H__

@@ -130,6 +130,9 @@ void Game::Kill()
 {
 	_Resources.Kill();
 	_Input.Kill();
+	_Level.Kill();
+	_Ball.Kill();
+	_BallRecorder.Kill();
 }
 
 // ********************************************
