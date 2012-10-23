@@ -53,3 +53,11 @@ void CommandAbc::Update(const float rDeltaTime)
 {
 	OnUpdate(rDeltaTime);
 }
+
+// ********************************************
+//	Render
+// ********************************************
+void CommandAbc::Render()
+{
+	OnRender();
+}

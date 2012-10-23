@@ -24,8 +24,9 @@
 //	Ctor
 // ********************************************
 CommandCpu::CommandCpu()
-: _nPlayerId (666)
+: _nPlayerId	(666)
 {
+	_nCmdType =CMD_CPU;
 }
 
 // ********************************************
@@ -85,6 +86,7 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 	{
 		if (rules.IsServing())											// ----------------- in Service ---------------
 		{
+			_rBallRecordTime =0.0f;
 			if (nBallSide==_nPlayerId)									// Service : my side
 			{
 				if (_rTimeCurrent>0.8f)
@@ -109,6 +111,7 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 		{
 			if (nBallSide==_nPlayerId)									// my side
 			{
+				/*
 				if (vBallFuturePos.y<vPlayerRotation.y)					// low ball
 				{
 					vInputRacket =hgeVector(0.0f, -1.0f);
@@ -130,15 +133,62 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 
 				Float32 rDiffX =vBallFuturePos.x-(vPlayerPos.x+rBack*0.5f);
 				vInputMove =hgeVector(rDiffX, 0.0f);
+				*/
+	
+				BallRecord* pBallRecord =_pGame->GetBallRecorder().GetBestMatch();
+				if (pBallRecord)
+				{
+					UInt32 nBest;
+					UInt32 nStart =BallRecord::GetFrameFromTime(_rBallRecordTime);
+					Float32 rDiff;
+					nBest =pBallRecord->GetBestMatch(vBallPos, nStart, 10, rDiff);
+
+					if (rDiff>0.3f)
+					{
+						_rBallRecordTime +=rDeltaTime;
+						nBest =BallRecord::GetFrameFromTime(_rBallRecordTime);
+					}
+					else
+					{
+						_rBallRecordTime =BallRecord::GetTimeFromFrame(nBest);
+					}
+
+					BallRecordFrame& frame =pBallRecord->GetFrame(nBest);
+					
+					//vInputMove   =frame._vInputMove;
+					Float32 rBallDiffX =frame._vBallPos.x-vBallPos.x;
+					vInputMove.x =frame._rPlayerPositionX-vPlayerPos.x-rBallDiffX;
+					vInputRacket =frame._vInputRaquet;
+				}
+
 			}
 			else
 			{
 				vInputRacket =hgeVector(rBack, 1.0f);
 				vInputMove.SetPolar(1.0f, _rTimeCurrent*10.0f);
+				_rBallRecordTime =0.0f;
 			}
 		}
 	}
 
 	_pPlayer->SetInputMove(vInputMove);
 	_pPlayer->SetInputRacket(vInputRacket);
+}
+
+
+// ********************************************
+//	OnRender
+// ********************************************
+void CommandCpu::OnRender()
+{
+	if (_rBallRecordTime!=0.0f)
+	{
+		BallRecord* pBallRecord =_pGame->GetBallRecorder().GetBestMatch();
+		if (pBallRecord)
+		{
+			BallRecordFrame& frame =pBallRecord->GetFrame(_rBallRecordTime);
+
+			hge->Gfx_RenderCircle(frame._vBallPos.x, frame._vBallPos.y, 0.05f, 0xFFFFFF00);
+		}
+	}
 }

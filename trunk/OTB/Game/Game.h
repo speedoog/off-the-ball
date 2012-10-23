@@ -44,14 +44,15 @@ public:
 			void			Render();
 
 	// Accessors
-	inline	Resources&		GetResources()		{ return _Resources;  	}
-	inline	InputCore&		GetInputCommand()	{ return _Input;	 	}
-	inline	Player&			GetPlayer(int i)	{ return _Players[i]; 	}
-	inline	Ball&			GetBall()			{ return _Ball;			}
-	inline	BallRecorder&	GetBallRecorder()	{ return _BallRecorder;	}
-	inline	Level&			GetLevel()			{ return _Level;		}
-	inline	Rules&			GetRules()			{ return _Rules;		}
-	inline	Bool			UseTimeScale()		{ return _Players[0].UseTimeScale() || _Players[1].UseTimeScale();	}
+	inline	Resources&		GetResources()					{ return _Resources;  		}
+	inline	InputCore&		GetInputCommand()				{ return _Input;	 		}
+	inline	Player&			GetPlayer(const UInt32 iSide)	{ return _Players[iSide]; 	}
+	inline	Ball&			GetBall()						{ return _Ball;				}
+	inline	BallRecorder&	GetBallRecorder()				{ return _BallRecorder;		}
+	inline	Level&			GetLevel()						{ return _Level;			}
+	inline	Rules&			GetRules()						{ return _Rules;			}
+	inline	Bool			UseTimeScale()					{ return _Players[0].UseTimeScale() || _Players[1].UseTimeScale();	}
+	inline	CommandAbc*		GetCmd(const UInt32 iSide)		{ return _pCmd[iSide];		}
 
 protected:
 	Level			_Level;
@@ -64,8 +65,7 @@ protected:
 //	Bool			_bUseTimeScale;
 
 	// temp ...
-	CommandAbc*		_pCmd0;
-	CommandAbc*		_pCmd1;
+	CommandAbc*		_pCmd[2];
 };
 
 #endif	//__GAME_H__

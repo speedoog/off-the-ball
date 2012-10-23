@@ -26,6 +26,7 @@
 CommandPad::CommandPad()
 : _pInput	(NULL)
 {
+	_nCmdType =CMD_PAD;
 }
 
 // ********************************************
