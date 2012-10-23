@@ -407,6 +407,25 @@ Bool TList<TType>::InsertSort(const TList& lOther, const Bool bAllowDup)
 //	Remove
 // ********************************************
 template <class TType>
+Bool TList<TType>::Remove(const TType* pElt)
+{
+	FOR_EACH(*this, it, TList<TType>)
+	{
+		TType& t=*it;
+		if (&t==pElt)
+		{
+			Remove(it);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// ********************************************
+//	Remove
+// ********************************************
+template <class TType>
 Bool TList<TType>::Remove(const TType& Elt)
 {
 	Iterator it =Find(Elt);

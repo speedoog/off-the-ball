@@ -120,6 +120,18 @@ inline T TAbs(const T& _x)
 	return (_x<0)?-_x:_x;
 }
 
+template <typename T>
+inline T TMax(T Value1, T Value2)
+{
+	return (Value1>Value2) ? Value1 : Value2;
+}
+
+template <typename T>
+inline T TMin(T Value1, T Value2)
+{
+	return (Value1<Value2) ? Value1 : Value2;
+}
+
 template <class C> static C	TBlend(const C Source, const C Destination, const float rRatio)
 {
 	return (Source+(Destination-Source)*rRatio);

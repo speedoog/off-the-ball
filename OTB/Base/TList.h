@@ -135,6 +135,7 @@ public:
 	inline Bool			InsertSort(const TList& List, const Bool bAllowDup);
 	inline Bool 		Remove(const TType& Elt);
 	inline void 		Remove(const Iterator& it);
+	inline Bool 		Remove(const TType* Elt);
 
 	// Sort
 	inline void 		Sort();

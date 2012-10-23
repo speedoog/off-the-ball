@@ -34,10 +34,12 @@ public:
 protected:
 	virtual void	OnInit(const UInt32 nPlayerId);
 	virtual void	OnUpdate(const float rDeltaTime);
+	virtual	void	OnRender();
 
 protected:
 	UInt32	_nPlayerId;
 	Float32	_rTimeCurrent;
+	Float32	_rBallRecordTime;
 };
 
 #endif	//__COMMANDCPU_H__

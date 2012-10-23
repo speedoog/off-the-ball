@@ -41,16 +41,20 @@ public:
 
 			void	Init(Game* pGame, Player* pPlayer, const int nCmdId);
 			void	Update(const float rDeltaTime);
+			void	Render();
+	inline	CmdType	GetCmdType() const					{ return _nCmdType; }
 
 protected:
 	// virtuals
 	virtual	void	OnInit(const UInt32 nPlayerId)		{ };
 	virtual	void	OnUpdate(const float rDeltaTime)	{ };
+	virtual	void	OnRender()							{ };
 
 protected:
 	Game*		_pGame;
 	Player* 	_pPlayer;
 	int			_nCmdId;
+	CmdType		_nCmdType;
 };
 
 

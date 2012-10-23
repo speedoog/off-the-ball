@@ -112,13 +112,13 @@ void Game::Init(XML_PARSER* pXml)
 
 	// P1 Init
 	CommandAbc::CmdType cmd1 =SMARTENUM_FIND(CommandAbc::CmdType, pCmd1, nOffset);
-	_pCmd0 =CreateCommand(cmd1);
-	_pCmd0->Init(this, &_Players[0], nCmdId1);
+	_pCmd[0] =CreateCommand(cmd1);
+	_pCmd[0]->Init(this, &_Players[0], nCmdId1);
 
 	// P2 Init
 	CommandAbc::CmdType cmd2 =SMARTENUM_FIND(CommandAbc::CmdType, pCmd2, nOffset);
-	_pCmd1 =CreateCommand(cmd2);
-	_pCmd1->Init(this, &_Players[1], nCmdId2);
+	_pCmd[1] =CreateCommand(cmd2);
+	_pCmd[1]->Init(this, &_Players[1], nCmdId2);
 
 	_Rules.ActionStartGame(0);		// start w/ player[0]
 }
@@ -148,8 +148,8 @@ void Game::Update(const float rDeltaTime)
 		//	const Float32 rTimeFactor =(UseTimeScale()==true)?0.3f:1.0f;
 		const Float32 rTimeScaled =rDeltaTime*rTimeFactor;
 
-		_pCmd0->Update(rTimeScaled);
-		_pCmd1->Update(rTimeScaled);
+		_pCmd[0]->Update(rTimeScaled);
+		_pCmd[1]->Update(rTimeScaled);
 
 		const UInt32 nSliceCount =10;
 		const Float32 rSliceTime =rTimeScaled/Float32(nSliceCount);
@@ -170,6 +170,11 @@ void Game::Update(const float rDeltaTime)
 	{
 		_Rules.ActionServiceStart(0);
 	}
+
+	if (hge->Input_GetKeyState(HGEK_DELETE)!=0)
+	{
+		_BallRecorder.DeleteCurrentRecord();
+	}
 }
 
 // ********************************************
@@ -182,6 +187,9 @@ void Game::Render()
 	_BallRecorder.Render();
 	_Players[0].Render();
 	_Players[1].Render();
+
+	_pCmd[0]->Render();
+	_pCmd[1]->Render();
 
 	_Rules.Render();
 }
