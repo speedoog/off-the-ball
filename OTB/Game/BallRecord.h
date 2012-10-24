@@ -45,9 +45,15 @@ public:
 };
 
 typedef TVector<BallRecordFrame>	BallFrameArray;
-class BallRecordData
+class BallRecord
 {
 public:
+	static  const Float32 _rFrameTime;
+	static  UInt32		GetFrameFromTime(const Float32 rTime)	{ return UInt32(rTime/_rFrameTime);		}
+	static  Float32		GetTimeFromFrame(const UInt32 nFrame)	{ return Float32(nFrame)*_rFrameTime;	}
+
+	BallRecord() : _nTry(1), _nSucced(1) {}
+
 	void				InitNew()		{ _aArray.Reserve(512); Clear(); }
 	BallRecordFrame&	NewFrame()		{ _aArray.Resize(_aArray.GetSize()+1); return *_aArray.GetLast(); }
 	void				Clear()			{ _aArray.Clear(); }
@@ -59,51 +65,34 @@ public:
 		}
 	}
 
-	BallFrameArray	_aArray;
-};
-
-class BallRecord
-{
-public:
-	static  const Float32 _rFrameTime;
-	static  UInt32		GetFrameFromTime(const Float32 rTime)	{ return UInt32(rTime/_rFrameTime);		}
-	static  Float32		GetTimeFromFrame(const UInt32 nFrame)	{ return Float32(nFrame)*_rFrameTime;	}
-
-	BallRecord() {}
-
-	void	Clear()		{ _Data.Clear(); }
-	void	Render(const UInt32 nColor);
+	void	Render(const UInt32 nColor, const Bool bReverse=false, const Bool bBallVelocity =true);
 	void	FixSide()
 	{
 		if (_nBallSide==0)
 		{
-			_Data.RevertSide();
-			if (_rInitialBallAngle>0)
-			{
-				_rInitialBallAngle =M_PI-_rInitialBallAngle;
-			}
-			else
-			{
-				_rInitialBallAngle =-M_PI-_rInitialBallAngle;
-			}
+			RevertSide();
+			_vInitialBallVelocity.x =-_vInitialBallVelocity.x;
 			_nBallSide =1;
 		}
 	}
 
-	// stream
+	// stream Write
 	inline friend void	operator << (TStream& Stream, const BallRecord& ballRecord)
 	{
-		Stream << ballRecord._rInitialBallAngle;
-		Stream << ballRecord._rInitialBallSpeed;
+		Stream << ballRecord._nTry;
+		Stream << ballRecord._nSucced;
+		Stream << ballRecord._vInitialBallVelocity;
 		Stream << ballRecord._vInitialBallPos;
-		Stream << ballRecord._Data._aArray;
+		Stream << ballRecord._aArray;
 	}
+	// Stream read
 	inline friend void	operator >> (TStream& Stream, BallRecord& ballRecord)
 	{
-		Stream >> ballRecord._rInitialBallAngle;
-		Stream >> ballRecord._rInitialBallSpeed;
+		Stream >> ballRecord._nTry;
+		Stream >> ballRecord._nSucced;
+		Stream >> ballRecord._vInitialBallVelocity;
 		Stream >> ballRecord._vInitialBallPos;
-		Stream >> ballRecord._Data._aArray;
+		Stream >> ballRecord._aArray;
 	}
 
 	BallRecordFrame& GetFrame(const Float32 rTime)
@@ -113,19 +102,19 @@ public:
 
 	BallRecordFrame& GetFrame(const UInt32 nFrame)
 	{
-		UInt32 nFrameClamped =TMin(nFrame, _Data._aArray.GetSize()-1);
-		return _Data._aArray[nFrameClamped];
+		UInt32 nFrameClamped =TMin(nFrame, _aArray.GetSize()-1);
+		return _aArray[nFrameClamped];
 	}
 
 	UInt32 GetBestMatch(const hgeVector& vBallPos, const UInt32 nStart, const UInt32 nWindowSize, Float32& rDiff)
 	{
 		UInt32  nBestMatch=nStart;
 		Float32 rBestDistSq =99999;
-		UInt32 nEnd =TMin(nStart+nWindowSize, _Data._aArray.GetSize());
+		UInt32 nEnd =TMin(nStart+nWindowSize, _aArray.GetSize());
 
 		for(UInt32 i=nStart; i<nEnd; ++i)
 		{
-			BallRecordFrame& frame =_Data._aArray[i];
+			BallRecordFrame& frame =_aArray[i];
  			hgeVector vDiff =frame._vBallPos-vBallPos;
  			Float32 rDistSq =vDiff.Length();
 //			Float32 rDistSq =TAbs(frame._vBallPos.y-vBallPos.y);
@@ -139,15 +128,17 @@ public:
 		return nBestMatch;
 	}
 
-	hgeVector 			_vInitialBallPos;
-	UInt32				_nBallSide;
-	Float32				_rInitialBallAngle;
-	Float32				_rInitialBallSpeed;
+	hgeVector 		_vInitialBallPos;
+	UInt32			_nBallSide;
+	hgeVector		_vInitialBallVelocity;
+	UInt32			_nTry, _nSucced;
 
-	BallRecordData		_Data;
+	BallFrameArray	_aArray;
 };
 
 class Ball;
+
+typedef	TVector<BallRecord>	BallRecordVector;
 class BallRecordDB
 {
 public:
@@ -157,27 +148,71 @@ public:
 	BallRecord*	FindBest(Ball& ball);
 
 	// stream
-	inline friend void	operator << (TStream& Stream, const BallRecordDB& ballRecordDb)
+	inline friend void	operator << (TStream& Stream, const BallRecordDB& ballRecordDB)
 	{
-		Stream << ballRecordDb._lDatabase;
+		Stream << ballRecordDB._lDatabase;
 	}
 	inline friend void	operator >> (TStream& Stream, BallRecordDB& ballRecordDB)
 	{
 		Stream >> ballRecordDB._lDatabase;
-		FOR_EACH_ELEMENT_OF_DLIST_SAFE(ballRecordDB._lDatabase, it, TList<BallRecord>)
+		ballRecordDB.Cleanup();
+	}
+
+	inline void Cleanup()
+	{
+		for(BallRecordVector::Iterator it =_lDatabase.GetHead(); it!=_lDatabase.GetTail(); )
 		{
+			Bool bRemove =false;
 			BallRecord& ballRec =*it;
-			UInt32 nSize =ballRec._Data._aArray.GetSize();
-			if (nSize>100 || nSize<25)
+			UInt32 nSize =ballRec._aArray.GetSize();
+
+			if ((*ballRec._aArray.GetLast())._vBallPos.y<1.65f)
+				bRemove =true;
+
+			if (nSize>200 || nSize<50)
+				bRemove =true;
+
+			Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry);
+			if (rRatio<0.33f)
+				bRemove =true;
+
+			if (bRemove)
 			{
-				ballRecordDB._lDatabase.Remove(it);
+				_lDatabase.Remove(it);
+			}
+			else
+			{
+				++it;
 			}
 		}
+
+		// remove duplicate
+		UInt32 nDup =0;
+		for(BallRecordVector::Iterator it1 =_lDatabase.GetHead(); it1!=_lDatabase.GetTail(); ++it1)
+		{
+			BallRecord& br1 =*it1;
+			for(BallRecordVector::Iterator it2 =it1+1; it2!=_lDatabase.GetTail(); )
+			{
+				BallRecord& br2 =*it2;
+				if (	TEqual(br1._vInitialBallPos.y,br2._vInitialBallPos.y)
+					&&	TEqual(br1._vInitialBallVelocity.x, br2._vInitialBallVelocity.x)
+					&&	TEqual(br1._vInitialBallVelocity.y, br2._vInitialBallVelocity.y) )
+				{
+					_lDatabase.Remove(it2);
+					++nDup;
+				}
+				else
+				{
+					++it2;
+				}
+			}
+		}
+
+		nDup ++;
 	}
 
 public:
-	TList<BallRecord>	_lDatabase;
-
+	BallRecordVector	_lDatabase;
 };
 
 class Game;
@@ -197,19 +232,23 @@ public:
 
 			void		DeleteCurrentRecord();
 	inline	BallRecord*	GetBestMatch()	{ return _pBestMatch; }
+
+	Bool			_bDbgBest, _bDbgRecord, _bDbgHeat;
+
 protected:
 			void		InsertFrame();
 
 protected:
-	Game*				_pGame;
-	Bool				_bRecording;
-	BallRecord			_BallRecord;	
-	Float32				_rLastFrameTime;
-	Float32				_rCurrentTime;
+	Game*			_pGame;
+	Bool			_bRecording;
+	BallRecord		_BallRecord;	
+	Float32			_rLastFrameTime;
+	Float32			_rCurrentTime;
 
-	BallRecordDB		_Database;
+	BallRecordDB	_Database;
 
-	BallRecord*			_pBestMatch;
+	BallRecord*		_pBestMatch;
+
 };
 
 #endif	//__BALLRECORD_H__
