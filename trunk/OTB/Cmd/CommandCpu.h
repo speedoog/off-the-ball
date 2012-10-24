@@ -40,6 +40,7 @@ protected:
 	UInt32	_nPlayerId;
 	Float32	_rTimeCurrent;
 	Float32	_rBallRecordTime;
+	Float32	_rShootRand;
 };
 
 #endif	//__COMMANDCPU_H__

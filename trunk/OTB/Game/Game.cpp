@@ -159,9 +159,8 @@ void Game::Update(const float rDeltaTime)
 			_Ball.Update(rSliceTime);
 			_Players[0].Update(rSliceTime);
 			_Players[1].Update(rSliceTime);
+			_BallRecorder.Update(rSliceTime);
 		}
-
-		_BallRecorder.Update(rTimeScaled);
 	}
 
 	// Cheat to restart (select btn)
@@ -170,6 +169,10 @@ void Game::Update(const float rDeltaTime)
 	{
 		_Rules.ActionServiceStart(0);
 	}
+
+	_BallRecorder._bDbgBest		^=hge->Input_KeyDown(HGEK_1);
+	_BallRecorder._bDbgRecord	^=hge->Input_KeyDown(HGEK_2);
+	_BallRecorder._bDbgHeat		^=hge->Input_KeyDown(HGEK_3);
 
 	if (hge->Input_GetKeyState(HGEK_DELETE)!=0)
 	{

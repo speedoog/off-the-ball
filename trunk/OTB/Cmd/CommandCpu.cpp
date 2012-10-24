@@ -81,6 +81,10 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 		vInputMove	 =hgeVector(rBack, 1.0f);
 		vInputRacket =hgeVector(rBack, 1.0f);
 		_rTimeCurrent =0.0f;
+		//_rShootRand =(Float32(rand())/Float32(RAND_MAX))*0.2f+0.70f;
+		//_rShootRandMin =0.68f;
+		//_rShootRandMax =0.83f;
+		_rShootRand =TRand(0.68f, 0.83f);
 	}
 	else
 	{
@@ -89,7 +93,7 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 			_rBallRecordTime =0.0f;
 			if (nBallSide==_nPlayerId)									// Service : my side
 			{
-				if (_rTimeCurrent>0.8f)
+				if (_rTimeCurrent>_rShootRand)
 				{
 					vInputRacket =hgeVector(rFront, 1.0f);				// shoot !
 				}
@@ -141,9 +145,9 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 					UInt32 nBest;
 					UInt32 nStart =BallRecord::GetFrameFromTime(_rBallRecordTime);
 					Float32 rDiff;
-					nBest =pBallRecord->GetBestMatch(vBallPos, nStart, 10, rDiff);
+					nBest =pBallRecord->GetBestMatch(hgeVector(rBack*vBallPos.x, vBallPos.y), nStart, 10, rDiff);
 
-					if (rDiff>0.3f)
+					if (rDiff>0.4f)
 					{
 						_rBallRecordTime +=rDeltaTime;
 						nBest =BallRecord::GetFrameFromTime(_rBallRecordTime);
@@ -154,18 +158,20 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 					}
 
 					BallRecordFrame& frame =pBallRecord->GetFrame(nBest);
-					
-					//vInputMove   =frame._vInputMove;
-					Float32 rBallDiffX =frame._vBallPos.x-vBallPos.x;
-					vInputMove.x =frame._rPlayerPositionX-vPlayerPos.x-rBallDiffX;
-					vInputRacket =frame._vInputRaquet;
+
+					Float32 rBallDiffX =(rBack*frame._vBallPos.x)-vBallPos.x;
+					vInputMove.x =rBack*(frame._rPlayerPositionX)-vPlayerPos.x-rBallDiffX;
+//					vInputMove.x*=1.5f;	// litle boost
+
+					vInputRacket.x =rBack*frame._vInputRaquet.x;
+					vInputRacket.y =frame._vInputRaquet.y;
 				}
 
 			}
 			else
 			{
 				vInputRacket =hgeVector(rBack, 1.0f);
-				vInputMove.SetPolar(1.0f, _rTimeCurrent*10.0f);
+				vInputMove.SetPolar(1.0f, _rTimeCurrent*3.0f);
 				_rBallRecordTime =0.0f;
 			}
 		}
@@ -174,7 +180,6 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 	_pPlayer->SetInputMove(vInputMove);
 	_pPlayer->SetInputRacket(vInputRacket);
 }
-
 
 // ********************************************
 //	OnRender
@@ -188,7 +193,8 @@ void CommandCpu::OnRender()
 		{
 			BallRecordFrame& frame =pBallRecord->GetFrame(_rBallRecordTime);
 
-			hge->Gfx_RenderCircle(frame._vBallPos.x, frame._vBallPos.y, 0.05f, 0xFFFFFF00);
+			const Float32 rRevert =(_pGame->GetBall().GetSide()==0)?-1.0f:1.0f;
+			hge->Gfx_RenderCircle(frame._vBallPos.x*rRevert, frame._vBallPos.y, 0.05f, 0xFFFFFF00);
 		}
 	}
 }

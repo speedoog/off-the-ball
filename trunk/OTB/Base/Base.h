@@ -155,6 +155,21 @@ template <class C> static C TChangeRange(C SourceRangeMin, C SourceRangeMax, C D
 	return DestinationRangeMin+dy*k;
 }
 
+static inline Float32 TRand()
+{
+	return Float32(rand())/Float32(RAND_MAX);
+}
+
+static inline Float32 TRand(const Float32 rMin, const Float32 rMax)
+{
+	return TChangeRange(0.0f, Float32(RAND_MAX), rMin, rMax, Float32(rand()) );
+}
+
+static Bool TEqual(const Float32 rValue1, const Float32 rValue2, const Float32 rEpsilon = 0.1f)
+{
+	return (TAbs(rValue1-rValue2) < rEpsilon);
+}
+
 #define FOR_EACH(_CONTAINER_, _ITER_, _CONTAINER_TYPE_)					\
 	for (_CONTAINER_TYPE_::Iterator _ITER_ = (_CONTAINER_).GetHead(),	\
 	_ITEND_ = (_CONTAINER_).GetTail(); _ITER_!=_ITEND_; ++_ITER_)
