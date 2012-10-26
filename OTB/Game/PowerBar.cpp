@@ -59,6 +59,7 @@ void PowerBar::Reset()
 // ********************************************
 Bool PowerBar::Update(const float rDeltaTime, const Bool bUse)
 {
+	/*
 	if (bUse)
 	{
 		if (_rValue>0.0f)
@@ -75,6 +76,7 @@ Bool PowerBar::Update(const float rDeltaTime, const Bool bUse)
 			_rValue =1.0f;
 		}
 	}
+	*/
 	return false;
 }
 
@@ -83,11 +85,13 @@ Bool PowerBar::Update(const float rDeltaTime, const Bool bUse)
 // ********************************************
 void PowerBar::ChangeSide()
 {
+	/*
 	_rValue +=0.25f;
 	if (_rValue>1.0f)
 	{
 		_rValue =1.0f;
 	}
+	*/
 }
 
 // ********************************************

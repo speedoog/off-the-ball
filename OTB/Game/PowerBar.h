@@ -27,14 +27,15 @@ class Game;
 class PowerBar
 {
 public:
-								PowerBar();
-								~PowerBar();
+					PowerBar();
+					~PowerBar();
 
-			void				Init(const UInt32 nPlayerId, Game* pGame);
-			void				Reset();
-			Bool				Update(const float rDeltaTime, const Bool bUse);
-			void				ChangeSide();
-			void				Render();
+			void	Init(const UInt32 nPlayerId, Game* pGame);
+			void	Reset();
+			Bool	Update(const float rDeltaTime, const Bool bUse);
+			void	ChangeSide();
+			void	Render();
+	inline 	void	SetValue(const Float32 rValue) { _rValue =rValue; }
 
 protected:
 	UInt32		_nPlayerId;

@@ -95,6 +95,13 @@ public:
 		Stream >> ballRecord._aArray;
 	}
 
+	Bool operator < (const BallRecord& other)
+	{
+		Float32 rRatio1 =Float32(_nSucced)/Float32(_nTry+1);
+		Float32 rRatio2 =Float32(other._nSucced)/Float32(other._nTry+1);
+		return rRatio1>rRatio2;
+	}
+
 	BallRecordFrame& GetFrame(const Float32 rTime)
 	{
 		return GetFrame(GetFrameFromTime(rTime));
@@ -160,6 +167,9 @@ public:
 
 	inline void Cleanup()
 	{
+		_lDatabase.Sort();
+
+		UInt32 nBad =0;
 		for(BallRecordVector::Iterator it =_lDatabase.GetHead(); it!=_lDatabase.GetTail(); )
 		{
 			Bool bRemove =false;
@@ -169,15 +179,16 @@ public:
 			if ((*ballRec._aArray.GetLast())._vBallPos.y<1.65f)
 				bRemove =true;
 
-			if (nSize>200 || nSize<50)
+			if (nSize>300 || nSize<50)
 				bRemove =true;
 
-			Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry);
+			Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry+1);
 			if (rRatio<0.33f)
 				bRemove =true;
 
 			if (bRemove)
 			{
+				++nBad;
 				_lDatabase.Remove(it);
 			}
 			else
@@ -187,16 +198,24 @@ public:
 		}
 
 		// remove duplicate
-		UInt32 nDup =0;
+		UInt32 nDup	 =0;
+		UInt32 nDup1 =0;
+		UInt32 nDup2 =0;
 		for(BallRecordVector::Iterator it1 =_lDatabase.GetHead(); it1!=_lDatabase.GetTail(); ++it1)
 		{
 			BallRecord& br1 =*it1;
 			for(BallRecordVector::Iterator it2 =it1+1; it2!=_lDatabase.GetTail(); )
 			{
 				BallRecord& br2 =*it2;
-				if (	TEqual(br1._vInitialBallPos.y,br2._vInitialBallPos.y)
-					&&	TEqual(br1._vInitialBallVelocity.x, br2._vInitialBallVelocity.x)
-					&&	TEqual(br1._vInitialBallVelocity.y, br2._vInitialBallVelocity.y) )
+
+				Bool bPos =TEqual(br1._vInitialBallPos.y,br2._vInitialBallPos.y, 0.025f);
+				if (bPos)	++nDup1;
+
+				Bool bVel =TEqual(br1._vInitialBallVelocity.x, br2._vInitialBallVelocity.x, 0.25f)
+						&& TEqual(br1._vInitialBallVelocity.y, br2._vInitialBallVelocity.y, 0.25f);
+				if (bVel)	++nDup2;
+
+				if (bPos && bVel)
 				{
 					_lDatabase.Remove(it2);
 					++nDup;
@@ -208,7 +227,7 @@ public:
 			}
 		}
 
-		nDup ++;
+		int t=0;
 	}
 
 public:

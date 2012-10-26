@@ -56,6 +56,8 @@ public:
 	inline	const hgeVector&	GetInputMove()	 const							{ return _vInputMove;	}
 	inline	const hgeVector&	GetInputRacket() const							{ return _vInputRacket;	}
 
+	inline	PowerBar&			getPowerBar()									{ return _PowerBar; }
+
 protected:
 	hgeVector	GetRaquetPos0() const;
 	hgeVector	GetRaquetPos1() const;

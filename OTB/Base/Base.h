@@ -165,7 +165,7 @@ static inline Float32 TRand(const Float32 rMin, const Float32 rMax)
 	return TChangeRange(0.0f, Float32(RAND_MAX), rMin, rMax, Float32(rand()) );
 }
 
-static Bool TEqual(const Float32 rValue1, const Float32 rValue2, const Float32 rEpsilon = 0.1f)
+static Bool TEqual(const Float32 rValue1, const Float32 rValue2, const Float32 rEpsilon = 0.05f)
 {
 	return (TAbs(rValue1-rValue2) < rEpsilon);
 }
