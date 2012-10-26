@@ -31,7 +31,7 @@ BallRecorder::BallRecorder()
 : _pGame		(NULL)
 , _bRecording	(false)
 , _pBestMatch	(NULL)
-, _bDbgBest		(true)
+, _bDbgBest		(false)
 , _bDbgRecord	(false)
 , _bDbgHeat		(false)
 {
@@ -56,7 +56,7 @@ void BallRecorder::Init(Game* pGame)
 
 	// Load DB
 	TStream Stream;
-	Bool bOk =Stream.OpenFile("AI/test.bin", TStream::SM_READ);
+	Bool bOk =Stream.OpenFile("Database.AI", TStream::SM_READ);
 	if (bOk)
 	{
 		Stream >> _Database;
@@ -71,7 +71,7 @@ void BallRecorder::Kill()
 {
 	// Save DB
 	TStream Stream;
-	Stream.OpenFile("AI/test.bin", TStream::SM_WRITE);
+	Stream.OpenFile("Database.AI", TStream::SM_WRITE);
 	Stream << _Database;
 	Stream.CloseFile();
 }
@@ -286,14 +286,16 @@ BallRecord*	BallRecordDB::FindBest(Ball& ball)
 		hgeVector vDiff =ballRec._vInitialBallVelocity-vVelocity;
 		Float32 dV =/*TChangeRange(0.0f, 10.0f,		0.0f, 1.0f,*/ vDiff.Length()/rBallSpeed;
 
-		Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry);
-
-		Float32 rScore =(dY+dV)/rRatio;
-
-		if (rScore<rBestScore)
+		Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry+1);
+		if (rRatio>=0.33f)
 		{
-			rBestScore=rScore;
-			pBest	  =&ballRec;
+			Float32 rScore =(dY+dV)/rRatio;
+
+			if (rScore<rBestScore)
+			{
+				rBestScore=rScore;
+				pBest	  =&ballRec;
+			}
 		}
 	}
 	

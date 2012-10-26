@@ -78,13 +78,13 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 
 	if (rules.IsWaitingToServe(_nPlayerId))								// Waiting for my serve
 	{
-		vInputMove	 =hgeVector(rBack, 1.0f);
-		vInputRacket =hgeVector(rBack, 1.0f);
+		vInputMove	 =hgeVector(TRand(0.75f*rBack, rBack), 1.0f);
+		vInputRacket =hgeVector(TRand(0.75f*rBack, rBack), TRand(0.75f, 1.0f));
 		_rTimeCurrent =0.0f;
 		//_rShootRand =(Float32(rand())/Float32(RAND_MAX))*0.2f+0.70f;
 		//_rShootRandMin =0.68f;
 		//_rShootRandMax =0.83f;
-		_rShootRand =TRand(0.68f, 0.83f);
+		_rShootRand =TRand(0.7f, 0.8f);
 	}
 	else
 	{
@@ -107,7 +107,8 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 				if (bRacketHit==false)
 				{
 					vInputMove.SetPolar(1.0f, _rTimeCurrent*4.0f);
-					vInputRacket.SetPolar(1.0f, _rTimeCurrent*10.0f);
+					//vInputRacket.SetPolar(1.0f, _rTimeCurrent*10.0f);
+					vInputRacket =hgeVector(rBack, -1.0f);
 				}
 			}
 		}
@@ -142,6 +143,8 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 				BallRecord* pBallRecord =_pGame->GetBallRecorder().GetBestMatch();
 				if (pBallRecord)
 				{
+					playerCPU.getPowerBar().SetValue(Float32(pBallRecord->_nSucced)/Float32(pBallRecord->_nTry) );
+
 					UInt32 nBest;
 					UInt32 nStart =BallRecord::GetFrameFromTime(_rBallRecordTime);
 					Float32 rDiff;
@@ -170,7 +173,9 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 			}
 			else
 			{
-				vInputRacket =hgeVector(rBack, 1.0f);
+				playerCPU.getPowerBar().SetValue( 0.0f );
+
+				vInputRacket =hgeVector(rBack, -1.0f);
 				vInputMove.SetPolar(1.0f, _rTimeCurrent*3.0f);
 				_rBallRecordTime =0.0f;
 			}
@@ -186,15 +191,18 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 // ********************************************
 void CommandCpu::OnRender()
 {
-	if (_rBallRecordTime!=0.0f)
+	if (_pGame->GetBallRecorder()._bDbgBest)
 	{
-		BallRecord* pBallRecord =_pGame->GetBallRecorder().GetBestMatch();
-		if (pBallRecord)
+		if (_rBallRecordTime!=0.0f)
 		{
-			BallRecordFrame& frame =pBallRecord->GetFrame(_rBallRecordTime);
+			BallRecord* pBallRecord =_pGame->GetBallRecorder().GetBestMatch();
+			if (pBallRecord)
+			{
+				BallRecordFrame& frame =pBallRecord->GetFrame(_rBallRecordTime);
 
-			const Float32 rRevert =(_pGame->GetBall().GetSide()==0)?-1.0f:1.0f;
-			hge->Gfx_RenderCircle(frame._vBallPos.x*rRevert, frame._vBallPos.y, 0.05f, 0xFFFFFF00);
+				const Float32 rRevert =(_pGame->GetBall().GetSide()==0)?-1.0f:1.0f;
+				hge->Gfx_RenderCircle(frame._vBallPos.x*rRevert, frame._vBallPos.y, 0.05f, 0xFFFFFF00);
+			}
 		}
 	}
 }

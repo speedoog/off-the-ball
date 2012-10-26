@@ -144,7 +144,8 @@ void Game::Update(const float rDeltaTime)
 
 	if (GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_BTN_VALIDATE)<0.5f)
 	{
-		const Float32 rTimeFactor =TChangeRange(0.5f, 1.0f, 1.0f, 0.3f, GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_TIME_SCALE));
+//		const Float32 rTimeFactor =TChangeRange(0.5f, 1.0f, 1.0f, 0.3f, GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_TIME_SCALE));
+		const Float32 rTimeFactor =1.0f;
 		//	const Float32 rTimeFactor =(UseTimeScale()==true)?0.3f:1.0f;
 		const Float32 rTimeScaled =rDeltaTime*rTimeFactor;
 
@@ -157,9 +158,9 @@ void Game::Update(const float rDeltaTime)
 		{
 			_Level.Update(rSliceTime);
 			_Ball.Update(rSliceTime);
+			_BallRecorder.Update(rSliceTime);
 			_Players[0].Update(rSliceTime);
 			_Players[1].Update(rSliceTime);
-			_BallRecorder.Update(rSliceTime);
 		}
 	}
 
