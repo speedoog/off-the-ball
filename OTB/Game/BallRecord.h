@@ -76,6 +76,8 @@ public:
 		}
 	}
 
+	void CleanupMove();
+
 	// stream Write
 	inline friend void	operator << (TStream& Stream, const BallRecord& ballRecord)
 	{
@@ -174,6 +176,8 @@ public:
 		{
 			Bool bRemove =false;
 			BallRecord& ballRec =*it;
+			ballRec.CleanupMove();
+
 			UInt32 nSize =ballRec._aArray.GetSize();
 
 			if ((*ballRec._aArray.GetLast())._vBallPos.y<1.65f)

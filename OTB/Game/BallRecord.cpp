@@ -255,8 +255,42 @@ void BallRecord::Render(const UInt32 nColor, const Bool bReverse, const Bool bBa
 			hge->Gfx_RenderLine(_vInitialBallPos.x, _vInitialBallPos.y,
 								vEnd.x*rReverse, vEnd.y, nColors[0] );
 		}
-
 	}
+}
+
+// ********************************************
+//	CleanupMove
+// ********************************************
+void BallRecord::CleanupMove()
+{
+	UInt32 nBreaks =0;
+	UInt32 nEraseStart =0;
+
+	BallRecordFrame* pvStart=&_aArray[0];
+	BallRecordFrame* pvMid	=&_aArray[1];
+	UInt32 nEnd =_aArray.GetSize()-1;
+	for (UInt32 iCurrent=1; iCurrent<nEnd; ++iCurrent)
+	{
+		BallRecordFrame* pvEnd =pvMid+1;
+		hgeVector vDiff1 =(pvMid->_vBallPos)-(pvStart->_vBallPos);	vDiff1.Normalize();
+		hgeVector vDiff2 =(pvEnd->_vBallPos)-(pvMid->_vBallPos);	vDiff2.Normalize();
+
+		Float32 rDot =vDiff1.Dot(vDiff2);
+		if (rDot<0.9f)
+		{
+			for(UInt32 iErase=nEraseStart; iErase<iCurrent; ++iErase)
+			{
+				_aArray[iErase]._rPlayerPositionX =pvMid->_rPlayerPositionX;
+			}
+			nEraseStart =iCurrent+1;
+			++nBreaks;
+		}
+
+		pvStart =pvMid;
+		pvMid	=pvEnd;
+	}
+
+	++nBreaks;
 }
 
 // ********************************************
@@ -298,6 +332,6 @@ BallRecord*	BallRecordDB::FindBest(Ball& ball)
 			}
 		}
 	}
-	
+
 	return pBest;
 }
