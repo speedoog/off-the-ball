@@ -176,18 +176,23 @@ public:
 		{
 			Bool bRemove =false;
 			BallRecord& ballRec =*it;
-			ballRec.CleanupMove();
+
+			while (ballRec._nTry>16)
+			{
+				ballRec._nTry	 /=2;
+				ballRec._nSucced /=2;
+			}
 
 			UInt32 nSize =ballRec._aArray.GetSize();
 
-			if ((*ballRec._aArray.GetLast())._vBallPos.y<1.65f)
+			if ((*ballRec._aArray.GetLast())._vBallPos.y<1.45f)
 				bRemove =true;
 
 			if (nSize>300 || nSize<50)
 				bRemove =true;
 
 			Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry+1);
-			if (rRatio<0.33f)
+			if (rRatio<0.55f)
 				bRemove =true;
 
 			if (bRemove)

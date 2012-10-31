@@ -64,6 +64,8 @@ protected:
 	int		_nBallSide;
 	int		_nGroundTouch;
 	int		_nServicePlayer;
+
+	int		_nDbgExchanges, _nDbgFails;
 };
 
 

@@ -134,6 +134,7 @@ void BallRecorder::StopRecord(const Bool bSuccess)
 
 			if (_BallRecord._aArray.GetSize()>1)
 			{
+				_BallRecord.CleanupMove();
 				_BallRecord.FixSide();
 				_Database._lDatabase.PushTail(_BallRecord);
 			}
@@ -305,6 +306,8 @@ BallRecord*	BallRecordDB::FindBest(Ball& ball)
 		vVelocity.x =-vVelocity.x;
 	}
 
+//	Float32 rMinRatio =TRand(0.1f, 0.8f);
+
 	const Float32 rBallPosY	=ball.GetPos().y;
 // 	const Float32 rBallAngle=vVelocity.Angle();
  	const Float32 rBallSpeed=vVelocity.Length();
@@ -321,7 +324,7 @@ BallRecord*	BallRecordDB::FindBest(Ball& ball)
 		Float32 dV =/*TChangeRange(0.0f, 10.0f,		0.0f, 1.0f,*/ vDiff.Length()/rBallSpeed;
 
 		Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry+1);
-		if (rRatio>=0.33f)
+//		if (rRatio>=rMinRatio)
 		{
 			Float32 rScore =(dY+dV)/rRatio;
 

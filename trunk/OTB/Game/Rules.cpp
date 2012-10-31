@@ -40,6 +40,8 @@ Rules::~Rules()
 void Rules::Init(Game* pGame)
 {
 	_pGame =pGame;
+	_nDbgExchanges	=0;
+	_nDbgFails		=0;
 }
 
 // ********************************************
@@ -84,6 +86,8 @@ void Rules::Render()
 			}
 		}
 	}
+
+	pFontMessages->printf(0.0f, rPosY*0.95f, HGETEXT_CENTER, "Training   %02.2f %%", 100.0f*(1.0f-Float32(_nDbgFails)/Float32(_nDbgExchanges+1)) );
 }
 
 // ..........................................................................................................
@@ -128,6 +132,7 @@ void Rules::ActionServiceStart(int nPlayerServe)
 // ********************************************
 void Rules::ActionFail()
 {
+	++_nDbgFails;
 	_pGame->GetBallRecorder().StopRecord(false);
 
 	// update score
@@ -173,6 +178,7 @@ void Rules::EventBallChangeSide(int nSide)
 	_nBallSide		=nSide;
 	_nGroundTouch	=0;
 
+	++_nDbgExchanges;
 	_pGame->GetBallRecorder().StopRecord(true);
 	_pGame->GetBallRecorder().StartRecord();
 }
