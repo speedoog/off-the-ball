@@ -49,6 +49,8 @@ BallRecorder::~BallRecorder()
 // ********************************************
 void BallRecorder::Init(Game* pGame)
 {
+	_Database.Init(pGame);
+
 	_bRecording =false;
 	_pGame		=pGame;
 
@@ -299,6 +301,8 @@ void BallRecord::CleanupMove()
 // ********************************************
 BallRecord*	BallRecordDB::FindBest(Ball& ball)
 {
+	Float32 rNetY =_pGame->GetLevel().GetFutureNetY()+0.1f;
+
 	hgeVector vVelocity =ball.GetVelocity();
 	Int32 nBallSide =ball.GetSide();
 	if (nBallSide==0)
@@ -322,6 +326,9 @@ BallRecord*	BallRecordDB::FindBest(Ball& ball)
 // 		Float32 dS =TChangeRange(0.0f, 10.0f,		0.0f, 1.0f, TAbs(ballRec._rInitialBallSpeed-rBallSpeed));
 //		hgeVector vDiff =ballRec._vInitialBallVelocity-vVelocity;
 //		Float32 dV =TChangeRange(0.0f, 10.0f,		0.0f, 10.0f, vDiff.Length());
+
+		if ( (*ballRec._aArray.GetLast())._vBallPos.y < rNetY )
+			continue;
 
 		Float32 rDiff =BallRecord::ComputeDiff(rBallPosY, vVelocity, ballRec._vInitialBallPos.y, ballRec._vInitialBallVelocity);
 

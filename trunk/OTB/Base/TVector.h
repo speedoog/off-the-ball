@@ -128,6 +128,7 @@ public:
 	inline void 		RemoveIndex(UInt32 i);
 	inline void 		RemoveIndexFast(UInt32 i);
 	inline void			Remove(const Iterator& it);
+	inline void			RemoveFast(const Iterator& it);
 	inline void			RemoveFast(const TType& Elt);
 	inline UInt32		Remove(const TType& Elt, Bool bRemoveAll = false);
 
