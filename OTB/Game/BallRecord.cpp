@@ -317,16 +317,18 @@ BallRecord*	BallRecordDB::FindBest(Ball& ball)
 	FOR_EACH(_lDatabase, it, BallRecordVector)
 	{
 		BallRecord& ballRec =*it;
-		Float32 dY =TChangeRange(0.0f, 10.0f,		0.0f, 3.0f, TAbs(ballRec._vInitialBallPos.y-rBallPosY));
+//		Float32 dY =TChangeRange(0.0f, 10.0f,		0.0f, 10.0f, TAbs(ballRec._vInitialBallPos.y-rBallPosY));
 // 		Float32	dA =TChangeRange(-M_PI_2, M_PI_2,	0.0f, 2.0f, TAbs(ballRec._rInitialBallAngle-rBallAngle));
 // 		Float32 dS =TChangeRange(0.0f, 10.0f,		0.0f, 1.0f, TAbs(ballRec._rInitialBallSpeed-rBallSpeed));
-		hgeVector vDiff =ballRec._vInitialBallVelocity-vVelocity;
-		Float32 dV =/*TChangeRange(0.0f, 10.0f,		0.0f, 1.0f,*/ vDiff.Length()/rBallSpeed;
+//		hgeVector vDiff =ballRec._vInitialBallVelocity-vVelocity;
+//		Float32 dV =TChangeRange(0.0f, 10.0f,		0.0f, 10.0f, vDiff.Length());
+
+		Float32 rDiff =BallRecord::ComputeDiff(rBallPosY, vVelocity, ballRec._vInitialBallPos.y, ballRec._vInitialBallVelocity);
 
 		Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry+1);
 //		if (rRatio>=rMinRatio)
 		{
-			Float32 rScore =(dY+dV)/rRatio;
+			Float32 rScore =rDiff/rRatio;
 
 			if (rScore<rBestScore)
 			{

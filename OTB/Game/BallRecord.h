@@ -137,9 +137,23 @@ public:
 		return nBestMatch;
 	}
 
+	inline static Float32 ComputeDiff(const Float32 rPosY1, const hgeVector vVelocity1, const Float32 rPosY2, const hgeVector vVelocity2)
+	{
+		Float32 dY =TAbs(rPosY1-rPosY2);
+		hgeVector vDiff =vVelocity1-vVelocity2;
+		Float32 dV =vDiff.Length();
+		return dY+dV;
+	}
+
+	inline Float32 ComputeDiff(const BallRecord& other)
+	{
+		return ComputeDiff(_vInitialBallPos.y, _vInitialBallVelocity, other._vInitialBallPos.y, other._vInitialBallVelocity);
+	}
+
 	hgeVector 		_vInitialBallPos;
-	UInt32			_nBallSide;
 	hgeVector		_vInitialBallVelocity;
+
+	UInt32			_nBallSide;
 	UInt32			_nTry, _nSucced;
 
 	BallFrameArray	_aArray;
@@ -192,7 +206,7 @@ public:
 				bRemove =true;
 
 			Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry+1);
-			if (rRatio<0.55f)
+			if (rRatio<0.33f)
 				bRemove =true;
 
 			if (bRemove)
@@ -217,14 +231,20 @@ public:
 			{
 				BallRecord& br2 =*it2;
 
+				Float32 rDiff =br1.ComputeDiff(br2);
+				/*
 				Bool bPos =TEqual(br1._vInitialBallPos.y,br2._vInitialBallPos.y, 0.025f);
 				if (bPos)	++nDup1;
 
 				Bool bVel =TEqual(br1._vInitialBallVelocity.x, br2._vInitialBallVelocity.x, 0.25f)
 						&& TEqual(br1._vInitialBallVelocity.y, br2._vInitialBallVelocity.y, 0.25f);
+
 				if (bVel)	++nDup2;
 
 				if (bPos && bVel)
+				*/
+
+				if (rDiff<0.1f)
 				{
 					_lDatabase.Remove(it2);
 					++nDup;
