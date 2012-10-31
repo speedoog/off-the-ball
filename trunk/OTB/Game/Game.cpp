@@ -66,6 +66,8 @@ CommandAbc* CreateCommand(const CommandAbc::CmdType cmd)
 // ********************************************
 void Game::Init(XML_PARSER* pXml)
 {
+	_rTimeScale =1.0f;
+
 	HWND hwnd =hge->System_GetState(HGE_HWND);
 	_Input.Init(hwnd);
 
@@ -145,10 +147,9 @@ void Game::Update(const float rDeltaTime)
 	if (GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_BTN_VALIDATE)<0.5f)
 	{
 //		const Float32 rTimeFactor =TChangeRange(0.5f, 1.0f, 1.0f, 0.3f, GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_TIME_SCALE));
-		const Float32 rTimeFactor =100.0f;
 
 		//	const Float32 rTimeFactor =(UseTimeScale()==true)?0.3f:1.0f;
-		const Float32 rTimeScaled =rDeltaTime*rTimeFactor;
+		const Float32 rTimeScaled =rDeltaTime*_rTimeScale;
 
 		const Float32 rSimulationFrameRate =600.0f;
 		const UInt32 nSliceCount =rSimulationFrameRate*rTimeScaled;
@@ -180,6 +181,13 @@ void Game::Update(const float rDeltaTime)
 	{
 		_BallRecorder.DeleteCurrentRecord();
 	}
+
+	if (hge->Input_KeyDown(HGEK_5))		_rTimeScale =0.2f;
+	if (hge->Input_KeyDown(HGEK_6))		_rTimeScale =0.5f;
+	if (hge->Input_KeyDown(HGEK_7))		_rTimeScale =1.0f;
+	if (hge->Input_KeyDown(HGEK_8))		_rTimeScale =2.0f;
+	if (hge->Input_KeyDown(HGEK_9))		_rTimeScale =10.0f;
+	if (hge->Input_KeyDown(HGEK_0))		_rTimeScale =100.0f;
 }
 
 // ********************************************
