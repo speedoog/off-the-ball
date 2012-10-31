@@ -62,6 +62,8 @@ protected:
 	Resources		_Resources;
 	InputCore		_Input;
 	Rules			_Rules;
+
+	Float32			_rTimeScale;
 //	Bool			_bUseTimeScale;
 
 	// temp ...
