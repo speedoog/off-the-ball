@@ -37,8 +37,9 @@ public:
 			void				Render();
 
 	// inlines
-	inline	const hgeVector&	GetSize()	{ return _vSize; }
-	inline	float				GetNetY()	{ return _rNetY; }
+	inline	const hgeVector&	GetSize()		{ return _vSize; }
+	inline	float				GetNetY()		{ return _rNetY; }
+	inline	float				GetFutureNetY()	{ if (_rCounter>15.0f) return _rNetY+0.2f; else return _rNetY; }
 
 protected:
 	Game*		_pGame;

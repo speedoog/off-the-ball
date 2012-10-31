@@ -476,6 +476,15 @@ void TVector<TType>::Remove(const Iterator& it)
 //	RemoveFast
 // ********************************************
 template <class TType>
+void TVector<TType>::RemoveFast(const Iterator& it)
+{
+	RemoveIndexFast(it.GetIndex());
+}
+
+// ********************************************
+//	RemoveFast
+// ********************************************
+template <class TType>
 void TVector<TType>::RemoveFast(const TType& Elt)
 {
 	Iterator Cur = Find(Elt);

@@ -160,13 +160,19 @@ public:
 };
 
 class Ball;
+class Game;
 
 typedef	TVector<BallRecord>	BallRecordVector;
 class BallRecordDB
 {
 public:
-				BallRecordDB()	{ }
+				BallRecordDB():_pGame(NULL)	{ }
 				~BallRecordDB()	{ }
+
+	void		Init(Game* pGame)
+	{
+		_pGame =pGame;
+	}
 
 	BallRecord*	FindBest(Ball& ball);
 
@@ -206,13 +212,13 @@ public:
 				bRemove =true;
 
 			Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry+1);
-			if (rRatio<0.33f)
+			if (rRatio<0.7f)
 				bRemove =true;
 
 			if (bRemove)
 			{
 				++nBad;
-				_lDatabase.Remove(it);
+				_lDatabase.RemoveFast(it);
 			}
 			else
 			{
@@ -244,9 +250,9 @@ public:
 				if (bPos && bVel)
 				*/
 
-				if (rDiff<0.1f)
+				if (rDiff<0.2f)
 				{
-					_lDatabase.Remove(it2);
+					_lDatabase.RemoveFast(it2);
 					++nDup;
 				}
 				else
@@ -260,10 +266,10 @@ public:
 	}
 
 public:
+	Game*				_pGame;
 	BallRecordVector	_lDatabase;
 };
 
-class Game;
 class BallRecorder
 {
 public:

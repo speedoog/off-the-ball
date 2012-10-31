@@ -145,17 +145,18 @@ void Game::Update(const float rDeltaTime)
 	if (GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_BTN_VALIDATE)<0.5f)
 	{
 //		const Float32 rTimeFactor =TChangeRange(0.5f, 1.0f, 1.0f, 0.3f, GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_TIME_SCALE));
-		const Float32 rTimeFactor =1.0f;
+		const Float32 rTimeFactor =100.0f;
+
 		//	const Float32 rTimeFactor =(UseTimeScale()==true)?0.3f:1.0f;
 		const Float32 rTimeScaled =rDeltaTime*rTimeFactor;
 
-		_pCmd[0]->Update(rTimeScaled);
-		_pCmd[1]->Update(rTimeScaled);
-
-		const UInt32 nSliceCount =10;
-		const Float32 rSliceTime =rTimeScaled/Float32(nSliceCount);
+		const Float32 rSimulationFrameRate =600.0f;
+		const UInt32 nSliceCount =rSimulationFrameRate*rTimeScaled;
+		const Float32 rSliceTime =1.0f/rSimulationFrameRate;
 		for(UInt32 i=0; i<nSliceCount; ++i)
 		{
+			_pCmd[0]->Update(rSliceTime);
+			_pCmd[1]->Update(rSliceTime);
 			_Level.Update(rSliceTime);
 			_Ball.Update(rSliceTime);
 			_BallRecorder.Update(rSliceTime);
