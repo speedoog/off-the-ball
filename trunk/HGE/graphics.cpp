@@ -726,6 +726,8 @@ bool HGE_Impl::_GfxInit()
 			}
 			if (bFound==false)
 			{
+				System_Log("Mode Found: %d x %d x %s", Mode.Width, Mode.Height, szFormats[_format_id(Mode.Format)]);
+
 				pScreenModes[nModeStored].nWidth =Mode.Width;
 				pScreenModes[nModeStored].nHeight=Mode.Height;
 				++nModeStored;
@@ -782,7 +784,7 @@ bool HGE_Impl::_GfxInit()
 
 	_AdjustWindow();
 
-	System_Log("Mode: %d x %d x %s\n",nScreenWidth,nScreenHeight,szFormats[_format_id(Format)]);
+	System_Log("\nSelected Mode: %d x %d x %s\n",nScreenWidth,nScreenHeight,szFormats[_format_id(Format)]);
 
 // Create vertex batch buffer
 
