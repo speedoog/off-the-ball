@@ -212,7 +212,7 @@ public:
 				bRemove =true;
 
 			Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry+1);
-			if (rRatio<0.7f)
+			if (rRatio<0.8f)
 				bRemove =true;
 
 			if (bRemove)
