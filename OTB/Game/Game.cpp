@@ -152,7 +152,7 @@ void Game::Update(const float rDeltaTime)
 		const Float32 rTimeScaled =rDeltaTime*_rTimeScale;
 
 		const Float32 rSimulationFrameRate =600.0f;
-		const UInt32 nSliceCount =rSimulationFrameRate*rTimeScaled;
+		const UInt32 nSliceCount =1+rSimulationFrameRate*rTimeScaled;
 		const Float32 rSliceTime =1.0f/rSimulationFrameRate;
 		for(UInt32 i=0; i<nSliceCount; ++i)
 		{
