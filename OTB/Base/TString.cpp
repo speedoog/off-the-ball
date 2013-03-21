@@ -42,7 +42,7 @@ TString::TString(const char* str)
 
 TString::TString(const TString& str)
 { 
-	if(str == 0)
+	if(str.GetCharconst() == 0)
 	{
 		_nLength = 0;
 		_pString = 0;
@@ -82,7 +82,7 @@ TString& TString::operator =(const char* str)
 
 TString& TString::operator =(const TString& str)
 {
-	assert(str != 0);
+	assert(str.GetCharconst() != 0);
 	if (_pString) delete _pString;
 	_nLength = strlen(str._pString);
 	_pString = new char[_nLength + 1]; 

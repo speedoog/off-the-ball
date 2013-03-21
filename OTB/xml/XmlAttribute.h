@@ -28,8 +28,8 @@ class XML_ATTRIBUTE : public TQuickListElement
 				void	SetValue(const char* pValue);
 				int		WriteToFile(FILE* pFile);
 
-		inline	char*	GetName()						{ return _sName; }
-		inline	char*	GetValue()						{ return _sValue; }
+		inline	char*	GetName()						{ return _sName.GetChar(); }
+		inline	char*	GetValue()						{ return _sValue.GetChar(); }
 		inline	int		GetValueAsInt()					{ return _sValue.GetAsInt(); }
 
 	protected:

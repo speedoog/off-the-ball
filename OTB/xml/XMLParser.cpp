@@ -80,6 +80,9 @@ XML_PARSER::XMLRC XML_PARSER::LoadFromFile(const char *pFileName)
 	char	*pESection		= 0;
 	char	*pOSecText		= 0;
 	int		bClosingSect	= false;
+	bool	bText =false;
+
+	int STOP =0;
 
 	TreePos = _Root;
 
@@ -101,6 +104,8 @@ XML_PARSER::XMLRC XML_PARSER::LoadFromFile(const char *pFileName)
 				}
 				pOSection = pScan+1;
 				pESection = 0;
+				bText =false;
+
 				break;
 
 			case '>':
@@ -123,6 +128,7 @@ XML_PARSER::XMLRC XML_PARSER::LoadFromFile(const char *pFileName)
 					TreePos		= pNewSect;
 					pOSection	= 0;
 				}
+				bText =true;
 				break;
 
 			case '/':
@@ -152,6 +158,14 @@ XML_PARSER::XMLRC XML_PARSER::LoadFromFile(const char *pFileName)
 				break;
 
 			case ' ':
+				if (bText)
+				{
+					if( TreePos && (pOSection==NULL) && (pOSecText==NULL) && (pESection==NULL))
+					{
+						TreePos->GetTextBuffer().Append(pScan, 1);
+						break;
+					}
+				}
 				if(pOSecText)
 					break;
 
@@ -179,6 +193,7 @@ XML_PARSER::XMLRC XML_PARSER::LoadFromFile(const char *pFileName)
 					break;
 				if(pESection)
 				{
+					++STOP;
 					if(CurrentAttrib)
 					{
 						delete pLoaded;
