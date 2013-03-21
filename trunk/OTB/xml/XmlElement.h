@@ -10,6 +10,7 @@
 //
 //----------------------------------------------------------
 
+
 #ifndef __XML_XMLELEMENT_H__
 #define __XML_XMLELEMENT_H__
 
@@ -29,6 +30,8 @@ class XML_ELEMENT : public TQuickListElement
 		inline	void			AddAttribute(XML_ATTRIBUTE *pAttrib)			{ _lAttributes.InsertQueue(pAttrib); }
 				int				SaveToFile(FILE *pFile, int IndentLevel);
 		inline	XML_ELEMENT*	GetFirstChild()									{ return (XML_ELEMENT*)_lChilds.GetHead(); }
+		inline	TQuickList&		GetChilds()										{ return _lChilds; }
+
 
 		inline	char*			GetName()										{ return _AttrName; }
 		inline	char*			GetText()										{ return _sText.GetBufferAsString(); }

@@ -50,12 +50,28 @@ public:
 	TString& operator +=(const TString& str);
 
 	// add more logic comparison operators as following, for example, although not efficient
-	virtual bool operator !=(char* str)	{ return strcmp(str, _pString) != 0; }
+	virtual bool operator !=(char* str)				{ return strcmp(str, _pString) != 0; }
+//	virtual bool operator ==(char* str)				{ return strcmp(str, _pString) == 0; }
+			bool operator ==(const TString& other)const
+			{
+				if (other._pString==0 && _pString==0)
+					return true;
+
+				if (other._pString==0 || _pString==0)
+					return false;
+				return strcmp(other._pString, _pString) == 0;
+			}
+
+			inline int GetLen()
+			{
+				return _nLength;
+			}
 
 	// c type string conversion
-	operator char* ()					{ return _pString; }
-	operator const char* ()	const		{ return _pString; }
+	//operator char* ()					{ return _pString; }
+	//operator const char* ()	const		{ return _pString; }
 	char*	GetChar()					{ return _pString; }
+	const char*	GetCharconst()	const				{ return _pString; }
 	int		GetAsInt() const			{ return atoi(_pString); }
 
 	// numeric conversion

@@ -39,7 +39,7 @@ TStream::~TStream()
 Bool TStream::OpenFile(const TString& sFilename, const TStream::TStreamOpenMode OpenMode)
 {
 	_OpenMode =OpenMode;
-	const char*	pFilename =sFilename;
+	const char*	pFilename =sFilename.GetCharconst();
 	static const char* pModes[] = { "rb", "wb", "ab" };
 
 	errno_t err;
