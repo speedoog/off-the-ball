@@ -23,6 +23,7 @@
 #include "../Cmd/CommandMouse.h"
 #include "../Cmd/CommandCpu.h"
 #include "../Xml/XMLParser.h"
+#include "../OTB.h"
 
 const char* XML_SECTION_GAME		="Game";
 const char* XML_SECTION_GAME_P1		="P1";
@@ -33,10 +34,11 @@ const char* XML_ATTRIBUTE_ID		="Id";
 // ********************************************
 //	Ctor
 // ********************************************
-Game::Game()
+Game::Game(Otb* pOTB)
 : _bShowPowerBar	(true)
 , _bDemoMode		(true)
 , _bShowTitle		(true)
+, _pOTB				(pOTB)
 {
 }
 
@@ -46,6 +48,22 @@ Game::Game()
 Game::~Game()
 {
 
+}
+
+// ********************************************
+//	GetResources
+// ********************************************
+Resources& Game::GetResources()
+{
+	return _pOTB->GetResources();
+}
+
+// ********************************************
+//	GetInputCommand
+// ********************************************
+InputCore& Game::GetInputCommand()
+{
+	return _pOTB->GetInputCommand();
 }
 
 CommandAbc* CreateCommand(const CommandAbc::CmdType cmd)
@@ -64,17 +82,13 @@ CommandAbc* CreateCommand(const CommandAbc::CmdType cmd)
 	}
 }
 
+
 // ********************************************
-//	Init
+//	InitBase
 // ********************************************
-void Game::Init(XML_PARSER* pXml)
+void Game::InitBase()
 {
 	_rTimeScale =1.0f;
-
-	HWND hwnd =hge->System_GetState(HGE_HWND);
-	_Input.Init(hwnd);
-
-	_Resources.Init();
 
 	_Level.Init(this, hgeVector(7.0f,7.5f), 1.3f);
 	_Players[0].Init(this, 0);
@@ -82,6 +96,15 @@ void Game::Init(XML_PARSER* pXml)
 	_Ball.Init(this);
 	_BallRecorder.Init(this);
 	_Rules.Init(this);
+
+}
+
+// ********************************************
+//	InitByXml
+// ********************************************
+void Game::InitByXml(XML_PARSER* pXml)
+{
+	InitBase();
 
 	const int nOffset =4;
 	const char* pCmd1Default =SMARTENUM_GET_STRING(CommandAbc::CmdType, CommandAbc::CMD_PAD)+nOffset;
@@ -129,12 +152,26 @@ void Game::Init(XML_PARSER* pXml)
 }
 
 // ********************************************
+//	InitDemoMode
+// ********************************************
+void Game::InitDemoMode()
+{
+	InitBase();
+
+	_pCmd[0] =CreateCommand(CommandAbc::CMD_CPU);
+	_pCmd[0]->Init(this, &_Players[0], 0);
+
+	_pCmd[1] =CreateCommand(CommandAbc::CMD_CPU);
+	_pCmd[1]->Init(this, &_Players[1], 1);
+
+	_Rules.ActionStartGame(0);		// start w/ player[0]
+}
+
+// ********************************************
 //	Kill
 // ********************************************
 void Game::Kill()
 {
-	_Resources.Kill();
-	_Input.Kill();
 	_Level.Kill();
 	_Ball.Kill();
 	_BallRecorder.Kill();
@@ -160,8 +197,6 @@ void Game::Update(const float rDeltaTime)
 		SetShowPowerBar(false);
 	}
 
-	_Input.Update();
-
 	if (GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_BTN_VALIDATE)<0.5f)
 	{
 //		const Float32 rTimeFactor =TChangeRange(0.5f, 1.0f, 1.0f, 0.3f, GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_TIME_SCALE));
@@ -170,7 +205,7 @@ void Game::Update(const float rDeltaTime)
 		const Float32 rTimeScaled =rDeltaTime*_rTimeScale;
 
 		const Float32 rSimulationFrameRate =600.0f;
-		const UInt32 nSliceCount =1+rSimulationFrameRate*rTimeScaled;
+		const UInt32 nSliceCount =1+UInt32(rSimulationFrameRate*rTimeScaled);
 		const Float32 rSliceTime =1.0f/rSimulationFrameRate;
 		for(UInt32 i=0; i<nSliceCount; ++i)
 		{
@@ -226,7 +261,7 @@ void Game::Render()
 
 	if (_bShowTitle)
 	{
-		hgeFont* pFontScore =_Resources._pFontScore;
+		hgeFont* pFontScore =GetResources()._pFontScore;
 		float rPosY =GetLevel().GetSize().y;
 
 		static float rHue =0.0f;
