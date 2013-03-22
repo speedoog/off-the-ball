@@ -31,21 +31,24 @@
 #include "../Cmd/CommandAbc.h"
 
 class XML_PARSER;
+class Otb;
 
 class Game
 {
 public:
-							Game();
+							Game(Otb* pOTB);
 							~Game();
-			void			Init(XML_PARSER* pXml=NULL);
+
+			void			InitByXml(XML_PARSER* pXml=NULL);
+			void			InitDemoMode();
 			void			Kill();
 
 			void			Update(const float rDeltaTime);
 			void			Render();
 
 	// Accessors
-	inline	Resources&		GetResources()					{ return _Resources;  		}
-	inline	InputCore&		GetInputCommand()				{ return _Input;	 		}
+			Resources&		GetResources();
+			InputCore&		GetInputCommand();
 	inline	Player&			GetPlayer(const UInt32 iSide)	{ return _Players[iSide]; 	}
 	inline	Ball&			GetBall()						{ return _Ball;				}
 	inline	BallRecorder&	GetBallRecorder()				{ return _BallRecorder;		}
@@ -58,13 +61,16 @@ public:
 	inline	void			SetShowPowerBar(const Bool bShowPowerBar) 	{ _bShowPowerBar =bShowPowerBar;	}
 
 protected:
+			void			InitBase();
+
+protected:
 	Level			_Level;
 	Player			_Players[2];
 	Ball			_Ball;
 	BallRecorder	_BallRecorder;
-	Resources		_Resources;
-	InputCore		_Input;
 	Rules			_Rules;
+
+	Otb*			_pOTB;
 
 	Float32			_rTimeScale;
 //	Bool			_bUseTimeScale;

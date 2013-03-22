@@ -30,21 +30,28 @@
 class Otb
 {
 public:
-					Otb();
-					~Otb();
-	void			Start();
+						Otb();
+						~Otb();
+			void		Start();
 
-	bool			Update(const float rDeltaTime);
-	bool			Render();
+			bool		Update(const float rDeltaTime);
+			bool		Render();
+
+	// Accessors
+	inline	Resources&	GetResources()					{ return _Resources;  		}
+	inline	InputCore&	GetInputCommand()				{ return _Input;	 		}
 
 protected:
-	void			DrawInputs();
-	void			LoadSettings();
+			void		DrawInputs();
+			void		LoadSettings();
 
 protected:
 	XML_PARSER		_XmlParser;
 	Game			_Game;
 	InputDirectX	_PadManager;
+
+	Resources		_Resources;
+	InputCore		_Input;
 
 	Bool			_bExitApp;
 	Bool			_bChangeVideoSettings;

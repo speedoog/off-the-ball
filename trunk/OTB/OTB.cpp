@@ -81,8 +81,9 @@ bool RenderFunc()
 }
 
 Otb::Otb()
-: _bExitApp(false)
-, _bChangeVideoSettings(false)
+: _bExitApp				(false)
+, _bChangeVideoSettings	(false)
+, _Game					(this)
 {
 	pThis =this;
 }
@@ -115,11 +116,25 @@ void Otb::Start()
 	// Tries to initiate HGE
 	if (hge->System_Initiate())
 	{
-		_Game.Init(&_XmlParser);
+
+		// init Low level stuff
+
+		HWND hwnd =hge->System_GetState(HGE_HWND);
+		_Input.Init(hwnd);
+		_Resources.Init();
+
+
+		//_Game.Init(&_XmlParser);
+		_Game.InitDemoMode();
 
 		Bool bSuccess =hge->System_Start();
 
 		_Game.Kill();
+
+		// kill low level
+		_Resources.Kill();
+		_Input.Kill();
+
 	}
 	else
 	{
@@ -137,6 +152,8 @@ void Otb::Start()
 
 bool Otb::Update(const float rDeltaTime)
 {
+	_Input.Update();
+
 	_Game.Update(rDeltaTime);
 
 	// Exit w/ Esc
