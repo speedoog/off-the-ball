@@ -54,6 +54,9 @@ public:
 	inline	Bool			UseTimeScale()					{ return _Players[0].UseTimeScale() || _Players[1].UseTimeScale();	}
 	inline	CommandAbc*		GetCmd(const UInt32 iSide)		{ return _pCmd[iSide];		}
 
+	inline	Bool			GetShowPowerBar() const						{ return _bShowPowerBar;			}
+	inline	void			SetShowPowerBar(const Bool bShowPowerBar) 	{ _bShowPowerBar =bShowPowerBar;	}
+
 protected:
 	Level			_Level;
 	Player			_Players[2];
@@ -65,6 +68,10 @@ protected:
 
 	Float32			_rTimeScale;
 //	Bool			_bUseTimeScale;
+
+	Bool			_bShowPowerBar;
+	Bool			_bDemoMode;
+	Bool			_bShowTitle;
 
 	// temp ...
 	CommandAbc*		_pCmd[2];

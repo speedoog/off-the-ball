@@ -40,8 +40,10 @@ Rules::~Rules()
 void Rules::Init(Game* pGame)
 {
 	_pGame =pGame;
-	_nDbgExchanges	=0;
-	_nDbgFails		=0;
+	_nDbgExchanges		=0;
+	_nDbgFails			=0;
+	_bShowScores		=true;
+	_bShowRulesMsg		=true;
 }
 
 // ********************************************
@@ -60,34 +62,40 @@ void Rules::Render()
 	Resources&	resources	=_pGame->GetResources();
 
 	// render score (move it in another class ?)
-	hgeVector vLvlSize =level.GetSize();
-	hgeFont* pFontScore =resources._pFontScore;
-	pFontScore->printf(-vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_LEFT,  "%d", _pGame->GetPlayer(0).ScoreGet());
-	pFontScore->printf( vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_RIGHT, "%d", _pGame->GetPlayer(1).ScoreGet());
-
-	hgeFont* pFontMessages =resources._pFontMessages;
-	pFontMessages->SetScale(-0.005f);
-	float rPosY =_pGame->GetLevel().GetSize().y;
-	if (_bServing)
+	if (_bShowScores)
 	{
-		if (_bWaitServe)
+		hgeVector vLvlSize =level.GetSize();
+		hgeFont* pFontScore =resources._pFontScore;
+		pFontScore->printf(-vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_LEFT,  "%d", _pGame->GetPlayer(0).ScoreGet());
+		pFontScore->printf( vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_RIGHT, "%d", _pGame->GetPlayer(1).ScoreGet());
+	}
+
+	if (_bShowRulesMsg)
+	{
+		hgeFont* pFontMessages =resources._pFontMessages;
+		pFontMessages->SetScale(-0.005f);
+		float rPosY =_pGame->GetLevel().GetSize().y;
+		if (_bServing)
 		{
-			pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Waiting for serve", _nServicePlayer+1);
-		}
-		else
-		{
-			if (_bSecondServe)
+			if (_bWaitServe)
 			{
-				pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Second Serve", _nServicePlayer+1);
+				pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Waiting for serve", _nServicePlayer+1);
 			}
 			else
 			{
-				pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Serve", _nServicePlayer+1);
+				if (_bSecondServe)
+				{
+					pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Second Serve", _nServicePlayer+1);
+				}
+				else
+				{
+					pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Serve", _nServicePlayer+1);
+				}
 			}
 		}
 	}
 
-	pFontMessages->printf(0.0f, rPosY*0.95f, HGETEXT_CENTER, "Training   %02.2f %%", 100.0f*(1.0f-Float32(_nDbgFails)/Float32(_nDbgExchanges+1)) );
+//	pFontMessages->printf(0.0f, rPosY*0.95f, HGETEXT_CENTER, "Training   %02.2f %%", 100.0f*(1.0f-Float32(_nDbgFails)/Float32(_nDbgExchanges+1)) );
 }
 
 // ..........................................................................................................

@@ -34,6 +34,9 @@ const char* XML_ATTRIBUTE_ID		="Id";
 //	Ctor
 // ********************************************
 Game::Game()
+: _bShowPowerBar	(true)
+, _bDemoMode		(true)
+, _bShowTitle		(true)
 {
 }
 
@@ -142,6 +145,21 @@ void Game::Kill()
 // ********************************************
 void Game::Update(const float rDeltaTime)
 {
+	if (_bDemoMode)
+	{
+		Float32 rDistance0 =(_Ball.GetPos()-_Players[0].GetRaquetPos1()).LengthSq();
+		Float32 rDistance1 =(_Ball.GetPos()-_Players[1].GetRaquetPos1()).LengthSq();
+
+		Float32 rDistMin =TMin(rDistance0, rDistance1);
+
+		Float32 rTimeScaleRaw = TChangeRange(0.0f, 3.0f, 0.3f, 3.0f, rDistMin);
+		_rTimeScale =TClamp(rTimeScaleRaw, 0.3f, 3.0f);
+
+		_Rules.SetShowRulesMsg(false);
+		_Rules.SetShowScores(false);
+		SetShowPowerBar(false);
+	}
+
 	_Input.Update();
 
 	if (GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_BTN_VALIDATE)<0.5f)
@@ -205,4 +223,17 @@ void Game::Render()
 	_pCmd[1]->Render();
 
 	_Rules.Render();
+
+	if (_bShowTitle)
+	{
+		hgeFont* pFontScore =_Resources._pFontScore;
+		float rPosY =GetLevel().GetSize().y;
+
+		static float rHue =0.0f;
+		rHue+=0.001f;	if (rHue>1.0f) rHue-=1.0f;
+		hgeColorHSV colTitle(rHue, 0.9f, 0.8f, 1.0f);
+
+		pFontScore->SetColor(colTitle.GetHWColor());
+		pFontScore->printf(0.0f, rPosY*0.82f, HGETEXT_CENTER, "Off  the  wall");
+	}
 }
