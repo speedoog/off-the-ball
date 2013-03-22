@@ -54,7 +54,7 @@ void Resources::Init()
 {
 	// load all
 	_pFontDebug		=LoadFont("Data/font1.fnt");
-	_pFontScore		=LoadFont("Data/FontScore.fnt");
+	_pFontScore		=LoadFont("Data/Bauhaus93.fnt");
 	_pFontMessages	=LoadFont("Data/Lucida70.fnt");
 
 	_BallTexture =hge->Texture_Load("Data/TennisBall3.png");

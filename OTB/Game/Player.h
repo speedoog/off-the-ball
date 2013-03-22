@@ -58,9 +58,8 @@ public:
 
 	inline	PowerBar&			getPowerBar()									{ return _PowerBar; }
 
-protected:
-	hgeVector	GetRaquetPos0() const;
-	hgeVector	GetRaquetPos1() const;
+			hgeVector			GetRaquetPos0() const;
+			hgeVector			GetRaquetPos1() const;
 
 protected:
 	Game*		_pGame;

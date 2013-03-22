@@ -35,37 +35,41 @@ public:
 			void		Render();
 
 	// Actions
-			void		ActionStartGame(int nPlayerStart);
-			void		ActionServiceStart(int nPlayerServe);
+			void		ActionStartGame(Int32 nPlayerStart);
+			void		ActionServiceStart(Int32 nPlayerServe);
 			void		ActionFail();
 			void		ActionServiceFailed();
 
 	// Events
-			void		EventBallChangeSide(int nSide);
+			void		EventBallChangeSide(Int32 nSide);
 			void		EventBallHitGround();
 			void		EventBallHitWall();
 			void		EventBallHitRacket();
 			void		EventBallHitNet();
 			void		EventServeStart();
 
-	inline	bool		IsWaitingToServe(int nPlayerId)	{ return _nServicePlayer==nPlayerId && _bWaitServe; }
-	inline	bool		IsWaitingToServe()				{ return _bWaitServe; }
-	inline	bool		IsServing()						{ return _bServing; }
-	inline	int			GetBallSide() const				{ return _nBallSide; }
-	inline	bool		GetRacketHit() const			{ return _bRacketHit; }
+	inline	Bool		IsWaitingToServe(Int32 nPlayerId)			{ return _nServicePlayer==nPlayerId && _bWaitServe; }
+	inline	Bool		IsWaitingToServe()							{ return _bWaitServe;				}
+	inline	Bool		IsServing()									{ return _bServing;					}
+	inline	Int32		GetBallSide() const							{ return _nBallSide;				}
+	inline	Bool		GetRacketHit() const						{ return _bRacketHit;				}
+
+	inline	void		SetShowScores(const Bool bShowScores)		{ _bShowScores =bShowScores;		}
+	inline	void		SetShowRulesMsg(const Bool bShowRulesMsg)	{ _bShowRulesMsg =bShowRulesMsg;	}
 
 protected:
 	Game*	_pGame;
 
-	bool	_bServing;
-	bool	_bSecondServe;
-	bool	_bWaitServe;
-	bool	_bRacketHit;
-	int		_nBallSide;
-	int		_nGroundTouch;
-	int		_nServicePlayer;
+	Bool	_bServing;
+	Bool	_bSecondServe;
+	Bool	_bWaitServe;
+	Bool	_bRacketHit;
+	Int32	_nBallSide;
+	Int32	_nGroundTouch;
+	Int32	_nServicePlayer;
 
-	int		_nDbgExchanges, _nDbgFails;
+	Bool	_bShowScores, _bShowRulesMsg;
+	Int32	_nDbgExchanges, _nDbgFails;
 };
 
 

@@ -184,7 +184,7 @@ public:
 	inline friend void	operator >> (TStream& Stream, BallRecordDB& ballRecordDB)
 	{
 		Stream >> ballRecordDB._lDatabase;
-		ballRecordDB.Cleanup();
+//		ballRecordDB.Cleanup();
 	}
 
 	inline void Cleanup()

@@ -27,6 +27,7 @@
 
 #include "../../hge/hge.h"
 #include "../../hge/hgevector.h"
+#include "../../hge/hgecolor.h"
 
 // -------------------------------------------- global HGE --------------------------------------------
 
