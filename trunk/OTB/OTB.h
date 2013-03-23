@@ -44,6 +44,7 @@ public:
 protected:
 			void		DrawInputs();
 			void		LoadSettings();
+			void		ApplyWorldTransform();
 
 protected:
 	XML_PARSER		_XmlParser;
@@ -55,6 +56,20 @@ protected:
 
 	Bool			_bExitApp;
 	Bool			_bChangeVideoSettings;
+
+public:
+	// video settings
+	int  	_nScreenSizeX;
+	int  	_nScreenSizeY;
+	bool 	_bWindowed;
+
+	// World Transform
+	float 	_rWorldTxTop;
+	float 	_rWorldTxBottom;
+	float 	_rWorldTxCenterX;
+	float 	_rWorldTxRotation;
+
+
 };
 
 
