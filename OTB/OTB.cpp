@@ -25,53 +25,18 @@
 HGE*			hge	  =0;
 Otb*			pThis =NULL;
 
-// normal window
-int  _nScreenSizeX =1280;
-int  _nScreenSizeY =720;
-bool _bWindowed    =true;
-
-// eeepc window
-// int	 _nScreenSizeX =900;
-// int	 _nScreenSizeY =500;
-// bool _bWindowed	   =true;
-
-// eeepc fullscreen
-// int  _nScreenSizeX =1024;
-// int  _nScreenSizeY =600;
-// bool _bWindowed    =false;
-
-static float rTop	=8.0f;
-static float rBottom=-0.5f;
-float rSizeY =rTop-rBottom;
-
-void ApplyWorldTransform() 
-{
-	static float rCenterX 	=0;			// center of scale & rotation
-	static float rCenterY 	=rBottom+(rSizeY/2.0f);
-	static float rCenterDx	=float(_nScreenSizeX)/2.0f;
-	static float rCenterDy	=float(_nScreenSizeY)/2.0f;
-	static float rRotation	=0;
-	//	rRotation+=0.02f;
-
-	float rGlobalScale =float(_nScreenSizeY)/rSizeY;
-
-	// Transformations are applied in this order: first scaling, then rotation and finally displacement. 
-	hge->Gfx_SetTransform(rCenterX, rCenterY, rCenterDx, rCenterDy, rRotation, rGlobalScale, -rGlobalScale);
-}
-
+// Constants
 const char* XML_SECTION_VIDEO			="Video";
 const char* XML_ATTRIB_VIDEO_SCREENX	="ScreenSizeX";
 const char* XML_ATTRIB_VIDEO_SCREENY	="ScreenSizeY";
 const char* XML_ATTRIB_VIDEO_WINDOWED	="Windowed";
-
-const int  DEFAULT_SCREENSIZEX 		=1280;
-const int  DEFAULT_SCREENSIZEY 		=720;
-const bool DEFAULT_SCREENWINDOWED   =true;
+const int  	DEFAULT_SCREENSIZEX 		=1280;
+const int  	DEFAULT_SCREENSIZEY 		=720;
+const bool 	DEFAULT_SCREENWINDOWED   	=true;
 
 bool FrameFunc()
 {
 	const float rDeltaTime =hge->Timer_GetDelta();
-
 	return pThis->Update(rDeltaTime);
 }
 
@@ -85,6 +50,17 @@ Otb::Otb()
 , _bChangeVideoSettings	(false)
 , _Game					(this)
 {
+	// initial video settings
+	_nScreenSizeX 		=DEFAULT_SCREENSIZEX;
+	_nScreenSizeY 		=DEFAULT_SCREENSIZEY;
+	_bWindowed    		=DEFAULT_SCREENWINDOWED;
+
+	// World Transform
+	_rWorldTxTop		=8.0f;
+	_rWorldTxBottom		=-0.5f;
+	_rWorldTxCenterX	=0.0f;		// center of scale & rotation
+	_rWorldTxRotation	=0.0f;
+
 	pThis =this;
 }
 
@@ -179,6 +155,18 @@ bool Otb::Render()
 	return false;
 }
 
+void Otb::ApplyWorldTransform()
+{
+	const float rSizeY		=_rWorldTxTop-_rWorldTxBottom;
+	const float rCenterY 	=_rWorldTxBottom+(rSizeY/2.0f);
+	const float rCenterDx	=float(_nScreenSizeX)/2.0f;
+	const float rCenterDy	=float(_nScreenSizeY)/2.0f;
+
+	const float rGlobalScale =float(_nScreenSizeY)/rSizeY;
+
+	// Transformations are applied in this order: first scaling, then rotation and finally displacement. 
+	hge->Gfx_SetTransform(_rWorldTxCenterX, rCenterY, rCenterDx, rCenterDy, _rWorldTxRotation, rGlobalScale, -rGlobalScale);
+}
 
 void Otb::DrawInputs()
 {
