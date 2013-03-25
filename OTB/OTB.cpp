@@ -34,6 +34,13 @@ const int  	DEFAULT_SCREENSIZEX 		=1280;
 const int  	DEFAULT_SCREENSIZEY 		=720;
 const bool 	DEFAULT_SCREENWINDOWED   	=true;
 
+
+// ------------ menu test ------------
+#include "Menus/menuitem.h"
+hgeGUI				*gui;
+hgeFont				*fnt;
+// ------------ menu test ------------
+
 bool FrameFunc()
 {
 	const float rDeltaTime =hge->Timer_GetDelta();
@@ -103,6 +110,26 @@ void Otb::Start()
 		//_Game.Init(&_XmlParser);
 		_Game.InitDemoMode();
 
+
+		// ------------ menu test ------------
+		fnt =_Resources._pFontMessages;
+		gui=new hgeGUI();
+
+		float rPosY =_Game.GetLevel().GetSize().y*0.7f;
+		gui->AddCtrl(new hgeGUIMenuItem(1,fnt,0,rPosY,0.0f,"Play"));		rPosY -=0.3f;
+		gui->AddCtrl(new hgeGUIMenuItem(2,fnt,0,rPosY,0.1f,"Options"));		rPosY -=0.3f;
+		gui->AddCtrl(new hgeGUIMenuItem(3,fnt,0,rPosY,0.2f,"Help"));		rPosY -=0.3f;
+		gui->AddCtrl(new hgeGUIMenuItem(4,fnt,0,rPosY,0.3f,"Credits"));		rPosY -=0.3f;
+		gui->AddCtrl(new hgeGUIMenuItem(5,fnt,0,rPosY,0.4f,"Exit"));		rPosY -=0.3f;
+
+		gui->SetNavMode(HGEGUI_UPDOWN | HGEGUI_CYCLED);
+//		gui->SetCursor(spr);
+		gui->SetFocus(1);
+		gui->Enter();
+		// ------------ menu test ------------
+
+
+
 		Bool bSuccess =hge->System_Start();
 
 		_Game.Kill();
@@ -132,6 +159,11 @@ bool Otb::Update(const float rDeltaTime)
 
 	_Game.Update(rDeltaTime);
 
+	// ------------ menu test ------------
+	int id=gui->Update(rDeltaTime);
+	// ------------ menu test ------------
+
+
 	// Exit w/ Esc
 	return (hge->Input_GetKeyState(HGEK_ESCAPE));
 }
@@ -145,6 +177,10 @@ bool Otb::Render()
 	hge->Gfx_Clear(0);
 
 	_Game.Render();
+
+	// ------------ menu test ------------
+	gui->Render();
+	// ------------ menu test ------------
 
 //	_Game.GetResources()._pFontDebug->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
 

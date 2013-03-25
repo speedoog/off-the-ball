@@ -269,6 +269,6 @@ void Game::Render()
 		hgeColorHSV colTitle(rHue, 0.9f, 0.8f, 1.0f);
 
 		pFontScore->SetColor(colTitle.GetHWColor());
-		pFontScore->printf(0.0f, rPosY*0.82f, HGETEXT_CENTER, "Off  the  wall");
+		pFontScore->printf(0.0f, rPosY*0.87f, HGETEXT_CENTER, "Off  the  wall");
 	}
 }
