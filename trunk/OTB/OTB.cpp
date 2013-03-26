@@ -39,6 +39,7 @@ const bool 	DEFAULT_SCREENWINDOWED   	=true;
 #include "Menus/menuitem.h"
 hgeGUI				*gui;
 hgeFont				*fnt;
+Bool				_bMenuTest=false;
 // ------------ menu test ------------
 
 bool FrameFunc()
@@ -93,8 +94,8 @@ void Otb::Start()
 	hge->System_SetState(HGE_LOGFILE,		"HGE.log");
 
 	hge->System_SetState(HGE_FPS,			HGEFPS_VSYNC);
-	//	hge->System_SetState(HGE_FPS,			HGEFPS_UNLIMITED);
-	//	hge->System_SetState(HGE_FPS,			60);
+//	hge->System_SetState(HGE_FPS,			HGEFPS_UNLIMITED);
+//	hge->System_SetState(HGE_FPS,			60);
 
 	// Tries to initiate HGE
 	if (hge->System_Initiate())
@@ -107,28 +108,30 @@ void Otb::Start()
 		_Resources.Init();
 
 
-		//_Game.Init(&_XmlParser);
-		_Game.InitDemoMode();
+		_Game.InitByXml(&_XmlParser);
+
+//		_Game.InitDemoMode();
 
 
 		// ------------ menu test ------------
-		fnt =_Resources._pFontMessages;
-		gui=new hgeGUI();
+		if (_bMenuTest)
+		{
+			fnt =_Resources._pFontMenus;
+			gui=new hgeGUI();
 
-		float rPosY =_Game.GetLevel().GetSize().y*0.7f;
-		gui->AddCtrl(new hgeGUIMenuItem(1,fnt,0,rPosY,0.0f,"Play"));		rPosY -=0.3f;
-		gui->AddCtrl(new hgeGUIMenuItem(2,fnt,0,rPosY,0.1f,"Options"));		rPosY -=0.3f;
-		gui->AddCtrl(new hgeGUIMenuItem(3,fnt,0,rPosY,0.2f,"Help"));		rPosY -=0.3f;
-		gui->AddCtrl(new hgeGUIMenuItem(4,fnt,0,rPosY,0.3f,"Credits"));		rPosY -=0.3f;
-		gui->AddCtrl(new hgeGUIMenuItem(5,fnt,0,rPosY,0.4f,"Exit"));		rPosY -=0.3f;
+			float rPosY =_Game.GetLevel().GetSize().y*0.7f;
+			gui->AddCtrl(new hgeGUIMenuItem(1,fnt,0,rPosY,0.0f,"Play"));		rPosY -=0.4f;
+			gui->AddCtrl(new hgeGUIMenuItem(2,fnt,0,rPosY,0.1f,"Options"));		rPosY -=0.4f;
+			gui->AddCtrl(new hgeGUIMenuItem(3,fnt,0,rPosY,0.2f,"Help"));		rPosY -=0.4f;
+			gui->AddCtrl(new hgeGUIMenuItem(4,fnt,0,rPosY,0.3f,"Credits"));		rPosY -=0.4f;
+			gui->AddCtrl(new hgeGUIMenuItem(5,fnt,0,rPosY,0.4f,"Exit"));		rPosY -=0.4f;
 
-		gui->SetNavMode(HGEGUI_UPDOWN | HGEGUI_CYCLED);
-//		gui->SetCursor(spr);
-		gui->SetFocus(1);
-		gui->Enter();
+			gui->SetNavMode(HGEGUI_UPDOWN | HGEGUI_CYCLED);
+//			gui->SetCursor(spr);
+			gui->SetFocus(1);
+			gui->Enter();
+		}
 		// ------------ menu test ------------
-
-
 
 		Bool bSuccess =hge->System_Start();
 
@@ -160,7 +163,10 @@ bool Otb::Update(const float rDeltaTime)
 	_Game.Update(rDeltaTime);
 
 	// ------------ menu test ------------
-	int id=gui->Update(rDeltaTime);
+	if (_bMenuTest)
+	{
+		int id=gui->Update(rDeltaTime);
+	}
 	// ------------ menu test ------------
 
 
@@ -179,7 +185,10 @@ bool Otb::Render()
 	_Game.Render();
 
 	// ------------ menu test ------------
-	gui->Render();
+	if (_bMenuTest)
+	{
+		gui->Render();
+	}
 	// ------------ menu test ------------
 
 //	_Game.GetResources()._pFontDebug->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );

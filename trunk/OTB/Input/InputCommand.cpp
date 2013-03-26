@@ -98,11 +98,23 @@ int	InputCore::Init(HWND	hWnd)
 	int nRes =_InputDirectX.Init(hWnd);
 	if (nRes==0)
 	{
-		_Mapper[0].SetDeviceIdx(0);
-		_Mapper[0].InitForXbox();
-
-		_Mapper[1].SetDeviceIdx(1);
-		_Mapper[1].InitForXbox();
+		for(UInt32 iPad=0; iPad<2; ++iPad)
+		{
+			const InputDirectX::Device& device =_InputDirectX.GetDevice(iPad);
+			_Mapper[iPad].SetDeviceIdx(iPad);
+			switch(device._PadType)
+			{
+			case InputDirectX::PT_XBOX:
+				_Mapper[iPad].InitForXbox();
+				break;
+			case InputDirectX::PT_PS3:
+				_Mapper[iPad].InitForPS3();
+				break;
+			default:
+				_Mapper[iPad].InitForOther();
+				break;
+			}
+		}
 	}
 
 	return nRes;

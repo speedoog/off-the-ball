@@ -34,6 +34,7 @@ public:
 
 	hgeFont* 	_pFontDebug;
 	hgeFont* 	_pFontScore;
+	hgeFont* 	_pFontMenus;
 	hgeFont* 	_pFontMessages;
 
 	HTEXTURE	_BallTexture;
@@ -43,7 +44,7 @@ public:
 	HTEXTURE	_texPowerBar;
 
 protected:
-	hgeFont*	LoadFont(const char* filename);
+	hgeFont*	LoadFont(const char* filename, const Float32 rScale =1.0f);
 };
 
 #endif	//__RESOURCES_H__

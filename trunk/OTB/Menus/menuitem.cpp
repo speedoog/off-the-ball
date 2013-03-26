@@ -46,7 +46,7 @@ void hgeGUIMenuItem::Render()
 
 	// text
 	fnt->SetColor(color.GetHWColor());
-	fnt->Render(rect.x1-offset, rect.y1-offset, HGETEXT_CENTER, title);
+	fnt->Render(rect.x1/*-offset*/, rect.y1/*-offset*/, HGETEXT_CENTER, title);
 }
 
 // This method is called each frame,
