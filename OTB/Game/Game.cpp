@@ -36,7 +36,7 @@ const char* XML_ATTRIBUTE_ID		="Id";
 // ********************************************
 Game::Game(Otb* pOTB)
 : _bShowPowerBar	(true)
-, _bDemoMode		(true)
+, _bDemoMode		(false)
 , _bShowTitle		(true)
 , _pOTB				(pOTB)
 {
@@ -156,6 +156,7 @@ void Game::InitByXml(XML_PARSER* pXml)
 // ********************************************
 void Game::InitDemoMode()
 {
+	_bDemoMode =true;
 	InitBase();
 
 	_pCmd[0] =CreateCommand(CommandAbc::CMD_CPU);

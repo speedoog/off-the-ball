@@ -36,14 +36,13 @@ Resources::~Resources()
 // ********************************************
 //	LoadFont
 // ********************************************
-hgeFont* Resources::LoadFont(const char* filename)
+hgeFont* Resources::LoadFont(const char* filename, const Float32 rScale)
 {
 	hgeFont* pFont;
 	pFont =new hgeFont(filename, true);
 	pFont->SetProportion(-1);
 
-	float scale =-0.01f;
-	pFont->SetScale(scale);
+	pFont->SetScale(-0.01f * rScale);
 	return pFont;
 }
 
@@ -55,6 +54,8 @@ void Resources::Init()
 	// load all
 	_pFontDebug		=LoadFont("Data/font1.fnt");
 	_pFontScore		=LoadFont("Data/Bauhaus93.fnt");
+	_pFontMenus		=LoadFont("Data/Bauhaus93.fnt", 0.5f);
+
 	_pFontMessages	=LoadFont("Data/Lucida70.fnt");
 
 	_BallTexture =hge->Texture_Load("Data/TennisBall3.png");
