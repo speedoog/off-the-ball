@@ -34,6 +34,7 @@ public:
 
 	hgeFont* 	_pFontDebug;
 	hgeFont* 	_pFontScore;
+	hgeFont* 	_pFontTitle;
 	hgeFont* 	_pFontMenus;
 	hgeFont* 	_pFontMessages;
 
