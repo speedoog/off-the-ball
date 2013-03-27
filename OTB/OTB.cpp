@@ -107,15 +107,11 @@ void Otb::Start()
 		_Input.Init(hwnd);
 		_Resources.Init();
 
-
-		_Game.InitByXml(&_XmlParser);
-
-//		_Game.InitDemoMode();
-
-
 		// ------------ menu test ------------
 		if (_bMenuTest)
 		{
+			_Game.InitDemoMode();
+
 			fnt =_Resources._pFontMenus;
 			gui=new hgeGUI();
 
@@ -132,6 +128,10 @@ void Otb::Start()
 			gui->Enter();
 		}
 		// ------------ menu test ------------
+		else
+		{
+			_Game.InitByXml(&_XmlParser);
+		}
 
 		Bool bSuccess =hge->System_Start();
 

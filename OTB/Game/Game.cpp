@@ -37,7 +37,7 @@ const char* XML_ATTRIBUTE_ID		="Id";
 Game::Game(Otb* pOTB)
 : _bShowPowerBar	(true)
 , _bDemoMode		(false)
-, _bShowTitle		(true)
+, _bShowTitle		(false)
 , _pOTB				(pOTB)
 {
 }
@@ -104,6 +104,9 @@ void Game::InitBase()
 // ********************************************
 void Game::InitByXml(XML_PARSER* pXml)
 {
+	_bDemoMode	=false;
+	_bShowTitle =false;
+
 	InitBase();
 
 	const int nOffset =4;
@@ -156,7 +159,8 @@ void Game::InitByXml(XML_PARSER* pXml)
 // ********************************************
 void Game::InitDemoMode()
 {
-	_bDemoMode =true;
+	_bDemoMode	=true;
+	_bShowTitle =true;
 	InitBase();
 
 	_pCmd[0] =CreateCommand(CommandAbc::CMD_CPU);
@@ -262,14 +266,14 @@ void Game::Render()
 
 	if (_bShowTitle)
 	{
-		hgeFont* pFontScore =GetResources()._pFontScore;
+		hgeFont* pFont=GetResources()._pFontTitle;
 		float rPosY =GetLevel().GetSize().y;
 
 		static float rHue =0.0f;
 		rHue+=0.001f;	if (rHue>1.0f) rHue-=1.0f;
 		hgeColorHSV colTitle(rHue, 0.9f, 0.8f, 1.0f);
 
-		pFontScore->SetColor(colTitle.GetHWColor());
-		pFontScore->printf(0.0f, rPosY*0.87f, HGETEXT_CENTER, "Off  the  wall");
+		pFont->SetColor(colTitle.GetHWColor());
+		pFont->printf(0.0f, rPosY*0.87f, HGETEXT_CENTER, "Off  the  wall");
 	}
 }
