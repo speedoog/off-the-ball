@@ -39,7 +39,7 @@ const bool 	DEFAULT_SCREENWINDOWED   	=true;
 #include "Menus/menuitem.h"
 hgeGUI				*gui;
 hgeFont				*fnt;
-Bool				_bMenuTest=false;
+Bool				_bMenuTest=true;
 // ------------ menu test ------------
 
 bool FrameFunc()

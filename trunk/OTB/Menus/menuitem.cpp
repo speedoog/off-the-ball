@@ -11,179 +11,187 @@
 
 #include "menuitem.h"
 
-// This is a GUI control constructor,
-// we should initialize all the variables here
-hgeGUIMenuItem::hgeGUIMenuItem(int _id, hgeFont *_fnt, /*HEFFECT _snd, */float _x, float _y, float _delay, char *_title)
+// ****************************************************************************************
+//	Ctor
+// ****************************************************************************************
+hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, hgeFont* pFont, const Float32 rPosx, const Float32 rPosy, const Float32 rDelay, const TString& sTitle)
 {
-	float w;
-	
-	id=_id;
-	fnt=_fnt;
-//	snd=_snd;
-	delay=_delay;
-	title=_title;
+	id		=nId;
+	_pFont	=pFont;
 
-	color.SetHWColor(0xFFFFE060);
-	shadow.SetHWColor(0x30FF0000);
-	offset=0.0f;
-	timer=-1.0f;
-	timer2=-1.0f;
+	_rDelay	=rDelay;
+	_sTitle	=sTitle;
 
-	bStatic=false;
+	_ColCurrent.SetHWColor(0xFFFFE060);
+	_rTimer	=-1.0f;
+	_rTimer2=-1.0f;
+
+	bStatic	=false;
 	bVisible=true;
 	bEnabled=true;
 
-	w=fnt->GetStringWidth(title);
-	rect.Set(_x-w/2, _y, _x+w/2, _y+fnt->GetHeight());
+	const Float32 rTextHalfWidth =pFont->GetStringWidth(sTitle.GetCharconst())/2.0f;
+	rect.Set(rPosx-rTextHalfWidth, rPosy, rPosx+rTextHalfWidth, rPosy+pFont->GetHeight());
 }
 
-// This method is called when the control should be rendered
-void hgeGUIMenuItem::Render()
-{
-	// shadow
-	fnt->SetColor(shadow.GetHWColor());
-	fnt->Render(rect.x1+offset+3, rect.y1+0.03f, HGETEXT_CENTER, title);
-
-	// text
-	fnt->SetColor(color.GetHWColor());
-	fnt->Render(rect.x1/*-offset*/, rect.y1/*-offset*/, HGETEXT_CENTER, title);
-}
-
-// This method is called each frame,
-// we should update the animation here
+// ****************************************************************************************
+//	Update
+// ****************************************************************************************
 void hgeGUIMenuItem::Update(float dt)
 {
-	if(timer2 != -1.0f)
+	if(_rTimer2 != -1.0f)
 	{
-		timer2+=dt;
-		if(timer2 >= delay+0.1f)
+		_rTimer2+=dt;
+		if(_rTimer2 >= _rDelay+0.1f)
 		{
-			color=scolor2+dcolor2;
-			shadow=sshadow+dshadow;
-			offset=0.0f;
-			timer2=-1.0f;
+			_ColCurrent=_ColS2+_ColD2;
+			_rTimer2=-1.0f;
 		}
 		else
 		{
-			if(timer2 < delay) { color=scolor2; shadow=sshadow; }
-			else { color=scolor2+dcolor2*(timer2-delay)*10; shadow=sshadow+dshadow*(timer2-delay)*10; }
+			if(_rTimer2 < _rDelay)
+			{
+				_ColCurrent=_ColS2;
+			}
+			else
+			{
+				_ColCurrent=_ColS2+_ColD2*(_rTimer2-_rDelay)*10;
+			}
 		}
 	}
-	else if(timer != -1.0f)
+	else if(_rTimer != -1.0f)
 	{
-		timer+=dt;
-		if(timer >= 0.2f)
+		_rTimer+=dt;
+		if(_rTimer >= 0.2f)
 		{
-			color=scolor+dcolor;
-			offset=soffset+doffset;
-			timer=-1.0f;
+			_ColCurrent=_ColS+_ColD;
+			_rTimer=-1.0f;
 		}
 		else
 		{
-			color=scolor+dcolor*timer*5;
-			offset=soffset+doffset*timer*5;
+			_ColCurrent=_ColS+_ColD*_rTimer*5;
 		}
 	}
 }
 
-// This method is called when the GUI
-// is about to appear on the screen
+// ****************************************************************************************
+//	Render
+// ****************************************************************************************
+void hgeGUIMenuItem::Render()
+{
+	_pFont->SetColor(_ColCurrent.GetHWColor());
+	_pFont->Render(rect.x1, rect.y1, HGETEXT_CENTER, _sTitle.GetCharconst());
+}
+
+// ****************************************************************************************
+//	Enter
+//	This method is called when the GUI is about to appear on the screen
+// ****************************************************************************************
 void hgeGUIMenuItem::Enter()
 {
 	hgeColor tcolor2;
 
-	scolor2.SetHWColor(0x00FFE060);
+	_ColS2.SetHWColor(0x00FFE060);
 	tcolor2.SetHWColor(0xFFFFE060);
-	dcolor2=tcolor2-scolor2;
+	_ColD2=tcolor2-_ColS2;
 
-	sshadow.SetHWColor(0x00000000);
 	tcolor2.SetHWColor(0x30000000);
-	dshadow=tcolor2-sshadow;
 
-	timer2=0.0f;
+	_rTimer2=0.0f;
 }
 
-// This method is called when the GUI
-// is about to disappear from the screen
+// ****************************************************************************************
+//	Leave
+//	Called when the GUI is about to disappear from the screen
+// ****************************************************************************************
 void hgeGUIMenuItem::Leave()
 {
 	hgeColor tcolor2;
 
-	scolor2.SetHWColor(0xFFFFE060);
+	_ColS2.SetHWColor(0xFFFFE060);
 	tcolor2.SetHWColor(0x00FFE060);
-	dcolor2=tcolor2-scolor2;
+	_ColD2=tcolor2-_ColS2;
 
-	sshadow.SetHWColor(0x30000000);
 	tcolor2.SetHWColor(0x00000000);
-	dshadow=tcolor2-sshadow;
 
-	timer2=0.0f;
+	_rTimer2=0.0f;
 }
 
-// This method is called to test whether the control
-// have finished it's Enter/Leave animation
+// ****************************************************************************************
+//	IsDone
+//	Called to test whether the control have finished it's Enter/Leave animation
+// ****************************************************************************************
 bool hgeGUIMenuItem::IsDone()
 {
-	if(timer2==-1.0f) return true;
-	else return false;
+	if(_rTimer2==-1.0f)
+	{
+		return true;
+	}
+	else 
+	{
+		return false;
+	}
 }
 
-// This method is called when the control
-// receives or loses keyboard input focus
+// ****************************************************************************************
+//	Focus
+//	Called when the control receives or loses keyboard input focus
+// ****************************************************************************************
 void hgeGUIMenuItem::Focus(bool bFocused)
 {
-	hgeColor tcolor;
+	hgeColor ColorTemp;
 	
 	if(bFocused)
 	{
 //		hge->Effect_Play(snd);
-		scolor.SetHWColor(0xFFFFE060);
-		tcolor.SetHWColor(0xFFFFFFFF);
-		soffset=0;
-		doffset=0.04f;
+		_ColS.SetHWColor(0xFFFFE060);
+		ColorTemp.SetHWColor(0xFFFFFFFF);
 	}
 	else
 	{
-		scolor.SetHWColor(0xFFFFFFFF);
-		tcolor.SetHWColor(0xFFFFE060);
-		soffset=0.04f;
-		doffset=-0.04f;
+		_ColS.SetHWColor(0xFFFFFFFF);
+		ColorTemp.SetHWColor(0xFFFFE060);
 	}
 
-	dcolor=tcolor-scolor;
-	timer=0.0f;
+	_ColD=ColorTemp-_ColS;
+	_rTimer=0.0f;
 }
 
-// This method is called to notify the control
-// that the mouse cursor has entered or left it's area
+// ****************************************************************************************
+//	MouseOver
+//	called to notify the control that the mouse cursor has entered or left it's area
+// ****************************************************************************************
 void hgeGUIMenuItem::MouseOver(bool bOver)
 {
-	if(bOver) gui->SetFocus(id);
+	if(bOver)
+	{
+		gui->SetFocus(id);
+	}
 }
 
-// This method is called to notify the control
-// that the left mouse button state has changed.
-// If it returns true - the caller will receive
-// the control's ID
+// ****************************************************************************************
+//	MouseOver
+//	Called to notify the control that the left mouse button state has changed.
+//	If it returns true - the caller will receive the control's ID
+// ****************************************************************************************
 bool hgeGUIMenuItem::MouseLButton(bool bDown)
 {
 	if(!bDown)
 	{
-		offset=4;
 		return true;
 	}
 	else 
 	{
 //		hge->Effect_Play(snd);
-		offset=0;
 		return false;
 	}
 }
 
-// This method is called to notify the
-// control that a key has been clicked.
-// If it returns true - the caller will
-// receive the control's ID
+// ****************************************************************************************
+//	KeyClick
+//	This method is called to notify the control that a key has been clicked.
+//	If it returns true - the caller will receive the control's ID
+// ****************************************************************************************
 bool hgeGUIMenuItem::KeyClick(int key, int chr)
 {
 	if(key==HGEK_ENTER || key==HGEK_SPACE)
@@ -191,6 +199,5 @@ bool hgeGUIMenuItem::KeyClick(int key, int chr)
 		MouseLButton(true);
 		return MouseLButton(false);
 	}
-
 	return false;
 }
