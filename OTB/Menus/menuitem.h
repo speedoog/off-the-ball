@@ -13,12 +13,14 @@
 #include "..\..\HGE\hgegui.h"
 #include "..\..\HGE\hgefont.h"
 #include "..\..\HGE\hgecolor.h"
+#include "../Base/Base.h"
+#include "../Base/TString.h"
 
 
 class hgeGUIMenuItem : public hgeGUIObject
 {
 public:
-	hgeGUIMenuItem(int id, hgeFont *fnt, /*HEFFECT snd, */float x, float y, float delay, char *title);
+					hgeGUIMenuItem(const Int32 nId, hgeFont* pFont, const Float32 rPosx, const Float32 rPosy, const Float32 rDelay, const TString& sTitle);
 
 	virtual void	Render();
 	virtual void	Update(float dt);
@@ -33,13 +35,11 @@ public:
 	virtual bool	KeyClick(int key, int chr);
 
 private:
-	hgeFont		*fnt;
-//	HEFFECT		snd;
-	float		delay;
-	char		*title;
+	hgeFont*	_pFont;
+	Float32		_rDelay;
+	TString		_sTitle;
 
-	hgeColor	scolor, dcolor, scolor2, dcolor2, sshadow, dshadow;
-	hgeColor	color, shadow;
-	float		soffset, doffset, offset;
-	float		timer, timer2;
+	hgeColor	_ColS, _ColD, _ColS2, _ColD2;
+	hgeColor	_ColCurrent;
+	Float32		_rTimer, _rTimer2;
 };
