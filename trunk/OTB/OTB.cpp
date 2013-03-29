@@ -34,13 +34,7 @@ const int  	DEFAULT_SCREENSIZEX 		=1280;
 const int  	DEFAULT_SCREENSIZEY 		=720;
 const bool 	DEFAULT_SCREENWINDOWED   	=true;
 
-
-// ------------ menu test ------------
-#include "Menus/menuitem.h"
-hgeGUI				*gui;
-hgeFont				*fnt;
-Bool				_bMenuTest=true;
-// ------------ menu test ------------
+Bool		_bMenuTest					=true;
 
 bool FrameFunc()
 {
@@ -56,7 +50,6 @@ bool RenderFunc()
 Otb::Otb()
 : _bExitApp				(false)
 , _bChangeVideoSettings	(false)
-, _Game					(this)
 {
 	// initial video settings
 	_nScreenSizeX 		=DEFAULT_SCREENSIZEX;
@@ -110,27 +103,14 @@ void Otb::Start()
 		// ------------ menu test ------------
 		if (_bMenuTest)
 		{
-			_Game.InitDemoMode();
+			_Game.InitDemoMode(this);
+			_Menu.Init(this);
 
-			fnt =_Resources._pFontMenus;
-			gui=new hgeGUI();
-
-			float rPosY =_Game.GetLevel().GetSize().y*0.7f;
-			gui->AddCtrl(new hgeGUIMenuItem(1,fnt,0,rPosY,0.0f,"Play"));		rPosY -=0.4f;
-			gui->AddCtrl(new hgeGUIMenuItem(2,fnt,0,rPosY,0.1f,"Options"));		rPosY -=0.4f;
-			gui->AddCtrl(new hgeGUIMenuItem(3,fnt,0,rPosY,0.2f,"Help"));		rPosY -=0.4f;
-			gui->AddCtrl(new hgeGUIMenuItem(4,fnt,0,rPosY,0.3f,"Credits"));		rPosY -=0.4f;
-			gui->AddCtrl(new hgeGUIMenuItem(5,fnt,0,rPosY,0.4f,"Exit"));		rPosY -=0.4f;
-
-			gui->SetNavMode(HGEGUI_UPDOWN | HGEGUI_CYCLED);
-//			gui->SetCursor(spr);
-			gui->SetFocus(1);
-			gui->Enter();
 		}
 		// ------------ menu test ------------
 		else
 		{
-			_Game.InitByXml(&_XmlParser);
+			_Game.InitByXml(this, &_XmlParser);
 		}
 
 		Bool bSuccess =hge->System_Start();
@@ -161,17 +141,10 @@ bool Otb::Update(const float rDeltaTime)
 	_Input.Update();
 
 	_Game.Update(rDeltaTime);
-
-	// ------------ menu test ------------
-	if (_bMenuTest)
-	{
-		int id=gui->Update(rDeltaTime);
-	}
-	// ------------ menu test ------------
-
+	_Menu.Update(rDeltaTime);
 
 	// Exit w/ Esc
-	return (hge->Input_GetKeyState(HGEK_ESCAPE));
+	return (hge->Input_GetKeyState(HGEK_ESCAPE) || _bExitApp);
 }
 
 bool Otb::Render()
@@ -183,13 +156,7 @@ bool Otb::Render()
 	hge->Gfx_Clear(0);
 
 	_Game.Render();
-
-	// ------------ menu test ------------
-	if (_bMenuTest)
-	{
-		gui->Render();
-	}
-	// ------------ menu test ------------
+	_Menu.Render();
 
 //	_Game.GetResources()._pFontDebug->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
 

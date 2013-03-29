@@ -36,11 +36,11 @@ class Otb;
 class Game
 {
 public:
-							Game(Otb* pOTB);
+							Game();
 							~Game();
 
-			void			InitByXml(XML_PARSER* pXml=NULL);
-			void			InitDemoMode();
+			void			InitByXml(Otb* pOTB, XML_PARSER* pXml=NULL);
+			void			InitDemoMode(Otb* pOTB);
 			void			Kill();
 
 			void			Update(const float rDeltaTime);
@@ -61,7 +61,7 @@ public:
 	inline	void			SetShowPowerBar(const Bool bShowPowerBar) 	{ _bShowPowerBar =bShowPowerBar;	}
 
 protected:
-			void			InitBase();
+			void			InitBase(Otb* pOTB);
 
 protected:
 	Level			_Level;
