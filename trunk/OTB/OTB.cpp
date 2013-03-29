@@ -155,7 +155,7 @@ bool Otb::Render()
 	hge->Gfx_BeginScene();
 	hge->Gfx_Clear(0);
 
-	_Game.Render();
+//	_Game.Render();
 	_Menu.Render();
 
 //	_Game.GetResources()._pFontDebug->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );

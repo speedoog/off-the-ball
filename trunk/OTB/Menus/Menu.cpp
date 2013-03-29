@@ -87,14 +87,21 @@ void Menu::Update(Float32 dt)
 				_pOTB->GetGame().InitByXml(_pOTB, &_pOTB->GetXmlTree());
 				Kill();
 				break;
+
 			case MII_MAIN_OPTIONS:
-				hge->Gfx_SetDisplayMode(500, 500, 32);
+				hge->Gfx_SetDisplayMode(1280, 720, 32);
 				break;
-			case 3:
-			case 4:
-				_pGUI->SetFocus(1);
-				_pGUI->Enter();
+			case MII_MAIN_HELP:
+				hge->Gfx_SetDisplayMode(320, 170, 32);
 				break;
+			case MII_MAIN_CREDITS:
+				hge->Gfx_SetDisplayMode(32, 17, 32);
+				break;
+
+// 			case 4:
+// 				_pGUI->SetFocus(1);
+// 				_pGUI->Enter();
+// 				break;
 
 			case MII_MAIN_EXIT:
 				_pOTB->ExitApp();
