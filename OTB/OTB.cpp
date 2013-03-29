@@ -110,7 +110,7 @@ void Otb::Start()
 		// ------------ menu test ------------
 		else
 		{
-			_Game.InitByXml(this, &_XmlParser);
+			_Game.InitByXml(this, &_XmlTree);
 		}
 
 		Bool bSuccess =hge->System_Start();
@@ -208,10 +208,10 @@ void Otb::DrawInputs()
 
 void Otb::LoadSettings()
 {
-	XML_PARSER::XMLRC rc =_XmlParser.LoadFromFile("OTB.xml");
+	XML_PARSER::XMLRC rc =_XmlTree.LoadFromFile("OTB.xml");
 	if (rc==XML_PARSER::XP_NO_ERROR)
 	{
-		XML_ELEMENT* pRoot =_XmlParser.GetRoot();
+		XML_ELEMENT* pRoot =_XmlTree.GetRoot();
 
 		// Read Video
 		{
