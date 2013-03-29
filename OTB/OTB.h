@@ -24,6 +24,7 @@
 
 #include "Base/Base.h"
 #include "Game/Game.h"
+#include "Menus/Menu.h"
 #include "Input/InputDirectX.h"
 #include "Xml/XMLParser.h"
 
@@ -38,8 +39,11 @@ public:
 			bool		Render();
 
 	// Accessors
-	inline	Resources&	GetResources()					{ return _Resources;  		}
-	inline	InputCore&	GetInputCommand()				{ return _Input;	 		}
+	inline	Resources&	GetResources()					{ return _Resources;  	}
+	inline	Game&		GetGame()						{ return _Game;			}
+	inline	InputCore&	GetInputCommand()				{ return _Input;	 	}
+
+	inline	void		ExitApp()						{ _bExitApp =true;		}
 
 protected:
 			void		DrawInputs();
@@ -49,6 +53,7 @@ protected:
 protected:
 	XML_PARSER		_XmlParser;
 	Game			_Game;
+	Menu			_Menu;
 	InputDirectX	_PadManager;
 
 	Resources		_Resources;

@@ -11,6 +11,12 @@
 
 #include "menuitem.h"
 
+// #define	MENU_COLOR_NORMAL	0xFFFFE060
+// #define	MENU_COLOR_SELECTED	0xFFFFFFFF
+
+#define	MENU_COLOR_NORMAL	(0xFFC0C0C0)
+#define	MENU_COLOR_SELECTED	(0xFFFF4040)
+
 // ****************************************************************************************
 //	Ctor
 // ****************************************************************************************
@@ -22,7 +28,7 @@ hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, hgeFont* pFont, const Float32 rP
 	_rDelay	=rDelay;
 	_sTitle	=sTitle;
 
-	_ColCurrent.SetHWColor(0xFFFFE060);
+	_ColCurrent.SetHWColor(0x00000000);
 	_rTimer	=-1.0f;
 	_rTimer2=-1.0f;
 
@@ -91,8 +97,8 @@ void hgeGUIMenuItem::Enter()
 {
 	hgeColor tcolor2;
 
-	_ColS2.SetHWColor(0x00FFE060);
-	tcolor2.SetHWColor(0xFFFFE060);
+	_ColS2.SetHWColor(MENU_COLOR_NORMAL&0x00FFFFFF);
+	tcolor2.SetHWColor(MENU_COLOR_NORMAL);
 	_ColD2=tcolor2-_ColS2;
 
 	tcolor2.SetHWColor(0x30000000);
@@ -108,8 +114,8 @@ void hgeGUIMenuItem::Leave()
 {
 	hgeColor tcolor2;
 
-	_ColS2.SetHWColor(0xFFFFE060);
-	tcolor2.SetHWColor(0x00FFE060);
+	_ColS2.SetHWColor(MENU_COLOR_NORMAL);
+	tcolor2.SetHWColor(MENU_COLOR_NORMAL&0x00FFFFFF);
 	_ColD2=tcolor2-_ColS2;
 
 	tcolor2.SetHWColor(0x00000000);
@@ -123,7 +129,7 @@ void hgeGUIMenuItem::Leave()
 // ****************************************************************************************
 bool hgeGUIMenuItem::IsDone()
 {
-	if(_rTimer2==-1.0f)
+	if (_rTimer2==-1.0f)
 	{
 		return true;
 	}
@@ -144,13 +150,13 @@ void hgeGUIMenuItem::Focus(bool bFocused)
 	if(bFocused)
 	{
 //		hge->Effect_Play(snd);
-		_ColS.SetHWColor(0xFFFFE060);
-		ColorTemp.SetHWColor(0xFFFFFFFF);
+		_ColS.SetHWColor(MENU_COLOR_NORMAL);
+		ColorTemp.SetHWColor(MENU_COLOR_SELECTED);
 	}
 	else
 	{
-		_ColS.SetHWColor(0xFFFFFFFF);
-		ColorTemp.SetHWColor(0xFFFFE060);
+		_ColS.SetHWColor(MENU_COLOR_SELECTED);
+		ColorTemp.SetHWColor(MENU_COLOR_NORMAL);
 	}
 
 	_ColD=ColorTemp-_ColS;

@@ -34,11 +34,11 @@ const char* XML_ATTRIBUTE_ID		="Id";
 // ********************************************
 //	Ctor
 // ********************************************
-Game::Game(Otb* pOTB)
+Game::Game()
 : _bShowPowerBar	(true)
 , _bDemoMode		(false)
 , _bShowTitle		(false)
-, _pOTB				(pOTB)
+, _pOTB				(NULL)
 {
 }
 
@@ -86,8 +86,9 @@ CommandAbc* CreateCommand(const CommandAbc::CmdType cmd)
 // ********************************************
 //	InitBase
 // ********************************************
-void Game::InitBase()
+void Game::InitBase(Otb* pOTB)
 {
+	_pOTB =pOTB;
 	_rTimeScale =1.0f;
 
 	_Level.Init(this, hgeVector(7.0f,7.5f), 1.3f);
@@ -96,18 +97,17 @@ void Game::InitBase()
 	_Ball.Init(this);
 	_BallRecorder.Init(this);
 	_Rules.Init(this);
-
 }
 
 // ********************************************
 //	InitByXml
 // ********************************************
-void Game::InitByXml(XML_PARSER* pXml)
+void Game::InitByXml(Otb* pOTB, XML_PARSER* pXml)
 {
 	_bDemoMode	=false;
 	_bShowTitle =false;
 
-	InitBase();
+	InitBase(pOTB);
 
 	const int nOffset =4;
 	const char* pCmd1Default =SMARTENUM_GET_STRING(CommandAbc::CmdType, CommandAbc::CMD_PAD)+nOffset;
@@ -151,23 +151,33 @@ void Game::InitByXml(XML_PARSER* pXml)
 	_pCmd[1] =CreateCommand(cmd2);
 	_pCmd[1]->Init(this, &_Players[1], nCmdId2);
 
+	SetShowPowerBar(false);
+
+	_Rules.SetShowRulesMsg(true);
+	_Rules.SetShowScores(true);
+
 	_Rules.ActionStartGame(0);		// start w/ player[0]
 }
 
 // ********************************************
 //	InitDemoMode
 // ********************************************
-void Game::InitDemoMode()
+void Game::InitDemoMode(Otb* pOTB)
 {
 	_bDemoMode	=true;
 	_bShowTitle =true;
-	InitBase();
+	InitBase(pOTB);
 
 	_pCmd[0] =CreateCommand(CommandAbc::CMD_CPU);
 	_pCmd[0]->Init(this, &_Players[0], 0);
 
 	_pCmd[1] =CreateCommand(CommandAbc::CMD_CPU);
 	_pCmd[1]->Init(this, &_Players[1], 1);
+
+	SetShowPowerBar(false);
+
+	_Rules.SetShowRulesMsg(false);
+	_Rules.SetShowScores(false);
 
 	_Rules.ActionStartGame(0);		// start w/ player[0]
 }
@@ -196,10 +206,6 @@ void Game::Update(const float rDeltaTime)
 
 		Float32 rTimeScaleRaw = TChangeRange(0.0f, 3.0f, 0.3f, 3.0f, rDistMin);
 		_rTimeScale =TClamp(rTimeScaleRaw, 0.3f, 3.0f);
-
-		_Rules.SetShowRulesMsg(false);
-		_Rules.SetShowScores(false);
-		SetShowPowerBar(false);
 	}
 
 	if (GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_BTN_VALIDATE)<0.5f)
