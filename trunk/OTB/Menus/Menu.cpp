@@ -30,23 +30,7 @@ void Menu::Init(Otb* pOTB)
 	_pOTB =pOTB;
 	_pGUI =new hgeGUI();
 
-	hgeFont* pFontMenu =pOTB->GetResources()._pFontMenus;
-
-	Float32 rPosX =0.0f;
-	Float32 rPosY =pOTB->GetGame().GetLevel().GetSize().y*0.7f;
-	Float32 rDelay=0.0f;
-
-	_pGUI->AddCtrl(new hgeGUIMenuItem(1, pFontMenu, rPosX, rPosY, rDelay, "Play")	);	rPosY -=0.4f; rDelay +=0.05f;
-	_pGUI->AddCtrl(new hgeGUIMenuItem(2, pFontMenu, rPosX, rPosY, rDelay, "Options"));	rPosY -=0.4f; rDelay +=0.05f;
-	_pGUI->AddCtrl(new hgeGUIMenuItem(3, pFontMenu, rPosX, rPosY, rDelay, "Help")	);	rPosY -=0.4f; rDelay +=0.05f;
-	_pGUI->AddCtrl(new hgeGUIMenuItem(4, pFontMenu, rPosX, rPosY, rDelay, "Credits"));	rPosY -=0.4f; rDelay +=0.05f;
-	_pGUI->AddCtrl(new hgeGUIMenuItem(5, pFontMenu, rPosX, rPosY, rDelay, "Exit")	);	rPosY -=0.4f; rDelay +=0.05f;
-
-	_pGUI->SetNavMode(HGEGUI_UPDOWN | HGEGUI_CYCLED);
-//	_pGUI->SetCursor(spr);
-	_pGUI->SetFocus(1);
-
-	_pGUI->Enter();
+	StartMainMenu();
 }
 
 // ****************************************************************************************
@@ -57,6 +41,30 @@ void Menu::Kill()
 	delete _pGUI;
 	_pGUI =NULL;
 	_pOTB =NULL;
+}
+
+// ****************************************************************************************
+//	StartMainMenu
+// ****************************************************************************************
+void Menu::StartMainMenu()
+{
+	hgeFont* pFontMenu =_pOTB->GetResources()._pFontMenus;
+
+	Float32 rPosX =0.0f;
+	Float32 rPosY =_pOTB->GetGame().GetLevel().GetSize().y*0.7f;
+	Float32 rDelay=0.0f;
+
+	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_PLAY,	pFontMenu, rPosX, rPosY, rDelay, "Play")	);	rPosY -=0.4f; rDelay +=0.05f;
+	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_OPTIONS, pFontMenu, rPosX, rPosY, rDelay, "Options"));	rPosY -=0.4f; rDelay +=0.05f;
+	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_HELP,	pFontMenu, rPosX, rPosY, rDelay, "Help")	);	rPosY -=0.4f; rDelay +=0.05f;
+	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_CREDITS, pFontMenu, rPosX, rPosY, rDelay, "Credits"));	rPosY -=0.4f; rDelay +=0.05f;
+	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_EXIT,	pFontMenu, rPosX, rPosY, rDelay, "Exit")	);	rPosY -=0.4f; rDelay +=0.05f;
+
+	_pGUI->SetNavMode(HGEGUI_UPDOWN | HGEGUI_CYCLED);
+	//	_pGUI->SetCursor(spr);
+	_pGUI->SetFocus(1);
+
+	_pGUI->Enter();
 }
 
 // ****************************************************************************************
@@ -74,7 +82,11 @@ void Menu::Update(Float32 dt)
 			// enter new menu
 			switch(lastid)
 			{
-			case 1:
+			case MII_MAIN_PLAY:
+				_pOTB->GetGame().Kill();
+				_pOTB->GetGame().InitByXml(_pOTB, &_pOTB->GetXmlTree());
+				Kill();
+				break;
 			case 2:
 			case 3:
 			case 4:
@@ -82,7 +94,7 @@ void Menu::Update(Float32 dt)
 				_pGUI->Enter();
 				break;
 
-			case 5:
+			case MII_MAIN_EXIT:
 				_pOTB->ExitApp();
 				break;
 

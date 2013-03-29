@@ -42,6 +42,7 @@ public:
 	inline	Resources&	GetResources()					{ return _Resources;  	}
 	inline	Game&		GetGame()						{ return _Game;			}
 	inline	InputCore&	GetInputCommand()				{ return _Input;	 	}
+	inline	XML_PARSER&	GetXmlTree()					{ return _XmlTree;		}
 
 	inline	void		ExitApp()						{ _bExitApp =true;		}
 
@@ -51,7 +52,7 @@ protected:
 			void		ApplyWorldTransform();
 
 protected:
-	XML_PARSER		_XmlParser;
+	XML_PARSER		_XmlTree;
 	Game			_Game;
 	Menu			_Menu;
 	InputDirectX	_PadManager;
