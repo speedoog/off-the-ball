@@ -87,7 +87,9 @@ void Menu::Update(Float32 dt)
 				_pOTB->GetGame().InitByXml(_pOTB, &_pOTB->GetXmlTree());
 				Kill();
 				break;
-			case 2:
+			case MII_MAIN_OPTIONS:
+				hge->Gfx_SetDisplayMode(500, 500, 32);
+				break;
 			case 3:
 			case 4:
 				_pGUI->SetFocus(1);
@@ -100,6 +102,7 @@ void Menu::Update(Float32 dt)
 
 			default:;
 			}
+			lastid =-1;	// discard
 		}
 		else if(id)
 		{

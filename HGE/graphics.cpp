@@ -803,6 +803,57 @@ bool HGE_Impl::_GfxInit()
 	return true;
 }
 
+void HGE_Impl::Gfx_SetDisplayMode(int width, int height, int bpp)
+{
+	nScreenWidth = width;
+	d3dppFS.BackBufferWidth = width;
+	d3dppW.BackBufferWidth = width;
+	//    d3dpp->BackBufferWidth = width;
+
+	nScreenHeight = height;
+	d3dppFS.BackBufferWidth = height;
+	d3dppW.BackBufferWidth = height;
+	//    d3dpp->BackBufferHeight = height;
+
+	nScreenBPP = bpp;
+
+	// Choose appropriate back buffer format
+	UINT nModes = pD3D->GetAdapterModeCount(nScreenAdapterID, D3DFMT_A8R8G8B8);
+	D3DDISPLAYMODE Mode;
+	for (UINT i = 0; i < nModes; ++i)
+	{
+		pD3D->EnumAdapterModes(nScreenAdapterID, D3DFMT_A8R8G8B8, i, &Mode);
+
+		if (Mode.Width != (UINT)nScreenWidth || Mode.Height != (UINT)nScreenHeight)
+			continue;
+		if (bpp == 16 && (_format_id(Mode.Format) > _format_id(D3DFMT_A1R5G5B5)))
+			continue;
+		if (_format_id(Mode.Format) > _format_id(d3dpp->BackBufferFormat))
+		{
+			d3dppFS.BackBufferFormat = Mode.Format;
+			d3dppW.BackBufferFormat = Mode.Format;
+			//            d3dpp->BackBufferFormat = Mode.Format;
+		}
+	}
+
+	// Adjust windowed/fullscreen rects, necessary before calling _AdjustWindow()
+	int wndWidth = nScreenWidth + GetSystemMetrics(SM_CXFIXEDFRAME)*2;
+	int wndHeight = nScreenHeight + GetSystemMetrics(SM_CYFIXEDFRAME)*2 + GetSystemMetrics(SM_CYCAPTION);
+
+	rectW.left = (GetSystemMetrics(SM_CXSCREEN)-wndWidth)/2;
+	rectW.top = (GetSystemMetrics(SM_CYSCREEN)-wndHeight)/2;
+	rectW.right = rectW.left + wndWidth;
+	rectW.bottom = rectW.top + wndHeight;
+
+	rectFS.left = 0;
+	rectFS.top = 0;
+	rectFS.right = nScreenWidth;
+	rectFS.bottom = nScreenHeight;
+
+	_AdjustWindow();
+	_Resize(wndWidth, height);
+}
+
 int HGE_Impl::_format_id(D3DFORMAT fmt)
 {
 	switch(fmt) {
@@ -839,7 +890,7 @@ void HGE_Impl::_AdjustWindow()
 
 void HGE_Impl::_Resize(int width, int height)
 {
-	if(hwndParent)
+	//if(hwndParent)
 	{
 		//if(procFocusLostFunc) procFocusLostFunc();
 
