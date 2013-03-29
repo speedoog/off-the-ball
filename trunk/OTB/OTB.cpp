@@ -169,6 +169,9 @@ bool Otb::Render()
 
 void Otb::ApplyWorldTransform()
 {
+	_nScreenSizeX =hge->System_GetState(HGE_SCREENWIDTH);
+	_nScreenSizeY =hge->System_GetState(HGE_SCREENHEIGHT);
+
 	const float rSizeY		=_rWorldTxTop-_rWorldTxBottom;
 	const float rCenterY 	=_rWorldTxBottom+(rSizeY/2.0f);
 	const float rCenterDx	=float(_nScreenSizeX)/2.0f;
