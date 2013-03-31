@@ -48,17 +48,15 @@ void Menu::Kill()
 // ****************************************************************************************
 void Menu::StartMainMenu()
 {
-	hgeFont* pFontMenu =_pOTB->GetResources()._pFontMenus;
-
 	Float32 rPosX =0.0f;
 	Float32 rPosY =_pOTB->GetGame().GetLevel().GetSize().y*0.7f;
 	Float32 rDelay=0.0f;
 
-	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_PLAY,	pFontMenu, rPosX, rPosY, rDelay, "Play")	);	rPosY -=0.4f; rDelay +=0.05f;
-	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_OPTIONS, pFontMenu, rPosX, rPosY, rDelay, "Options"));	rPosY -=0.4f; rDelay +=0.05f;
-	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_HELP,	pFontMenu, rPosX, rPosY, rDelay, "Help")	);	rPosY -=0.4f; rDelay +=0.05f;
-	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_CREDITS, pFontMenu, rPosX, rPosY, rDelay, "Credits"));	rPosY -=0.4f; rDelay +=0.05f;
-	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_EXIT,	pFontMenu, rPosX, rPosY, rDelay, "Exit")	);	rPosY -=0.4f; rDelay +=0.05f;
+	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_PLAY,	this, rPosX, rPosY, rDelay, "Play")	);		rPosY -=0.4f; rDelay +=0.05f;
+	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_OPTIONS, this, rPosX, rPosY, rDelay, "Options"));	rPosY -=0.4f; rDelay +=0.05f;
+	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_HELP,	this, rPosX, rPosY, rDelay, "Help")	);		rPosY -=0.4f; rDelay +=0.05f;
+	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_CREDITS, this, rPosX, rPosY, rDelay, "Credits"));	rPosY -=0.4f; rDelay +=0.05f;
+	_pGUI->AddCtrl(new hgeGUIMenuItem(MII_MAIN_EXIT,	this, rPosX, rPosY, rDelay, "Exit")	);		rPosY -=0.4f; rDelay +=0.05f;
 
 	_pGUI->SetNavMode(HGEGUI_UPDOWN | HGEGUI_CYCLED);
 	//	_pGUI->SetCursor(spr);
@@ -89,10 +87,18 @@ void Menu::Update(Float32 dt)
 				break;
 
 			case MII_MAIN_OPTIONS:
-				hge->Gfx_SetDisplayMode(1280, 720, 32);
+				{
+					hge->Gfx_SetDisplayMode(1280, 720, 32);
+					_pGUI->SetFocus(1);
+					_pGUI->Enter();
+				}
 				break;
 			case MII_MAIN_HELP:
-				hge->Gfx_SetDisplayMode(320, 170, 32);
+				{
+					hge->Gfx_SetDisplayMode(320, 200, 32);
+					_pGUI->SetFocus(1);
+					_pGUI->Enter();
+				}
 				break;
 			case MII_MAIN_CREDITS:
 				hge->Gfx_SetDisplayMode(32, 17, 32);

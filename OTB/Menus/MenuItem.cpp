@@ -9,7 +9,12 @@
 // In menuitem.cpp/h we define the
 // behaviour of our custom GUI control
 
-#include "menuitem.h"
+#include "MenuItem.h"
+
+#include "Menu.h"
+#include "../OTB.h"
+#include "HGE/hgerect.h"
+
 
 // #define	MENU_COLOR_NORMAL	0xFFFFE060
 // #define	MENU_COLOR_SELECTED	0xFFFFFFFF
@@ -20,10 +25,10 @@
 // ****************************************************************************************
 //	Ctor
 // ****************************************************************************************
-hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, hgeFont* pFont, const Float32 rPosx, const Float32 rPosy, const Float32 rDelay, const TString& sTitle)
+hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, Menu* pMenu, const Float32 rPosx, const Float32 rPosy, const Float32 rDelay, const TString& sTitle)
 {
 	id		=nId;
-	_pFont	=pFont;
+	_pMenu	=pMenu;
 
 	_rDelay	=rDelay;
 	_sTitle	=sTitle;
@@ -35,9 +40,12 @@ hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, hgeFont* pFont, const Float32 rP
 	bStatic	=false;
 	bVisible=true;
 	bEnabled=true;
+	_bFocused =false;
 
-	const Float32 rTextHalfWidth =pFont->GetStringWidth(sTitle.GetCharconst())/2.0f;
-	rect.Set(rPosx-rTextHalfWidth, rPosy, rPosx+rTextHalfWidth, rPosy+pFont->GetHeight());
+	hgeFont* pFontMenu =_pMenu->GetOTB()->GetResources()._pFontMenus;
+
+	const Float32 rTextHalfWidth =pFontMenu->GetStringWidth(sTitle.GetCharconst())/2.0f;
+	rect.Set(rPosx-rTextHalfWidth, rPosy, rPosx+rTextHalfWidth, rPosy+pFontMenu->GetHeight()*pFontMenu->GetScale());
 }
 
 // ****************************************************************************************
@@ -85,8 +93,15 @@ void hgeGUIMenuItem::Update(float dt)
 // ****************************************************************************************
 void hgeGUIMenuItem::Render()
 {
-	_pFont->SetColor(_ColCurrent.GetHWColor());
-	_pFont->Render(rect.x1, rect.y1, HGETEXT_CENTER, _sTitle.GetCharconst());
+	hgeFont* pFontMenu =_pMenu->GetOTB()->GetResources()._pFontMenus;
+
+	pFontMenu->SetColor(_ColCurrent.GetHWColor());
+	pFontMenu->Render(rect.x1, rect.y1, HGETEXT_CENTER, _sTitle.GetCharconst());
+
+	//hge->Gfx_RenderBox(rect.x1, rect.y1, rect.x2, rect.y2, _bFocused?MENU_COLOR_SELECTED:MENU_COLOR_NORMAL);
+
+// 	Float32 nSize=rect.y2-rect.y1;
+// 	hge->Gfx_RenderBox(rect.x1 - 2.0f*nSize, rect.y1, rect.x1-nSize, rect.y1+nSize, _bFocused?MENU_COLOR_SELECTED:MENU_COLOR_NORMAL);
 }
 
 // ****************************************************************************************
@@ -145,6 +160,8 @@ bool hgeGUIMenuItem::IsDone()
 // ****************************************************************************************
 void hgeGUIMenuItem::Focus(bool bFocused)
 {
+	_bFocused =bFocused;
+
 	hgeColor ColorTemp;
 	
 	if(bFocused)

@@ -47,6 +47,13 @@ bool RenderFunc()
 	return pThis->Render();
 }
 
+bool GfxRestoreFunc()
+{
+//	pThis->GetResources().Kill();
+//	pThis->GetResources().Init();
+	return false;
+}
+
 Otb::Otb()
 : _bExitApp				(false)
 , _bChangeVideoSettings	(false)
@@ -79,6 +86,8 @@ void Otb::Start()
 	// Init HGE
 	hge->System_SetState(HGE_FRAMEFUNC,		FrameFunc);
 	hge->System_SetState(HGE_RENDERFUNC,	RenderFunc);
+	hge->System_SetState(HGE_GFXRESTOREFUNC,GfxRestoreFunc); 
+
 	hge->System_SetState(HGE_SHOWSPLASH,	false);
 	hge->System_SetState(HGE_SCREENWIDTH,	_nScreenSizeX);
 	hge->System_SetState(HGE_SCREENHEIGHT,	_nScreenSizeY);
@@ -155,7 +164,7 @@ bool Otb::Render()
 	hge->Gfx_BeginScene();
 	hge->Gfx_Clear(0);
 
-//	_Game.Render();
+	_Game.Render();
 	_Menu.Render();
 
 //	_Game.GetResources()._pFontDebug->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
