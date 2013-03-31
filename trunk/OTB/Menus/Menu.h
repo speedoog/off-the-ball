@@ -56,6 +56,9 @@ public:
 
 	void	Render();
 	void	Update(float dt);
+
+	inline	Otb*	GetOTB()	{ return _pOTB; }
+
 protected:
 	void	StartMainMenu();
 

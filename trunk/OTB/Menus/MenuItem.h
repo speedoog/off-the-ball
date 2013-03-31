@@ -9,6 +9,11 @@
 // In menuitem.cpp/h we define the
 // behaviour of our custom GUI control
 
+#ifndef __MENU_ITEM_H__
+#define __MENU_ITEM_H__
+
+#pragma once
+
 #include "..\..\HGE\hge.h"
 #include "..\..\HGE\hgegui.h"
 #include "..\..\HGE\hgefont.h"
@@ -16,11 +21,12 @@
 #include "../Base/Base.h"
 #include "../Base/TString.h"
 
+class Menu;
 
 class hgeGUIMenuItem : public hgeGUIObject
 {
 public:
-					hgeGUIMenuItem(const Int32 nId, hgeFont* pFont, const Float32 rPosx, const Float32 rPosy, const Float32 rDelay, const TString& sTitle);
+					hgeGUIMenuItem(const Int32 nId, Menu* pMenu, const Float32 rPosx, const Float32 rPosy, const Float32 rDelay, const TString& sTitle);
 
 	virtual void	Render();
 	virtual void	Update(float dt);
@@ -35,11 +41,14 @@ public:
 	virtual bool	KeyClick(int key, int chr);
 
 private:
-	hgeFont*	_pFont;
+	Menu*		_pMenu;
 	Float32		_rDelay;
 	TString		_sTitle;
+	Bool		_bFocused;
 
 	hgeColor	_ColS, _ColD, _ColS2, _ColD2;
 	hgeColor	_ColCurrent;
 	Float32		_rTimer, _rTimer2;
 };
+
+#endif	//__MENU_ITEM_H__
