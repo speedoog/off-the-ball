@@ -11,8 +11,11 @@
 
 #pragma once
 
+#include "../Base/Base.h"
+
 class Otb;
 class hgeGUI;
+class TString;
 
 class Menu
 {
@@ -54,6 +57,11 @@ public:
 	{
 		MS_MAIN		=0
 	,	MS_OPTIONS
+	,	MS_VIDEO
+	,	MS_AUDIO
+	,	MS_INPUT
+	,	MS_HELP
+	,	MS_CREDITS
 	};
 
 			Menu();
@@ -66,13 +74,24 @@ public:
 	inline	Otb*	GetOTB()	{ return _pOTB; }
 
 protected:
+
+	void	ClearMenu();
+	void	AddMenuItem(const MenuItemId ItemId, const TString& sLabel);
+
 	void	StartMenuMain();
 	void	StartMenuOptions();
+	void	StartMenuVideo();
+	void	StartMenuAudio();
+	void	StartMenuInput();
+	void	StartMenuHelp();
+	void	StartMenuCredits();
 
 protected:
 	Otb*			_pOTB;
 	hgeGUI*			_pGUI;
+
 	MenuScreen		_nMenuCurrent;
+	Float32			_rCurrentY;
 };
 
 #endif //__MENU_H__
