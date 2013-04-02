@@ -50,6 +50,12 @@ public:
 	,	MII_CREDITS_BACK
 	};
 
+	enum MenuScreen
+	{
+		MS_MAIN		=0
+	,	MS_OPTIONS
+	};
+
 			Menu();
 	void	Init(Otb* pOTB);
 	void	Kill();
@@ -60,11 +66,13 @@ public:
 	inline	Otb*	GetOTB()	{ return _pOTB; }
 
 protected:
-	void	StartMainMenu();
+	void	StartMenuMain();
+	void	StartMenuOptions();
 
 protected:
-	Otb*	_pOTB;
-	hgeGUI*	_pGUI;
+	Otb*			_pOTB;
+	hgeGUI*			_pGUI;
+	MenuScreen		_nMenuCurrent;
 };
 
 #endif //__MENU_H__
