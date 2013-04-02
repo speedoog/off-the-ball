@@ -25,17 +25,17 @@
 // ****************************************************************************************
 //	Ctor
 // ****************************************************************************************
-hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, Menu* pMenu, const Float32 rPosx, const Float32 rPosy, const Float32 rDelay, const TString& sTitle)
+hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, Menu* pMenu, const Float32 rPosx, const Float32 rPosy, const TString& sTitle)
 {
 	id		=nId;
 	_pMenu	=pMenu;
 
-	_rDelay	=rDelay;
+//	_rDelay	=rDelay;
 	_sTitle	=sTitle;
 
-	_ColCurrent.SetHWColor(0x00000000);
-	_rTimer	=-1.0f;
-	_rTimer2=-1.0f;
+// 	_ColCurrent.SetHWColor(0x00000000);
+// 	_rTimer	=-1.0f;
+// 	_rTimer2=-1.0f;
 
 	bStatic	=false;
 	bVisible=true;
@@ -53,6 +53,7 @@ hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, Menu* pMenu, const Float32 rPosx
 // ****************************************************************************************
 void hgeGUIMenuItem::Update(float dt)
 {
+	/*
 	if(_rTimer2 != -1.0f)
 	{
 		_rTimer2+=dt;
@@ -86,6 +87,7 @@ void hgeGUIMenuItem::Update(float dt)
 			_ColCurrent=_ColS+_ColD*_rTimer*5;
 		}
 	}
+	*/
 }
 
 // ****************************************************************************************
@@ -95,7 +97,9 @@ void hgeGUIMenuItem::Render()
 {
 	hgeFont* pFontMenu =_pMenu->GetOTB()->GetResources()._pFontMenus;
 
-	pFontMenu->SetColor(_ColCurrent.GetHWColor());
+	hgeColor ColorCurrent =_bFocused?MENU_COLOR_SELECTED:MENU_COLOR_NORMAL;
+
+	pFontMenu->SetColor(ColorCurrent.GetHWColor());
 	pFontMenu->Render(rect.x1, rect.y1, HGETEXT_CENTER, _sTitle.GetCharconst());
 
 	//hge->Gfx_RenderBox(rect.x1, rect.y1, rect.x2, rect.y2, _bFocused?MENU_COLOR_SELECTED:MENU_COLOR_NORMAL);
@@ -110,6 +114,7 @@ void hgeGUIMenuItem::Render()
 // ****************************************************************************************
 void hgeGUIMenuItem::Enter()
 {
+	/*
 	hgeColor tcolor2;
 
 	_ColS2.SetHWColor(MENU_COLOR_NORMAL&0x00FFFFFF);
@@ -119,6 +124,7 @@ void hgeGUIMenuItem::Enter()
 	tcolor2.SetHWColor(0x30000000);
 
 	_rTimer2=0.0f;
+	*/
 }
 
 // ****************************************************************************************
@@ -127,6 +133,7 @@ void hgeGUIMenuItem::Enter()
 // ****************************************************************************************
 void hgeGUIMenuItem::Leave()
 {
+	/*
 	hgeColor tcolor2;
 
 	_ColS2.SetHWColor(MENU_COLOR_NORMAL);
@@ -136,6 +143,7 @@ void hgeGUIMenuItem::Leave()
 	tcolor2.SetHWColor(0x00000000);
 
 	_rTimer2=0.0f;
+	*/
 }
 
 // ****************************************************************************************
@@ -144,14 +152,14 @@ void hgeGUIMenuItem::Leave()
 // ****************************************************************************************
 bool hgeGUIMenuItem::IsDone()
 {
-	if (_rTimer2==-1.0f)
+//	if (_rTimer2==-1.0f)
 	{
 		return true;
 	}
-	else 
-	{
-		return false;
-	}
+// 	else 
+// 	{
+// 		return false;
+// 	}
 }
 
 // ****************************************************************************************
@@ -162,6 +170,7 @@ void hgeGUIMenuItem::Focus(bool bFocused)
 {
 	_bFocused =bFocused;
 
+/*
 	hgeColor ColorTemp;
 	
 	if(bFocused)
@@ -178,6 +187,7 @@ void hgeGUIMenuItem::Focus(bool bFocused)
 
 	_ColD=ColorTemp-_ColS;
 	_rTimer=0.0f;
+*/
 }
 
 // ****************************************************************************************

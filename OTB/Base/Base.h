@@ -50,6 +50,7 @@ typedef float				Float32;
 typedef double				Float64;
 typedef bool				Bool;
 typedef UInt32				IntPtr;
+typedef wchar_t				sWChar;   // type for unicode strings
 
 // -------------------------------------------- new / delete --------------------------------------------
 

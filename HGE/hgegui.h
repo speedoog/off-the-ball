@@ -75,8 +75,10 @@ protected:
 class hgeGUI
 {
 public:
-	hgeGUI();
-	~hgeGUI();
+					hgeGUI();
+					~hgeGUI();
+
+	void			Clear();
 
 	void			AddCtrl(hgeGUIObject *ctrl);
 	void			DelCtrl(int id);

@@ -26,7 +26,7 @@ class Menu;
 class hgeGUIMenuItem : public hgeGUIObject
 {
 public:
-					hgeGUIMenuItem(const Int32 nId, Menu* pMenu, const Float32 rPosx, const Float32 rPosy, const Float32 rDelay, const TString& sTitle);
+					hgeGUIMenuItem(const Int32 nId, Menu* pMenu, const Float32 rPosx, const Float32 rPosy, const TString& sTitle);
 
 	virtual void	Render();
 	virtual void	Update(float dt);
@@ -42,13 +42,13 @@ public:
 
 private:
 	Menu*		_pMenu;
-	Float32		_rDelay;
+//	Float32		_rDelay;
 	TString		_sTitle;
 	Bool		_bFocused;
 
-	hgeColor	_ColS, _ColD, _ColS2, _ColD2;
-	hgeColor	_ColCurrent;
-	Float32		_rTimer, _rTimer2;
+// 	hgeColor	_ColS, _ColD, _ColS2, _ColD2;
+// 	hgeColor	_ColCurrent;
+// 	Float32		_rTimer, _rTimer2;
 };
 
 #endif	//__MENU_ITEM_H__

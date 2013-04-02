@@ -33,6 +33,13 @@ hgeGUI::hgeGUI()
 
 hgeGUI::~hgeGUI()
 {
+	Clear();
+
+	hge->Release();
+}
+
+void hgeGUI::Clear()
+{
 	hgeGUIObject *ctrl=ctrls, *nextctrl;
 
 	while(ctrl)
@@ -41,9 +48,9 @@ hgeGUI::~hgeGUI()
 		delete ctrl;
 		ctrl=nextctrl;
 	}
-
-	hge->Release();
+	ctrls=NULL;
 }
+
 
 void hgeGUI::AddCtrl(hgeGUIObject *ctrl)
 {
