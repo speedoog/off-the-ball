@@ -45,7 +45,6 @@ void Menu::Kill()
 	_pOTB =NULL;
 }
 
-
 // ****************************************************************************************
 //	ClearMenu
 // ****************************************************************************************
@@ -53,7 +52,7 @@ void Menu::ClearMenu()
 {
 	_pGUI->Leave();
 	_pGUI->Clear();
-	_rCurrentY =_pOTB->GetGame().GetLevel().GetSize().y*0.7f;
+	_rCurrentY =GetMenuPosY()-0.6f;
 }
 
 // ****************************************************************************************
@@ -72,8 +71,6 @@ void Menu::Update(Float32 dt)
 {
 	if (_pOTB && _pGUI)
 	{
-		static int lastid=0;
-
 		int id=_pGUI->Update(dt);
 
 		switch(id)
@@ -162,6 +159,33 @@ void Menu::Update(Float32 dt)
 // _pGUI->Enter();
 
 //hge->Gfx_SetDisplayMode(32, 17, 32);
+
+// ****************************************************************************************
+//	Render
+// ****************************************************************************************
+void Menu::Render()
+{
+	if (_pOTB && _pGUI)
+	{
+		// Title
+		{
+			hgeFont* pFont=GetOTB()->GetResources()._pFontTitle;
+			float rPosY =GetOTB()->GetGame().GetLevel().GetSize().y;
+
+			static float rHue =0.0f;
+			rHue+=0.001f;	if (rHue>1.0f) rHue-=1.0f;
+			hgeColorHSV colTitle(rHue, 0.9f, 0.8f, 1.0f);
+
+			pFont->SetColor(colTitle.GetHWColor());
+			pFont->printf(0.0f, rPosY*0.9f, HGETEXT_CENTER, "Off  the  wall");
+		}
+
+		hgeFont* pFontMenu =GetOTB()->GetResources()._pFontMenus;
+		pFontMenu->Render(0.0f, GetMenuPosY(), HGETEXT_CENTER, SMARTENUM_GET_STRING(MenuScreen, _nMenuCurrent)+3 );
+
+		_pGUI->Render();
+	}
+}
 
 // ****************************************************************************************
 //	StartMenuMain
@@ -278,13 +302,9 @@ void Menu::StartMenuCredits()
 }
 
 // ****************************************************************************************
-//	Render
+//	GetMenuPosY
 // ****************************************************************************************
-void Menu::Render()
+Float32	Menu::GetMenuPosY()
 {
-	if (_pOTB && _pGUI)
-	{
-		_pGUI->Render();
-	}
+	return _pOTB->GetGame().GetLevel().GetSize().y*0.8f;
 }
-
