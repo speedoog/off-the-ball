@@ -12,6 +12,7 @@
 #pragma once
 
 #include "../Base/Base.h"
+#include "../Base/SmartEnum.h"
 
 class Otb;
 class hgeGUI;
@@ -53,16 +54,15 @@ public:
 	,	MII_CREDITS_BACK
 	};
 
-	enum MenuScreen
-	{
-		MS_MAIN		=0
-	,	MS_OPTIONS
-	,	MS_VIDEO
-	,	MS_AUDIO
-	,	MS_INPUT
-	,	MS_HELP
-	,	MS_CREDITS
-	};
+	SMARTENUM_DECLARE(	MenuScreen
+						,	MS_MAIN
+						,	MS_OPTIONS
+						,	MS_VIDEO
+						,	MS_AUDIO
+						,	MS_INPUT
+						,	MS_HELP
+						,	MS_CREDITS
+						);
 
 			Menu();
 	void	Init(Otb* pOTB);
@@ -74,6 +74,7 @@ public:
 	inline	Otb*	GetOTB()	{ return _pOTB; }
 
 protected:
+	Float32	GetMenuPosY();
 
 	void	ClearMenu();
 	void	AddMenuItem(const MenuItemId ItemId, const TString& sLabel);

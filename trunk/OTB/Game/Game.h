@@ -77,7 +77,6 @@ protected:
 
 	Bool			_bShowPowerBar;
 	Bool			_bDemoMode;
-	Bool			_bShowTitle;
 
 	// temp ...
 	CommandAbc*		_pCmd[2];
