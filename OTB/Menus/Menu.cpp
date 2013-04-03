@@ -76,10 +76,8 @@ void Menu::Update(Float32 dt)
 		switch(id)
 		{
 			// ------------- Menu Main ------------- 
-		case MII_MAIN_PLAY:
-			_pOTB->GetGame().Kill();
-			_pOTB->GetGame().InitByXml(_pOTB, &_pOTB->GetXmlTree());
-			Kill();
+		case MII_MAIN_START:
+			StartMenuStart();
 			break;
 
 		case MII_MAIN_OPTIONS:
@@ -96,6 +94,23 @@ void Menu::Update(Float32 dt)
 
 		case MII_MAIN_EXIT:
 			_pOTB->ExitApp();
+			break;
+
+			// ------------- Start Options ------------- 
+		case MII_START_P1:
+			break;
+		case MII_START_P2:
+			break;
+		case MII_START_POINTS:
+			break;
+		case MII_START_PLAY:
+			_pOTB->GetGame().Kill();
+			_pOTB->GetGame().InitByXml(_pOTB, &_pOTB->GetXmlTree());
+			Kill();
+			break;
+
+		case MII_START_BACK:
+			StartMenuMain();
 			break;
 
 			// ------------- Menu Options ------------- 
@@ -124,6 +139,11 @@ void Menu::Update(Float32 dt)
 			break;
 
 			// ------------- Menu Audio ------------- 
+		case MII_OPTAUDIO_MUSIC:
+			break;
+		case MII_OPTAUDIO_EFFECTS:
+			break;
+
 		case MII_OPTAUDIO_BACK:
 			StartMenuOptions();
 			break;
@@ -194,16 +214,35 @@ void Menu::StartMenuMain()
 {
 	ClearMenu();
 
-	AddMenuItem( MII_MAIN_PLAY,		"Play"		);
+	AddMenuItem( MII_MAIN_START,	"Start"		);
 	AddMenuItem( MII_MAIN_OPTIONS,	"Options"	);
 	AddMenuItem( MII_MAIN_HELP,		"Help"		);
 	AddMenuItem( MII_MAIN_CREDITS,	"Credits"	);
 	AddMenuItem( MII_MAIN_EXIT,		"Exit"		);
 
-	_pGUI->SetFocus(MII_MAIN_PLAY);
+	_pGUI->SetFocus(MII_MAIN_START);
 	_pGUI->Enter();
 
 	_nMenuCurrent =MS_MAIN;
+}
+
+// ****************************************************************************************
+//	StartMenuStart
+// ****************************************************************************************
+void Menu::StartMenuStart()
+{
+	ClearMenu();
+
+	AddMenuItem( MII_START_P1,		"P1"		);
+	AddMenuItem( MII_START_P2,		"P2"		);
+	AddMenuItem( MII_START_POINTS,	"Points"	);
+	AddMenuItem( MII_START_PLAY,	"Play"		);
+	AddMenuItem( MII_START_BACK,	"Back"		);
+
+	_pGUI->SetFocus(MII_START_P1);
+	_pGUI->Enter();
+
+	_nMenuCurrent =MS_START;
 }
 
 // ****************************************************************************************

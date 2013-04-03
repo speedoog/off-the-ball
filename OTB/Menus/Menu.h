@@ -24,11 +24,18 @@ public:
 	enum MenuItemId
 	{
 	// Main Menu
-		MII_MAIN_PLAY		=1
+		MII_MAIN_START	=1
 	,	MII_MAIN_OPTIONS
 	,	MII_MAIN_HELP
 	,	MII_MAIN_CREDITS
 	,	MII_MAIN_EXIT
+
+	// Start Menu
+	,	MII_START_P1
+	,	MII_START_P2
+	,	MII_START_POINTS
+	,	MII_START_PLAY
+	,	MII_START_BACK
 
 	// Options Menu
 	,	MII_OPTIONS_VIDEO
@@ -42,6 +49,8 @@ public:
 	,	MII_OPTVIDEO_BACK
 
 	// Audio Menu
+	,	MII_OPTAUDIO_MUSIC
+	,	MII_OPTAUDIO_EFFECTS
 	,	MII_OPTAUDIO_BACK
 
 	// Input Menu
@@ -56,6 +65,7 @@ public:
 
 	SMARTENUM_DECLARE(	MenuScreen
 						,	MS_MAIN
+						,	MS_START
 						,	MS_OPTIONS
 						,	MS_VIDEO
 						,	MS_AUDIO
@@ -80,6 +90,7 @@ protected:
 	void	AddMenuItem(const MenuItemId ItemId, const TString& sLabel);
 
 	void	StartMenuMain();
+	void	StartMenuStart();
 	void	StartMenuOptions();
 	void	StartMenuVideo();
 	void	StartMenuAudio();
