@@ -55,7 +55,7 @@ void Resources::Init()
 	_pFontDebug	=LoadFont("Data/font1.fnt");
 	_pFontScore	=LoadFont("Data/Bauhaus93.fnt");
 	_pFontTitle	=LoadFont("Data/Bauhaus93.fnt");
-	_pFontMenus	=LoadFont("Data/Bauhaus93.fnt", 0.5f);
+	_pFontMenus	=LoadFont("Data/Verdana60.fnt", 0.5f);
 
 	_pFontMessages	=LoadFont("Data/Lucida70.fnt");
 

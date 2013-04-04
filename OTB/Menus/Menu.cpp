@@ -71,6 +71,15 @@ void Menu::Update(Float32 dt)
 {
 	if (_pOTB && _pGUI)
 	{
+		// Title
+		{
+			hgeFont* pFont=GetOTB()->GetResources()._pFontTitle;
+			static float rHue =0.0f;
+			rHue+=dt*0.1f; if (rHue>1.0f) rHue-=1.0f;
+			hgeColorHSV colTitle(rHue, 0.9f, 0.8f, 1.0f);
+			pFont->SetColor(colTitle.GetHWColor());
+		}
+
 		int id=_pGUI->Update(dt);
 
 		switch(id)
@@ -97,16 +106,23 @@ void Menu::Update(Float32 dt)
 			break;
 
 			// ------------- Start Options ------------- 
-		case MII_START_P1:
-			break;
-		case MII_START_P2:
-			break;
-		case MII_START_POINTS:
-			break;
-		case MII_START_PLAY:
+		case MII_START_SINGLE:
 			_pOTB->GetGame().Kill();
-			_pOTB->GetGame().InitByXml(_pOTB, &_pOTB->GetXmlTree());
+			_pOTB->GetGame().InitSingle(_pOTB);
 			Kill();
+			break;
+		case MII_START_VS:
+			_pOTB->GetGame().Kill();
+			_pOTB->GetGame().InitVs(_pOTB);
+			Kill();
+			break;
+		case MII_START_CPU_TRAINNING:
+			_pOTB->GetGame().Kill();
+			_pOTB->GetGame().InitDemoMode(_pOTB);
+			Kill();
+			break;
+
+		case MII_START_POINTS:
 			break;
 
 		case MII_START_BACK:
@@ -191,16 +207,11 @@ void Menu::Render()
 		{
 			hgeFont* pFont=GetOTB()->GetResources()._pFontTitle;
 			float rPosY =GetOTB()->GetGame().GetLevel().GetSize().y;
-
-			static float rHue =0.0f;
-			rHue+=0.001f;	if (rHue>1.0f) rHue-=1.0f;
-			hgeColorHSV colTitle(rHue, 0.9f, 0.8f, 1.0f);
-
-			pFont->SetColor(colTitle.GetHWColor());
-			pFont->printf(0.0f, rPosY*0.9f, HGETEXT_CENTER, "Off  the  wall");
+			pFont->printf(0.0f, rPosY*0.96f, HGETEXT_CENTER, "Off  the  wall");
 		}
 
 		hgeFont* pFontMenu =GetOTB()->GetResources()._pFontMenus;
+		pFontMenu->SetColor(0xFFFFFFFF);
 		pFontMenu->Render(0.0f, GetMenuPosY(), HGETEXT_CENTER, SMARTENUM_GET_STRING(MenuScreen, _nMenuCurrent)+3 );
 
 		_pGUI->Render();
@@ -233,13 +244,13 @@ void Menu::StartMenuStart()
 {
 	ClearMenu();
 
-	AddMenuItem( MII_START_P1,		"P1"		);
-	AddMenuItem( MII_START_P2,		"P2"		);
-	AddMenuItem( MII_START_POINTS,	"Points"	);
-	AddMenuItem( MII_START_PLAY,	"Play"		);
-	AddMenuItem( MII_START_BACK,	"Back"		);
+	AddMenuItem( MII_START_SINGLE,			"Single"		);
+	AddMenuItem( MII_START_VS,				"Vs"			);
+	AddMenuItem( MII_START_CPU_TRAINNING,	"CPU Training"	);
+	AddMenuItem( MII_START_POINTS,			"Points"		);
+	AddMenuItem( MII_START_BACK,			"Back"			);
 
-	_pGUI->SetFocus(MII_START_P1);
+	_pGUI->SetFocus(MII_START_SINGLE);
 	_pGUI->Enter();
 
 	_nMenuCurrent =MS_START;
@@ -345,5 +356,5 @@ void Menu::StartMenuCredits()
 // ****************************************************************************************
 Float32	Menu::GetMenuPosY()
 {
-	return _pOTB->GetGame().GetLevel().GetSize().y*0.8f;
+	return _pOTB->GetGame().GetLevel().GetSize().y*0.75f;
 }
