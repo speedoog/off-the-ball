@@ -50,6 +50,7 @@ void CommandPad::OnInit(const UInt32 nPlayerId)
 // ********************************************
 void CommandPad::OnUpdate(const float rDeltaTime)
 {
+	// Left stick = Move
 	hgeVector vAxisLeft =_pInput->GetAxisLeft(_nCmdId);
 	if (vAxisLeft.Length()>0.2f)						// deadzone
 	{
@@ -60,13 +61,10 @@ void CommandPad::OnUpdate(const float rDeltaTime)
 		_pPlayer->SetInputMove(hgeVector(0,0));
 	}
 
+	// Right stick = Racket
 	const hgeVector& vAxisRight =_pInput->GetAxisRight(_nCmdId);
 	if (vAxisRight.Length()>0.3f)						// deadzone
 	{
 		_pPlayer->SetInputRacket(vAxisRight);
 	}
-// 	else
-// 	{
-// 		_pPlayer->SetInputRacket(hgeVector(0,0));
-// 	}
 }

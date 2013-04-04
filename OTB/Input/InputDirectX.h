@@ -70,9 +70,11 @@ public:
 	void				Update();
 	const Device&		GetDevice(DeviceIdx iDeviceIdx) const			{ return _Device[iDeviceIdx]; }
 
+	// DirectX CB
+	Bool 				EnumObjects(const DIDEVICEOBJECTINSTANCE* pdidoi);
+	Bool 				EnumJoysticks(const DIDEVICEINSTANCE* pdidInstance);
+
 private:
-	static	BOOL CALLBACK	EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, void* pContext);
-	static	BOOL CALLBACK	EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, void* pContext);
 
 private:
 	bool			_bInited;					// Has been inited ?

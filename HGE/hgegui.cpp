@@ -247,8 +247,6 @@ void hgeGUI::Render()
 int hgeGUI::Update(float dt)
 {
 	bool bDone;
-	int key;
-	hgeGUIObject *ctrl;
 
 // Update the mouse variables
 
@@ -261,7 +259,7 @@ int hgeGUI::Update(float dt)
 
 // Update all controls
 
-	ctrl=ctrls;
+	hgeGUIObject* ctrl=ctrls;
 	while(ctrl)
 	{
 		ctrl->Update(dt);
@@ -286,13 +284,43 @@ int hgeGUI::Update(float dt)
 		}
 	}
 
-// Handle keys	
+	int ret;
+	ret =HandleKeys();
+	if (ret!=-1)	return ret;
 
-	key=hge->Input_GetKey();
+	ret =HandleMouse();
+	if (ret!=-1)	return ret;
+
+	return 0;
+}
+
+int hgeGUI::HandleKeys()
+{
+	int key=hge->Input_GetKey();
 	if(((navmode & HGEGUI_LEFTRIGHT) && key==HGEK_LEFT) ||
 		((navmode & HGEGUI_UPDOWN) && key==HGEK_UP))
 	{
-		ctrl=ctrlFocus;
+		int ret =ChangeItem(true);
+		if (ret!=-1)	return ret;
+	}
+	else if(((navmode & HGEGUI_LEFTRIGHT) && key==HGEK_RIGHT) ||
+		((navmode & HGEGUI_UPDOWN) && key==HGEK_DOWN))
+	{
+		int ret =ChangeItem(false);
+		if (ret!=-1)	return ret;
+	}
+	else if(ctrlFocus && key && key!=HGEK_LBUTTON && key!=HGEK_RBUTTON)
+	{
+		if(ctrlFocus->KeyClick(key, hge->Input_GetChar())) return ctrlFocus->id;
+	}
+	return -1;
+}
+
+int hgeGUI::ChangeItem(bool bNext)
+{
+	if (bNext)
+	{
+		hgeGUIObject* ctrl=ctrlFocus;
 		if(!ctrl)
 		{
 			ctrl=ctrls;
@@ -314,11 +342,11 @@ int hgeGUI::Update(float dt)
 			if(ctrl) ctrl->Focus(true);
 			ctrlFocus=ctrl;
 		}
+
 	}
-	else if(((navmode & HGEGUI_LEFTRIGHT) && key==HGEK_RIGHT) ||
-		((navmode & HGEGUI_UPDOWN) && key==HGEK_DOWN))
+	else
 	{
-		ctrl=ctrlFocus;
+		hgeGUIObject* ctrl=ctrlFocus;
 		if(!ctrl)
 		{
 			ctrl=ctrls;
@@ -338,12 +366,12 @@ int hgeGUI::Update(float dt)
 			ctrlFocus=ctrl;
 		}
 	}
-	else if(ctrlFocus && key && key!=HGEK_LBUTTON && key!=HGEK_RBUTTON)
-	{
-		if(ctrlFocus->KeyClick(key, hge->Input_GetChar())) return ctrlFocus->id;
-	}
+	return -1;
+}
 
-// Handle mouse
+int hgeGUI::HandleMouse()
+{
+	hgeGUIObject* ctrl=NULL;
 
 	bool bLDown = hge->Input_GetKeyState(HGEK_LBUTTON);
 	bool bRDown = hge->Input_GetKeyState(HGEK_RBUTTON);
@@ -382,8 +410,7 @@ int hgeGUI::Update(float dt)
 		if(ctrlOver) {ctrlOver->MouseOver(false); ctrlOver=0;}
 
 	}
-
-	return 0;
+	return -1;
 }
 
 bool hgeGUI::ProcessCtrl(hgeGUIObject *ctrl)

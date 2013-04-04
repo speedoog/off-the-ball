@@ -80,6 +80,13 @@ void Menu::Update(Float32 dt)
 			pFont->SetColor(colTitle.GetHWColor());
 		}
 
+		InputCore& Input =_pOTB->GetInputCommand();
+		hgeVector vLeftStick =Input.GetAxisLeft(0);
+		if (TAbs(vLeftStick.y)>0.1f)
+		{
+			_pGUI->ChangeItem((vLeftStick.y>0.0f));
+		}
+
 		int id=_pGUI->Update(dt);
 
 		switch(id)

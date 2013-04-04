@@ -19,6 +19,19 @@
 #include "InputDirectX.h"
 #include "../Base/Base.h"
 
+
+static BOOL CALLBACK EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, void* pContext)
+{
+	InputDirectX* pThis =(InputDirectX*)pContext;
+	return pThis->EnumJoysticks(pdidInstance);
+}
+
+static BOOL CALLBACK EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, void* pContext)
+{
+	InputDirectX* pThis =(InputDirectX*)pContext;
+	return pThis->EnumObjects(pdidoi);
+}
+
 // ********************************************
 //	Ctor
 // ********************************************
@@ -158,84 +171,8 @@ void InputDirectX::Update(void)
 
 		// Get the input's device state
 		PadCurrent._pDInputDevice->GetDeviceState(sizeof(DIJOYSTATE2),&PadCurrent._JoyState);
-
-		/*
-		PadCurrent._vAxisLeft.x =float(PadCurrent._JoyState.lX&0xFF)/128.0f-1.0f;
-		PadCurrent._vAxisLeft.y =float(255-(PadCurrent._JoyState.lY&0xFF))/128.0f-1.0f;
-
-		if (PadCurrent._PadType==PT_XBOX)
-		{
-			PadCurrent._vAxisRight.x =float(PadCurrent._JoyState.lRx&0xFF)/128.0f-1.0f;
-			PadCurrent._vAxisRight.y =float(255-(PadCurrent._JoyState.lRy&0xFF))/128.0f-1.0f;
-		}
-		else if (PadCurrent._PadType==PT_PS3)
-		{
-			PadCurrent._vAxisRight.x =float(PadCurrent._JoyState.lZ&0xFF)/128.0f-1.0f;
-			PadCurrent._vAxisRight.y =float(255-(PadCurrent._JoyState.lRz&0xFF))/128.0f-1.0f;
-		}
-		else
-		{
-			// other
-			PadCurrent._vAxisRight.x =float(PadCurrent._JoyState.lRz&0xFF)/128.0f-1.0f;
-			PadCurrent._vAxisRight.y =float(255-(PadCurrent._JoyState.rglSlider[0]&0xFF))/128.0f-1.0f;
-		}
-		*/
 	}
 }
-
-/*
-// ********************************************
-//	GetCtrlState
-// ********************************************
-InputDirectX::CtrlStatus InputDirectX::GetCtrlState(PadIdx iPadIdx, CtrlIdx iControl) const
-{
-	const PcPad& PadCurrent =_Pad[iPadIdx];
-
-	switch(iControl)
-	{
-	case	PAD_BTN_A:			return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[0];
-	case	PAD_BTN_B:			return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[1];
-	case	PAD_BTN_X:			return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[2];
-	case	PAD_BTN_Y:			return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[3];
-
-	case	PAD_BTN_LEFT_BTN:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[4];
-	case	PAD_BTN_RIGHT_BTN:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[5];
-
-	case	PAD_BTN_SELECT:		return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[6];
-	case	PAD_BTN_START:		return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[7];
-	case	PAD_BTN_THUMB_L:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[8];
-	case	PAD_BTN_THUMB_R:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[9];
-
-// 	case	PAD_LEFTPAD_AXIS_X:	return	(CtrlStatus)(PadCurrent._JoyState.lX&0xFF);
-// 	case	PAD_LEFTPAD_AXIS_Y:	return	(CtrlStatus)(0xFF-(PadCurrent._JoyState.lY&0xFF));
-// 
-// 	case	PAD_RIGHTPAD_AXIS_X:return	(CtrlStatus)(PadCurrent._JoyState.lRx&0xFF);
-// 	case	PAD_RIGHTPAD_AXIS_Y:return	(CtrlStatus)(0xFF-(PadCurrent._JoyState.lRy&0xFF));
-
-	case	PAD_BTN_UP:			return	(CtrlStatus)(PadCurrent._JoyState.rgdwPOV[0]&0xFF);
-	case	PAD_BTN_DOWN:		return	(CtrlStatus)(PadCurrent._JoyState.rgdwPOV[1]&0xFF);
-	case	PAD_BTN_LEFT:		return	(CtrlStatus)(PadCurrent._JoyState.rgdwPOV[2]&0xFF);
-	case	PAD_BTN_RIGHT:		return	(CtrlStatus)(PadCurrent._JoyState.rgdwPOV[3]&0xFF);
-	case	PAD_BTN_OVER_AXIS1:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[10];
-	case	PAD_BTN_OVER_AXIS2:	return	(CtrlStatus)PadCurrent._JoyState.rgbButtons[11];
-
-	// raw axis
-	case	PAD_AXIS_X:			return	(CtrlStatus)(PadCurrent._JoyState.lX&0xFF);
-	case	PAD_AXIS_Y:			return	(CtrlStatus)(PadCurrent._JoyState.lY&0xFF);
-	case	PAD_AXIS_Z:			return	(CtrlStatus)(PadCurrent._JoyState.lZ&0xFF);
-	case	PAD_AXIS_RX:		return	(CtrlStatus)(PadCurrent._JoyState.lRx&0xFF);
-	case	PAD_AXIS_RY:		return	(CtrlStatus)(PadCurrent._JoyState.lRy&0xFF);
-	case	PAD_AXIS_RZ:		return	(CtrlStatus)(PadCurrent._JoyState.lRz&0xFF);
-
-	// sliders
-	case	PAD_SLIDER0:		return	(CtrlStatus)(PadCurrent._JoyState.rglSlider[0]&0xFF);
-	case	PAD_SLIDER1:		return	(CtrlStatus)(PadCurrent._JoyState.rglSlider[1]&0xFF);
-
-	default:;
-	}
-	return	0;
-}
-*/
 
 bool IsXboxPad(const DIDEVICEINSTANCE* pCurrentDevice)
 {
@@ -252,14 +189,13 @@ bool IsPs3Pad(const DIDEVICEINSTANCE* pCurrentDevice)
 }
 
 // ********************************************
-//	Name: EnumJoysticksCallback()
+//	Name: EnumJoysticks()
 //	Desc: Called once for each enumerated joystick. If we find one, create a
 //       device interface on it so we can play with it.
 // ********************************************
-BOOL CALLBACK InputDirectX::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance, void* pContext)
+Bool InputDirectX::EnumJoysticks(const DIDEVICEINSTANCE* pdidInstance)
 {
-	InputDirectX* pthis =(InputDirectX*)pContext;
-	Device& PadCurrent =pthis->_Device[pthis->_nPadCurrent];
+	Device& PadCurrent =_Device[_nPadCurrent];
 
 	if (IsPs3Pad(pdidInstance))
 	{
@@ -275,14 +211,14 @@ BOOL CALLBACK InputDirectX::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidIn
 	}
 
 	// Obtain an interface to the enumerated joystick.
-	HRESULT hr = pthis->_pDirectInput->CreateDevice(pdidInstance->guidInstance,&(PadCurrent._pDInputDevice),NULL);
+	HRESULT hr = _pDirectInput->CreateDevice(pdidInstance->guidInstance,&(PadCurrent._pDInputDevice),NULL);
 	if (FAILED(hr))
 	{
 		return DIENUM_CONTINUE;										// If it failed, then we can't use this joystick. (Maybe the user unplugged it while we were in the middle of enumerating it.)
 	}
 
-	++pthis->_nPadCurrent;
-	if (pthis->_nPadCount>=MAX_DEVICE_COUNT)
+	++_nPadCurrent;
+	if (_nPadCount>=MAX_DEVICE_COUNT)
 	{
 		return DIENUM_STOP;											// Stop enumeration. Note: we're just taking the first joystick we get. You could store all the enumerated joysticks and let the user pick.
 	}
@@ -291,15 +227,14 @@ BOOL CALLBACK InputDirectX::EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidIn
 }
 
 // ********************************************
-// Name: EnumObjectsCallback()
+// Name: EnumObjects()
 // Desc: Callback function for enumerating objects (axes, buttons, POVs) on a 
 //       joystick. This function enables user interface elements for objects
 //       that are found to exist, and scales axes min/max values.
 // ********************************************
-BOOL CALLBACK InputDirectX::EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, void* pContext)
+Bool  InputDirectX::EnumObjects(const DIDEVICEOBJECTINSTANCE* pdidoi)
 {
-	InputDirectX* pthis=(InputDirectX*)pContext;
-	Device& PadCurrent =pthis->_Device[pthis->_nPadCurrent];
+	Device& PadCurrent =_Device[_nPadCurrent];
 
 	static int nSliderCount =0;		// Number of returned slider controls
 	static int nPOVCount	=0;		// Number of returned POV controls
