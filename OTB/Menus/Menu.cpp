@@ -118,7 +118,7 @@ void Menu::Update(Float32 dt)
 			break;
 		case MII_START_CPU_TRAINNING:
 			_pOTB->GetGame().Kill();
-			_pOTB->GetGame().InitDemoMode(_pOTB);
+			_pOTB->GetGame().InitTrainingMode(_pOTB);
 			Kill();
 			break;
 

@@ -61,6 +61,8 @@ void Rules::Render()
 	Level&		level		=_pGame->GetLevel();
 	Resources&	resources	=_pGame->GetResources();
 
+	float rPosY =_pGame->GetLevel().GetSize().y;
+
 	// render score (move it in another class ?)
 	if (_bShowScores)
 	{
@@ -74,7 +76,6 @@ void Rules::Render()
 	{
 		hgeFont* pFontMessages =resources._pFontMessages;
 		pFontMessages->SetScale(-0.005f);
-		float rPosY =_pGame->GetLevel().GetSize().y;
 		if (_bServing)
 		{
 			if (_bWaitServe)
@@ -95,7 +96,10 @@ void Rules::Render()
 		}
 	}
 
-//	pFontMessages->printf(0.0f, rPosY*0.95f, HGETEXT_CENTER, "Training   %02.2f %%", 100.0f*(1.0f-Float32(_nDbgFails)/Float32(_nDbgExchanges+1)) );
+	if (_pGame->GetTraining())
+	{
+		resources._pFontMessages->printf(0.0f, rPosY*0.95f, HGETEXT_CENTER, "Training   %02.2f %%", 100.0f*(1.0f-Float32(_nDbgFails)/Float32(_nDbgExchanges+1)) );
+	}
 }
 
 // ..........................................................................................................

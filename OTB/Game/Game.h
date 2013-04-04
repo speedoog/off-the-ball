@@ -41,6 +41,7 @@ public:
 
 			void			InitByXml(Otb* pOTB, XML_PARSER* pXml=NULL);
 			void			InitDemoMode(Otb* pOTB);
+			void			InitTrainingMode(Otb* pOTB);
 			void			InitSingle(Otb* pOTB);
 			void			InitVs(Otb* pOTB);
 			void			Kill();
@@ -59,11 +60,12 @@ public:
 	inline	Bool			UseTimeScale()					{ return _Players[0].UseTimeScale() || _Players[1].UseTimeScale();	}
 	inline	CommandAbc*		GetCmd(const UInt32 iSide)		{ return _pCmd[iSide];		}
 
-	inline	Bool			GetShowPowerBar() const						{ return _bShowPowerBar;			}
-	inline	void			SetShowPowerBar(const Bool bShowPowerBar) 	{ _bShowPowerBar =bShowPowerBar;	}
+	inline	Bool			GetTraining() const					{ return _bTraining;		}
+	inline	void			SetTraining(const Bool bTraining) 	{ _bTraining =bTraining;	}
 
 protected:
 			void			InitBase(Otb* pOTB);
+			void			InitAiMode(Otb* pOTB);
 
 protected:
 	Level			_Level;
@@ -77,7 +79,7 @@ protected:
 	Float32			_rTimeScale;
 //	Bool			_bUseTimeScale;
 
-	Bool			_bShowPowerBar;
+	Bool			_bTraining;
 	Bool			_bDemoMode;
 
 	// temp ...

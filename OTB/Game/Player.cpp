@@ -314,7 +314,7 @@ void Player::Render()
 	hge->Gfx_RenderLine(vRaquet0.x, vRaquet0.y,
 						vRaquet1.x, vRaquet1.y, 0xFF60FF60);
 
-	if (_pGame->GetShowPowerBar())
+	if (_pGame->GetTraining())
 	{
 		_PowerBar.Render();
 	}
