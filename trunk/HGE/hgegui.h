@@ -102,10 +102,16 @@ public:
 	int				Update(float dt);
 	void			Render();
 
+	int				ChangeItem(bool bNext);
+
 private:
 	hgeGUI(const hgeGUI &);
 	hgeGUI&			operator= (const hgeGUI&);
 	bool			ProcessCtrl(hgeGUIObject *ctrl);
+
+	int				HandleKeys();
+	int				HandleMouse();
+
 
 	static HGE		*hge;
 

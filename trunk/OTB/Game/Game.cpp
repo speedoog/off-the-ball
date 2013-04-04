@@ -320,4 +320,8 @@ void Game::Render()
 
 	_Rules.Render();
 
+	if (_bDemoMode==false && _rTimeScale!=1.0f)
+	{
+		_pOTB->GetResources()._pFontDebug->printf(0.0f, 0.0f, HGETEXT_CENTER, "Timescale =%.1f", _rTimeScale);
+	}
 }

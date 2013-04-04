@@ -93,7 +93,7 @@ InputCore::~InputCore()
 // ********************************************
 //	Init
 // ********************************************
-int	InputCore::Init(HWND	hWnd)
+int	InputCore::Init(HWND hWnd)
 {
 	int nRes =_InputDirectX.Init(hWnd);
 	if (nRes==0)

@@ -52,7 +52,7 @@ hgeFont* Resources::LoadFont(const char* filename, const Float32 rScale)
 void Resources::Init()
 {
 	// load all
-	_pFontDebug	=LoadFont("Data/font1.fnt");
+	_pFontDebug	=LoadFont("Data/Verdana60.fnt", 0.4f);
 	_pFontScore	=LoadFont("Data/Bauhaus93.fnt");
 	_pFontTitle	=LoadFont("Data/Bauhaus93.fnt");
 	_pFontMenus	=LoadFont("Data/Verdana60.fnt", 0.5f);
