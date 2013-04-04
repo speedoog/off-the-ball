@@ -180,6 +180,50 @@ void Game::InitDemoMode(Otb* pOTB)
 }
 
 // ********************************************
+//	InitSingle
+// ********************************************
+void Game::InitSingle(Otb* pOTB)
+{
+	_bDemoMode	=false;
+	InitBase(pOTB);
+
+	_pCmd[0] =CreateCommand(CommandAbc::CMD_PAD);
+	_pCmd[0]->Init(this, &_Players[0], 0);
+
+	_pCmd[1] =CreateCommand(CommandAbc::CMD_CPU);
+	_pCmd[1]->Init(this, &_Players[1], 1);
+
+	SetShowPowerBar(false);
+
+	_Rules.SetShowRulesMsg(false);
+	_Rules.SetShowScores(false);
+
+	_Rules.ActionStartGame(0);		// start w/ player[0]
+}
+
+// ********************************************
+//	InitVs
+// ********************************************
+void Game::InitVs(Otb* pOTB)
+{
+	_bDemoMode	=false;
+	InitBase(pOTB);
+
+	_pCmd[0] =CreateCommand(CommandAbc::CMD_PAD);
+	_pCmd[0]->Init(this, &_Players[0], 0);
+
+	_pCmd[1] =CreateCommand(CommandAbc::CMD_PAD);
+	_pCmd[1]->Init(this, &_Players[1], 1);
+
+	SetShowPowerBar(false);
+
+	_Rules.SetShowRulesMsg(false);
+	_Rules.SetShowScores(false);
+
+	_Rules.ActionStartGame(0);		// start w/ player[0]
+}
+
+// ********************************************
 //	Kill
 // ********************************************
 void Game::Kill()
@@ -202,7 +246,7 @@ void Game::Update(const float rDeltaTime)
 		Float32 rDistMin =TMin(rDistance0, rDistance1);
 
 		Float32 rTimeScaleRaw = TChangeRange(0.0f, 3.0f, 0.3f, 3.0f, rDistMin);
-		_rTimeScale =TClamp(rTimeScaleRaw, 0.3f, 3.0f);
+		_rTimeScale =TClamp(rTimeScaleRaw, 0.5f, 2.0f);
 	}
 
 	if (GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_BTN_VALIDATE)<0.5f)

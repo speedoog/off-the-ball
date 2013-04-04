@@ -100,7 +100,7 @@ void hgeGUIMenuItem::Render()
 	hgeColor ColorCurrent =_bFocused?MENU_COLOR_SELECTED:MENU_COLOR_NORMAL;
 
 	pFontMenu->SetColor(ColorCurrent.GetHWColor());
-	pFontMenu->Render(rect.x1, rect.y1, HGETEXT_CENTER, _sTitle.GetCharconst());
+	pFontMenu->Render(rect.x1, rect.y1, HGETEXT_LEFT, _sTitle.GetCharconst());
 
 	//hge->Gfx_RenderBox(rect.x1, rect.y1, rect.x2, rect.y2, _bFocused?MENU_COLOR_SELECTED:MENU_COLOR_NORMAL);
 

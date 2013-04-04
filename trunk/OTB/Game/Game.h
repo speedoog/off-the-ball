@@ -41,6 +41,8 @@ public:
 
 			void			InitByXml(Otb* pOTB, XML_PARSER* pXml=NULL);
 			void			InitDemoMode(Otb* pOTB);
+			void			InitSingle(Otb* pOTB);
+			void			InitVs(Otb* pOTB);
 			void			Kill();
 
 			void			Update(const float rDeltaTime);

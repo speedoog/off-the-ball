@@ -144,7 +144,7 @@ void hgeFont::Render(float x, float y, int align, const char *string)
 
 	align &= HGETEXT_HORZMASK;
 	if(align==HGETEXT_RIGHT) fx-=GetStringWidth(string, false);
-	if(align==HGETEXT_CENTER) fx-=int(GetStringWidth(string, false)/2.0f);
+	if(align==HGETEXT_CENTER) fx-=GetStringWidth(string, false)/2.0f;
 
 	while(*string)
 	{
@@ -153,7 +153,7 @@ void hgeFont::Render(float x, float y, int align, const char *string)
 			y += int(fHeight*fScale*fSpacing);
 			fx = x;
 			if(align == HGETEXT_RIGHT)  fx -= GetStringWidth(string+1, false);
-			if(align == HGETEXT_CENTER) fx -= int(GetStringWidth(string+1, false)/2.0f);
+			if(align == HGETEXT_CENTER) fx -= GetStringWidth(string+1, false)/2.0f;
 		}
 		else
 		{

@@ -485,6 +485,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Out\OTB.xml"
+			>
+		</File>
+		<File
 			RelativePath=".\Resources.cpp"
 			>
 		</File>
