@@ -35,9 +35,9 @@ const char* XML_ATTRIBUTE_ID		="Id";
 //	Ctor
 // ********************************************
 Game::Game()
-: _bShowPowerBar	(true)
-, _bDemoMode		(false)
-, _pOTB				(NULL)
+: _bTraining	(true)
+, _bDemoMode	(false)
+, _pOTB			(NULL)
 {
 }
 
@@ -96,6 +96,9 @@ void Game::InitBase(Otb* pOTB)
 	_Ball.Init(this);
 	_BallRecorder.Init(this);
 	_Rules.Init(this);
+
+	SetTraining(false);
+	_bDemoMode	=false;
 }
 
 // ********************************************
@@ -103,8 +106,6 @@ void Game::InitBase(Otb* pOTB)
 // ********************************************
 void Game::InitByXml(Otb* pOTB, XML_PARSER* pXml)
 {
-	_bDemoMode	=false;
-
 	InitBase(pOTB);
 
 	const int nOffset =4;
@@ -149,10 +150,27 @@ void Game::InitByXml(Otb* pOTB, XML_PARSER* pXml)
 	_pCmd[1] =CreateCommand(cmd2);
 	_pCmd[1]->Init(this, &_Players[1], nCmdId2);
 
-	SetShowPowerBar(false);
-
 	_Rules.SetShowRulesMsg(true);
 	_Rules.SetShowScores(true);
+
+	_Rules.ActionStartGame(0);		// start w/ player[0]
+}
+
+// ********************************************
+//	InitAiMode
+// ********************************************
+void Game::InitAiMode(Otb* pOTB)
+{
+	InitBase(pOTB);
+
+	_pCmd[0] =CreateCommand(CommandAbc::CMD_CPU);
+	_pCmd[0]->Init(this, &_Players[0], 0);
+
+	_pCmd[1] =CreateCommand(CommandAbc::CMD_CPU);
+	_pCmd[1]->Init(this, &_Players[1], 1);
+
+	_Rules.SetShowRulesMsg(false);
+	_Rules.SetShowScores(false);
 
 	_Rules.ActionStartGame(0);		// start w/ player[0]
 }
@@ -162,21 +180,18 @@ void Game::InitByXml(Otb* pOTB, XML_PARSER* pXml)
 // ********************************************
 void Game::InitDemoMode(Otb* pOTB)
 {
+	InitAiMode(pOTB);
 	_bDemoMode	=true;
-	InitBase(pOTB);
+}
 
-	_pCmd[0] =CreateCommand(CommandAbc::CMD_CPU);
-	_pCmd[0]->Init(this, &_Players[0], 0);
-
-	_pCmd[1] =CreateCommand(CommandAbc::CMD_CPU);
-	_pCmd[1]->Init(this, &_Players[1], 1);
-
-	SetShowPowerBar(false);
-
-	_Rules.SetShowRulesMsg(false);
-	_Rules.SetShowScores(false);
-
-	_Rules.ActionStartGame(0);		// start w/ player[0]
+// ********************************************
+//	InitTrainingMode
+// ********************************************
+void Game::InitTrainingMode(Otb* pOTB)
+{
+	InitAiMode(pOTB);
+	_bDemoMode	=false;
+	SetTraining(true);
 }
 
 // ********************************************
@@ -184,7 +199,6 @@ void Game::InitDemoMode(Otb* pOTB)
 // ********************************************
 void Game::InitSingle(Otb* pOTB)
 {
-	_bDemoMode	=false;
 	InitBase(pOTB);
 
 	_pCmd[0] =CreateCommand(CommandAbc::CMD_PAD);
@@ -192,8 +206,6 @@ void Game::InitSingle(Otb* pOTB)
 
 	_pCmd[1] =CreateCommand(CommandAbc::CMD_CPU);
 	_pCmd[1]->Init(this, &_Players[1], 1);
-
-	SetShowPowerBar(false);
 
 	_Rules.SetShowRulesMsg(false);
 	_Rules.SetShowScores(false);
@@ -206,7 +218,6 @@ void Game::InitSingle(Otb* pOTB)
 // ********************************************
 void Game::InitVs(Otb* pOTB)
 {
-	_bDemoMode	=false;
 	InitBase(pOTB);
 
 	_pCmd[0] =CreateCommand(CommandAbc::CMD_PAD);
@@ -214,8 +225,6 @@ void Game::InitVs(Otb* pOTB)
 
 	_pCmd[1] =CreateCommand(CommandAbc::CMD_PAD);
 	_pCmd[1]->Init(this, &_Players[1], 1);
-
-	SetShowPowerBar(false);
 
 	_Rules.SetShowRulesMsg(false);
 	_Rules.SetShowScores(false);
@@ -310,4 +319,5 @@ void Game::Render()
 	_pCmd[1]->Render();
 
 	_Rules.Render();
+
 }
