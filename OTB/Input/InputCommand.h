@@ -20,6 +20,7 @@
 #define __INPUTCOMMAND_H__
 
 #include "../Base/Base.h"
+#include "../Base/SmartEnum.h"
 #include "InputDirectX.h"
 
 class InputControl
@@ -35,24 +36,24 @@ public:
 class InputMapper
 {
 public:
-	SMARTENUM_DECLARE(CtrlIdx,
-		PAD_BTN_VALIDATE,
-		PAD_BTN_CANCEL,
-		PAD_BTN_PAUSE,
+	SMARTENUM_DECLARE(CtrlIdx
+		, PAD_BTN_VALIDATE
+		, PAD_BTN_CANCEL
+		, PAD_BTN_PAUSE
 
-		PAD_LEFTPAD_AXIS_X,
-		PAD_LEFTPAD_AXIS_Y,
-		PAD_RIGHTPAD_AXIS_X,
-		PAD_RIGHTPAD_AXIS_Y,
+		, PAD_LEFTPAD_AXIS_X
+		, PAD_LEFTPAD_AXIS_Y
+		, PAD_RIGHTPAD_AXIS_X
+		, PAD_RIGHTPAD_AXIS_Y
 
-		PAD_TIME_SCALE,
+		, PAD_TIME_SCALE
 
-		PAD_BTN_UP,
-		PAD_BTN_DOWN,
-		PAD_BTN_LEFT,
-		PAD_BTN_RIGHT,
+		, PAD_BTN_UP
+		, PAD_BTN_DOWN
+		, PAD_BTN_LEFT
+		, PAD_BTN_RIGHT
 
-		PAD_MAX_ENTRIES,
+		, PAD_MAX_ENTRIES
 		);
 
 	InputMapper()	{}
@@ -71,9 +72,26 @@ protected:
 	Int32			_nDeviceIdx;
 };
 
+class InputMenu
+{
+public:
+			InputMenu() : _rLastValue(0.0f), _rValueCurrent(0.0f) { }
+	Float32				  _rLastValue, _rValueCurrent;
+};
+
 class InputCore
 {
 public:
+	SMARTENUM_DECLARE(MenuCtl
+		, MC_UP
+		, MC_DOWN
+		, MC_LEFT
+		, MC_RIGHT
+		, MC_VALIDATE
+		, MC_CANCEL
+
+		, MC_MAX
+		)
 
 						InputCore();
 						~InputCore();
@@ -90,9 +108,14 @@ public:
 	hgeVector			GetAxisLeft(int iPlayerIdx) const;
 	hgeVector			GetAxisRight(int iPlayerIdx) const;
 
+	const Float32		GetMenuInput(const MenuCtl iMenuControl) const;
+
+	typedef InputMenu	InputMenuArray[MC_MAX];
+
 protected:
 	InputDirectX	_InputDirectX;
 	InputMapper		_Mapper[2];
+	InputMenuArray	_InputMenuArray;
 };
 
 #endif	//__INPUTCOMMAND_H__

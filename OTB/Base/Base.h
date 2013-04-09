@@ -122,6 +122,12 @@ inline T TAbs(const T& _x)
 	return (_x<0)?-_x:_x;
 }
 
+template<typename T>
+inline T TSign(const T& _x_)
+{
+	return (_x_<0.0f) ? (-1.0f) : (_x_>0.0f) ? (1.0f) : (0.0f);
+}
+
 template <typename T>
 inline T TMax(T Value1, T Value2)
 {

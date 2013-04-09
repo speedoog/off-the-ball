@@ -98,6 +98,8 @@ protected:
 	void	StartMenuHelp();
 	void	StartMenuCredits();
 
+	void	ItemValidate(const int id);
+
 protected:
 	Otb*			_pOTB;
 	hgeGUI*			_pGUI;
