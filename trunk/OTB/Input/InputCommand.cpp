@@ -43,7 +43,7 @@ void InputMapper::InitForXbox()
 // ********************************************
 void InputMapper::InitForPS3()
 {
-	_Controls[PAD_BTN_VALIDATE		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[0]	), false );
+	_Controls[PAD_BTN_VALIDATE		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[2]	), false );
 	_Controls[PAD_BTN_CANCEL		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[1]	), false );
 	_Controls[PAD_BTN_PAUSE			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[7]	), false );
 	_Controls[PAD_LEFTPAD_AXIS_X	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lX		   	), false );
@@ -62,7 +62,7 @@ void InputMapper::InitForPS3()
 // ********************************************
 void InputMapper::InitForOther()
 {
-	_Controls[PAD_BTN_VALIDATE		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[0]	), false );
+	_Controls[PAD_BTN_VALIDATE		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[2]	), false );
 	_Controls[PAD_BTN_CANCEL		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[1]	), false );
 	_Controls[PAD_BTN_PAUSE			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[7]	), false );
 	_Controls[PAD_LEFTPAD_AXIS_X	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lX		   	), false );
@@ -128,13 +128,61 @@ void InputCore::Kill()
 	_InputDirectX.Kill();
 }
 
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Float32 UpdateMenuInput(Float32 rCurrentValue, InputMenu& inputMenu)
+{
+	if (rCurrentValue<0.1f)
+	{
+		rCurrentValue =0.0f;
+	}
+	else
+	{
+		rCurrentValue =1.0f;
+	}
+
+	if (rCurrentValue!=inputMenu._rLastValue)
+	{
+		inputMenu._rValueCurrent =rCurrentValue;
+	}
+	else
+	{
+		inputMenu._rValueCurrent =0.0f;
+	}
+
+	inputMenu._rLastValue =rCurrentValue;
+	return rCurrentValue;
+}
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 // ********************************************
 //	Update
 // ********************************************
 void InputCore::Update()
 {
 	_InputDirectX.Update();
+
+	// update menu mapper
+
+	// ---- UP ----
+	{
+		Float32 rAnalog	 =TClamp(GetCtrlStateFloatSymetric(0, InputMapper::PAD_LEFTPAD_AXIS_Y), 0.0f, 1.0f);
+		Float32 rDigital =GetCtrlStateFloat(0, InputMapper::PAD_BTN_UP);
+		UpdateMenuInput(TMax(rAnalog, rDigital), _InputMenuArray[MC_UP]);
+	}
+
+	// ---- DOWN ----
+	{
+		Float32 rAnalog	 =TClamp(-GetCtrlStateFloatSymetric(0, InputMapper::PAD_LEFTPAD_AXIS_Y), 0.0f, 1.0f);
+		Float32 rDigital =GetCtrlStateFloat(0, InputMapper::PAD_BTN_DOWN);
+		UpdateMenuInput(TMax(rAnalog, rDigital), _InputMenuArray[MC_DOWN]);
+	}
 }
+
+
 
 // ********************************************
 //	GetCtrlState
@@ -173,7 +221,7 @@ const CtrlStatus InputCore::GetCtrlState(int iPlayerIdx, InputMapper::CtrlIdx iC
 const Float32 InputCore::GetCtrlStateFloat(int iPlayerIdx, InputMapper::CtrlIdx iControl) const
 {
 	CtrlStatus status =GetCtrlState(iPlayerIdx, iControl);
-	return Float32(status)/255.0f;
+	return 1.0f-(Float32(status)/255.0f);
 }
 
 // ********************************************
@@ -205,4 +253,12 @@ hgeVector InputCore::GetAxisRight(DeviceIdx iPlayerIdx) const
 	vAxisRight.x =GetCtrlStateFloatSymetric(iPlayerIdx, InputMapper::PAD_RIGHTPAD_AXIS_X);
 	vAxisRight.y =GetCtrlStateFloatSymetric(iPlayerIdx, InputMapper::PAD_RIGHTPAD_AXIS_Y);
 	return vAxisRight;
+}
+
+// ********************************************
+//	GetMenuInput
+// ********************************************
+const Float32 InputCore::GetMenuInput(const MenuCtl iMenuControl) const
+{
+	return _InputMenuArray[iMenuControl]._rValueCurrent;
 }

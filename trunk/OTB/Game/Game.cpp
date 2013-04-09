@@ -258,7 +258,7 @@ void Game::Update(const float rDeltaTime)
 		_rTimeScale =TClamp(rTimeScaleRaw, 0.5f, 2.0f);
 	}
 
-	if (GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_BTN_VALIDATE)<0.5f)
+	if (GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_BTN_VALIDATE)>0.5f)
 	{
 //		const Float32 rTimeFactor =TChangeRange(0.5f, 1.0f, 1.0f, 0.3f, GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_TIME_SCALE));
 

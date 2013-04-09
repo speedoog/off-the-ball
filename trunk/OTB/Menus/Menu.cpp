@@ -81,112 +81,25 @@ void Menu::Update(Float32 dt)
 		}
 
 		InputCore& Input =_pOTB->GetInputCommand();
-		hgeVector vLeftStick =Input.GetAxisLeft(0);
-		if (TAbs(vLeftStick.y)>0.1f)
+		if (Input.GetMenuInput(InputCore::MC_UP)!=0.0f)
 		{
-			_pGUI->ChangeItem((vLeftStick.y>0.0f));
+			_pGUI->ChangeItem(true);
 		}
 
-		int id=_pGUI->Update(dt);
-
-		switch(id)
+		if (Input.GetMenuInput(InputCore::MC_DOWN)!=0.0f)
 		{
-			// ------------- Menu Main ------------- 
-		case MII_MAIN_START:
-			StartMenuStart();
-			break;
+			_pGUI->ChangeItem(false);
+		}
 
-		case MII_MAIN_OPTIONS:
-			StartMenuOptions();
-			break;
-
-		case MII_MAIN_HELP:
-			StartMenuHelp();
-			break;
-
-		case MII_MAIN_CREDITS:
-			StartMenuCredits();
-			break;
-
-		case MII_MAIN_EXIT:
-			_pOTB->ExitApp();
-			break;
-
-			// ------------- Start Options ------------- 
-		case MII_START_SINGLE:
-			_pOTB->GetGame().Kill();
-			_pOTB->GetGame().InitSingle(_pOTB);
-			Kill();
-			break;
-		case MII_START_VS:
-			_pOTB->GetGame().Kill();
-			_pOTB->GetGame().InitVs(_pOTB);
-			Kill();
-			break;
-		case MII_START_CPU_TRAINNING:
-			_pOTB->GetGame().Kill();
-			_pOTB->GetGame().InitTrainingMode(_pOTB);
-			Kill();
-			break;
-
-		case MII_START_POINTS:
-			break;
-
-		case MII_START_BACK:
-			StartMenuMain();
-			break;
-
-			// ------------- Menu Options ------------- 
-		case MII_OPTIONS_VIDEO:
-			StartMenuVideo();
-			break;
-		case MII_OPTIONS_AUDIO:
-			StartMenuAudio();
-			break;
-		case MII_OPTIONS_INPUT:
-			StartMenuInput();
-			break;
-		case MII_OPTIONS_BACK:
-			StartMenuMain();
-			break;
-
-			// ------------- Menu Video ------------- 
-		case MII_OPTVIDEO_RESOLUTION:
-			break;
-
-		case MII_OPTVIDEO_WINDOWED:
-			break;
-
-		case MII_OPTVIDEO_BACK:
-			StartMenuOptions();
-			break;
-
-			// ------------- Menu Audio ------------- 
-		case MII_OPTAUDIO_MUSIC:
-			break;
-		case MII_OPTAUDIO_EFFECTS:
-			break;
-
-		case MII_OPTAUDIO_BACK:
-			StartMenuOptions();
-			break;
-
-			// ------------- Menu Input ------------- 
-		case MII_OPTINPUT_BACK:
-			StartMenuOptions();
-			break;
-
-			// ------------- Menu Help ------------- 
-		case MII_HELP_BACK:
-			StartMenuMain();
-			break;
-
-			// ------------- Menu Credits ------------- 
-		case MII_CREDITS_BACK:
-			StartMenuMain();
-			break;
-
-		default:;
+		const Float32 rInputValidate =Input.GetMenuInput(InputCore::MC_VALIDATE);
+		if (TAbs(rInputValidate)>0.1f)
+		{
+			ItemValidate(_pGUI->GetFocus());
+		}
+		else
+		{
+			int id=_pGUI->Update(dt);
+			ItemValidate(id);
 		}
 	}
 }
@@ -202,6 +115,112 @@ void Menu::Update(Float32 dt)
 // _pGUI->Enter();
 
 //hge->Gfx_SetDisplayMode(32, 17, 32);
+
+// ****************************************************************************************
+//	ItemValidate
+// ****************************************************************************************
+void Menu::ItemValidate(const int id)
+{
+	switch(id)
+	{
+		// ------------- Menu Main ------------- 
+	case MII_MAIN_START:
+		StartMenuStart();
+		break;
+
+	case MII_MAIN_OPTIONS:
+		StartMenuOptions();
+		break;
+
+	case MII_MAIN_HELP:
+		StartMenuHelp();
+		break;
+
+	case MII_MAIN_CREDITS:
+		StartMenuCredits();
+		break;
+
+	case MII_MAIN_EXIT:
+		_pOTB->ExitApp();
+		break;
+
+		// ------------- Start Options ------------- 
+	case MII_START_SINGLE:
+		_pOTB->GetGame().Kill();
+		_pOTB->GetGame().InitSingle(_pOTB);
+		Kill();
+		break;
+	case MII_START_VS:
+		_pOTB->GetGame().Kill();
+		_pOTB->GetGame().InitVs(_pOTB);
+		Kill();
+		break;
+	case MII_START_CPU_TRAINNING:
+		_pOTB->GetGame().Kill();
+		_pOTB->GetGame().InitTrainingMode(_pOTB);
+		Kill();
+		break;
+
+	case MII_START_POINTS:
+		break;
+
+	case MII_START_BACK:
+		StartMenuMain();
+		break;
+
+		// ------------- Menu Options ------------- 
+	case MII_OPTIONS_VIDEO:
+		StartMenuVideo();
+		break;
+	case MII_OPTIONS_AUDIO:
+		StartMenuAudio();
+		break;
+	case MII_OPTIONS_INPUT:
+		StartMenuInput();
+		break;
+	case MII_OPTIONS_BACK:
+		StartMenuMain();
+		break;
+
+		// ------------- Menu Video ------------- 
+	case MII_OPTVIDEO_RESOLUTION:
+		break;
+
+	case MII_OPTVIDEO_WINDOWED:
+		break;
+
+	case MII_OPTVIDEO_BACK:
+		StartMenuOptions();
+		break;
+
+		// ------------- Menu Audio ------------- 
+	case MII_OPTAUDIO_MUSIC:
+		break;
+	case MII_OPTAUDIO_EFFECTS:
+		break;
+
+	case MII_OPTAUDIO_BACK:
+		StartMenuOptions();
+		break;
+
+		// ------------- Menu Input ------------- 
+	case MII_OPTINPUT_BACK:
+		StartMenuOptions();
+		break;
+
+		// ------------- Menu Help ------------- 
+	case MII_HELP_BACK:
+		StartMenuMain();
+		break;
+
+		// ------------- Menu Credits ------------- 
+	case MII_CREDITS_BACK:
+		StartMenuMain();
+		break;
+
+	default:;
+	}
+}
 
 // ****************************************************************************************
 //	Render
