@@ -242,7 +242,7 @@ Bool  InputDirectX::EnumObjects(const DIDEVICEOBJECTINSTANCE* pdidoi)
 	// For axes that are returned, set the DIPROP_RANGE property for the enumerated axis in order to scale min/max values.
 	if (pdidoi->dwType & DIDFT_AXIS)
 	{
-		DIPROPRANGE diprg; 
+		DIPROPRANGE diprg;
 		diprg.diph.dwSize       =sizeof(DIPROPRANGE); 
 		diprg.diph.dwHeaderSize =sizeof(DIPROPHEADER); 
 		diprg.diph.dwHow        =DIPH_BYID; 

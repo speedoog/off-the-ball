@@ -48,10 +48,7 @@ public:
 
 		, PAD_TIME_SCALE
 
-		, PAD_BTN_UP
-		, PAD_BTN_DOWN
-		, PAD_BTN_LEFT
-		, PAD_BTN_RIGHT
+		, PAD_BTN_DPAD
 
 		, PAD_MAX_ENTRIES
 		);
@@ -100,6 +97,7 @@ public:
 	void				Kill();
 
 	void				Update();
+	void				Render();
 
 	const CtrlStatus  	GetCtrlState(int iPlayerIdx, InputMapper::CtrlIdx iControl) const;
 	const Float32		GetCtrlStateFloat(int iPlayerIdx, InputMapper::CtrlIdx iControl) const;
@@ -110,12 +108,17 @@ public:
 
 	const Float32		GetMenuInput(const MenuCtl iMenuControl) const;
 
+protected:
 	typedef InputMenu	InputMenuArray[MC_MAX];
+	const Int32 		GetCtrlStateRaw(int iPlayerIdx, InputMapper::CtrlIdx iControl) const;
 
 protected:
 	InputDirectX	_InputDirectX;
 	InputMapper		_Mapper[2];
 	InputMenuArray	_InputMenuArray;
+
+	// debug
+	Bool			_bDebugDirectX, _bDebugMenu;
 };
 
 #endif	//__INPUTCOMMAND_H__

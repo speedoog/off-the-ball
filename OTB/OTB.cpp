@@ -23,7 +23,9 @@
 #include "Base/TList.h"
 
 HGE*			hge	  =0;
-Otb*			pThis =NULL;
+
+// OTB Singleton
+Otb* Otb::_pOTB =NULL;
 
 // Constants
 const char* XML_SECTION_VIDEO			="Video";
@@ -39,18 +41,18 @@ Bool		_bMenuTest					=true;
 bool FrameFunc()
 {
 	const float rDeltaTime =hge->Timer_GetDelta();
-	return pThis->Update(rDeltaTime);
+	return Otb::GetInstance()->Update(rDeltaTime);
 }
 
 bool RenderFunc()
 {
-	return pThis->Render();
+	return Otb::GetInstance()->Render();
 }
 
 bool GfxRestoreFunc()
 {
-//	pThis->GetResources().Kill();
-//	pThis->GetResources().Init();
+//	Otb::GetInstance()->GetResources().Kill();
+//	Otb::GetInstance()->GetResources().Init();
 	return false;
 }
 
@@ -69,7 +71,7 @@ Otb::Otb()
 	_rWorldTxCenterX	=0.0f;		// center of scale & rotation
 	_rWorldTxRotation	=0.0f;
 
-	pThis =this;
+	_pOTB =this;
 }
 
 Otb::~Otb()
@@ -166,6 +168,7 @@ bool Otb::Render()
 
 	_Game.Render();
 	_Menu.Render();
+	_Input.Render();
 
 //	_Game.GetResources()._pFontDebug->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
 

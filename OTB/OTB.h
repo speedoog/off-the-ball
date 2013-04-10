@@ -46,6 +46,8 @@ public:
 
 	inline	void		ExitApp()						{ _bExitApp =true;		}
 
+	static	Otb*		GetInstance()					{ return _pOTB;			}
+
 protected:
 			void		DrawInputs();
 			void		LoadSettings();
@@ -62,6 +64,8 @@ protected:
 
 	Bool			_bExitApp;
 	Bool			_bChangeVideoSettings;
+
+	static Otb*	_pOTB;
 
 public:
 	// video settings

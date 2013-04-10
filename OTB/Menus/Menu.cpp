@@ -81,18 +81,18 @@ void Menu::Update(Float32 dt)
 		}
 
 		InputCore& Input =_pOTB->GetInputCommand();
-		if (Input.GetMenuInput(InputCore::MC_UP)!=0.0f)
+		if (Input.GetMenuInput(InputCore::MC_UP)>=0.5f)
 		{
 			_pGUI->ChangeItem(true);
 		}
 
-		if (Input.GetMenuInput(InputCore::MC_DOWN)!=0.0f)
+		if (Input.GetMenuInput(InputCore::MC_DOWN)>=0.5f)
 		{
 			_pGUI->ChangeItem(false);
 		}
 
 		const Float32 rInputValidate =Input.GetMenuInput(InputCore::MC_VALIDATE);
-		if (TAbs(rInputValidate)>0.1f)
+		if (TAbs(rInputValidate)>0.5f)
 		{
 			ItemValidate(_pGUI->GetFocus());
 		}
@@ -230,11 +230,13 @@ void Menu::Render()
 	if (_pOTB && _pGUI)
 	{
 		// Title
+/*
 		{
 			hgeFont* pFont=GetOTB()->GetResources()._pFontTitle;
 			float rPosY =GetOTB()->GetGame().GetLevel().GetSize().y;
 			pFont->printf(0.0f, rPosY*0.96f, HGETEXT_CENTER, "Off  the  wall");
 		}
+*/
 
 		hgeFont* pFontMenu =GetOTB()->GetResources()._pFontMenus;
 		pFontMenu->SetColor(0xFFFFFFFF);

@@ -309,6 +309,8 @@ void Game::Update(const float rDeltaTime)
 // ********************************************
 void Game::Render()
 {
+	return;
+
 	_Level.Render();
 	_Ball.Render();
 	_BallRecorder.Render();
