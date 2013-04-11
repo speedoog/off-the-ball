@@ -35,32 +35,32 @@ public:
 	,	MII_START_VS
 	,	MII_START_CPU_TRAINNING
 	,	MII_START_POINTS
-	,	MII_START_BACK
+//	,	MII_START_BACK
 
 	// Options Menu
 	,	MII_OPTIONS_VIDEO
 	,	MII_OPTIONS_AUDIO
 	,	MII_OPTIONS_INPUT
-	,	MII_OPTIONS_BACK
+//	,	MII_OPTIONS_BACK
 
 	// Video Menu
 	,	MII_OPTVIDEO_RESOLUTION
 	,	MII_OPTVIDEO_WINDOWED
-	,	MII_OPTVIDEO_BACK
+//	,	MII_OPTVIDEO_BACK
 
 	// Audio Menu
 	,	MII_OPTAUDIO_MUSIC
 	,	MII_OPTAUDIO_EFFECTS
-	,	MII_OPTAUDIO_BACK
+//	,	MII_OPTAUDIO_BACK
 
 	// Input Menu
-	,	MII_OPTINPUT_BACK
+//	,	MII_OPTINPUT_BACK
 
 	// help Menu
-	,	MII_HELP_BACK
+//	,	MII_HELP_BACK
 
 	// Credits Menu
-	,	MII_CREDITS_BACK
+//	,	MII_CREDITS_BACK
 	};
 
 	SMARTENUM_DECLARE(	MenuScreen
@@ -99,6 +99,7 @@ protected:
 	void	StartMenuCredits();
 
 	void	ItemValidate(const int id);
+	void	ItemCancel();
 
 protected:
 	Otb*			_pOTB;

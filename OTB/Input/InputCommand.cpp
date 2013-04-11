@@ -43,7 +43,7 @@ void InputMapper::InitForPS3()
 {
 	_Controls[PAD_BTN_VALIDATE		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[2]	), false );
 	_Controls[PAD_BTN_CANCEL		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[1]	), false );
-	_Controls[PAD_BTN_PAUSE			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[7]	), false );
+	_Controls[PAD_BTN_PAUSE			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[8]	), false );
 	_Controls[PAD_LEFTPAD_AXIS_X	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lX		   	), false );
 	_Controls[PAD_LEFTPAD_AXIS_Y	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lY		   	), true	 );
 	_Controls[PAD_RIGHTPAD_AXIS_X	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lZ		   	), false );
@@ -59,7 +59,7 @@ void InputMapper::InitForOther()
 {
 	_Controls[PAD_BTN_VALIDATE		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[2]	), false );
 	_Controls[PAD_BTN_CANCEL		] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[1]	), false );
-	_Controls[PAD_BTN_PAUSE			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[7]	), false );
+	_Controls[PAD_BTN_PAUSE			] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, rgbButtons[8]	), false );
 	_Controls[PAD_LEFTPAD_AXIS_X	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lX		   	), false );
 	_Controls[PAD_LEFTPAD_AXIS_Y	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lY		   	), true	 );
 	_Controls[PAD_RIGHTPAD_AXIS_X	] =InputControl( GET_ATTR_OFFSET(DIJOYSTATE2, lRz		   	), false );

@@ -16,9 +16,6 @@
 #include "HGE/hgerect.h"
 
 
-// #define	MENU_COLOR_NORMAL	0xFFFFE060
-// #define	MENU_COLOR_SELECTED	0xFFFFFFFF
-
 #define	MENU_COLOR_NORMAL	(0xFFC0C0C0)
 #define	MENU_COLOR_SELECTED	(0xFFFF4040)
 
@@ -30,12 +27,7 @@ hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, Menu* pMenu, const Float32 rPosx
 	id		=nId;
 	_pMenu	=pMenu;
 
-//	_rDelay	=rDelay;
 	_sTitle	=sTitle;
-
-// 	_ColCurrent.SetHWColor(0x00000000);
-// 	_rTimer	=-1.0f;
-// 	_rTimer2=-1.0f;
 
 	bStatic	=false;
 	bVisible=true;
@@ -53,41 +45,6 @@ hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, Menu* pMenu, const Float32 rPosx
 // ****************************************************************************************
 void hgeGUIMenuItem::Update(float dt)
 {
-	/*
-	if(_rTimer2 != -1.0f)
-	{
-		_rTimer2+=dt;
-		if(_rTimer2 >= _rDelay+0.1f)
-		{
-			_ColCurrent=_ColS2+_ColD2;
-			_rTimer2=-1.0f;
-		}
-		else
-		{
-			if(_rTimer2 < _rDelay)
-			{
-				_ColCurrent=_ColS2;
-			}
-			else
-			{
-				_ColCurrent=_ColS2+_ColD2*(_rTimer2-_rDelay)*10;
-			}
-		}
-	}
-	else if(_rTimer != -1.0f)
-	{
-		_rTimer+=dt;
-		if(_rTimer >= 0.2f)
-		{
-			_ColCurrent=_ColS+_ColD;
-			_rTimer=-1.0f;
-		}
-		else
-		{
-			_ColCurrent=_ColS+_ColD*_rTimer*5;
-		}
-	}
-	*/
 }
 
 // ****************************************************************************************
@@ -102,10 +59,10 @@ void hgeGUIMenuItem::Render()
 	pFontMenu->SetColor(ColorCurrent.GetHWColor());
 	pFontMenu->Render(rect.x1, rect.y1, HGETEXT_LEFT, _sTitle.GetCharconst());
 
-	//hge->Gfx_RenderBox(rect.x1, rect.y1, rect.x2, rect.y2, _bFocused?MENU_COLOR_SELECTED:MENU_COLOR_NORMAL);
+// 	hge->Gfx_RenderBox(rect.x1, rect.y1, rect.x2, rect.y2, _bFocused?MENU_COLOR_SELECTED:MENU_COLOR_NORMAL);
 
-// 	Float32 nSize=rect.y2-rect.y1;
-// 	hge->Gfx_RenderBox(rect.x1 - 2.0f*nSize, rect.y1, rect.x1-nSize, rect.y1+nSize, _bFocused?MENU_COLOR_SELECTED:MENU_COLOR_NORMAL);
+//	Float32 nSize=rect.y2-rect.y1;
+//	hge->Gfx_RenderBox(rect.x1 - 2.0f*nSize, rect.y1, rect.x1-nSize, rect.y1+nSize, _bFocused?MENU_COLOR_SELECTED:MENU_COLOR_NORMAL);
 }
 
 // ****************************************************************************************
@@ -114,17 +71,6 @@ void hgeGUIMenuItem::Render()
 // ****************************************************************************************
 void hgeGUIMenuItem::Enter()
 {
-	/*
-	hgeColor tcolor2;
-
-	_ColS2.SetHWColor(MENU_COLOR_NORMAL&0x00FFFFFF);
-	tcolor2.SetHWColor(MENU_COLOR_NORMAL);
-	_ColD2=tcolor2-_ColS2;
-
-	tcolor2.SetHWColor(0x30000000);
-
-	_rTimer2=0.0f;
-	*/
 }
 
 // ****************************************************************************************
@@ -133,17 +79,6 @@ void hgeGUIMenuItem::Enter()
 // ****************************************************************************************
 void hgeGUIMenuItem::Leave()
 {
-	/*
-	hgeColor tcolor2;
-
-	_ColS2.SetHWColor(MENU_COLOR_NORMAL);
-	tcolor2.SetHWColor(MENU_COLOR_NORMAL&0x00FFFFFF);
-	_ColD2=tcolor2-_ColS2;
-
-	tcolor2.SetHWColor(0x00000000);
-
-	_rTimer2=0.0f;
-	*/
 }
 
 // ****************************************************************************************
@@ -152,14 +87,7 @@ void hgeGUIMenuItem::Leave()
 // ****************************************************************************************
 bool hgeGUIMenuItem::IsDone()
 {
-//	if (_rTimer2==-1.0f)
-	{
-		return true;
-	}
-// 	else 
-// 	{
-// 		return false;
-// 	}
+	return true;
 }
 
 // ****************************************************************************************
@@ -169,25 +97,6 @@ bool hgeGUIMenuItem::IsDone()
 void hgeGUIMenuItem::Focus(bool bFocused)
 {
 	_bFocused =bFocused;
-
-/*
-	hgeColor ColorTemp;
-	
-	if(bFocused)
-	{
-//		hge->Effect_Play(snd);
-		_ColS.SetHWColor(MENU_COLOR_NORMAL);
-		ColorTemp.SetHWColor(MENU_COLOR_SELECTED);
-	}
-	else
-	{
-		_ColS.SetHWColor(MENU_COLOR_SELECTED);
-		ColorTemp.SetHWColor(MENU_COLOR_NORMAL);
-	}
-
-	_ColD=ColorTemp-_ColS;
-	_rTimer=0.0f;
-*/
 }
 
 // ****************************************************************************************
@@ -215,7 +124,6 @@ bool hgeGUIMenuItem::MouseLButton(bool bDown)
 	}
 	else 
 	{
-//		hge->Effect_Play(snd);
 		return false;
 	}
 }
