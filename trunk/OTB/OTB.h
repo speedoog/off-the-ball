@@ -35,6 +35,8 @@ public:
 						~Otb();
 			void		Start();
 
+			void		MainMenu();
+
 			bool		Update(const float rDeltaTime);
 			bool		Render();
 

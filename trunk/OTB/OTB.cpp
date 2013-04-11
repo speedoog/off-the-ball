@@ -36,8 +36,6 @@ const int  	DEFAULT_SCREENSIZEX 		=1280;
 const int  	DEFAULT_SCREENSIZEY 		=720;
 const bool 	DEFAULT_SCREENWINDOWED   	=true;
 
-Bool		_bMenuTest					=true;
-
 bool FrameFunc()
 {
 	const float rDeltaTime =hge->Timer_GetDelta();
@@ -111,18 +109,8 @@ void Otb::Start()
 		_Input.Init(hwnd);
 		_Resources.Init();
 
-		// ------------ menu test ------------
-		if (_bMenuTest)
-		{
-			_Game.InitDemoMode(this);
-			_Menu.Init(this);
-
-		}
-		// ------------ menu test ------------
-		else
-		{
-			_Game.InitByXml(this, &_XmlTree);
-		}
+		// start
+		MainMenu();
 
 		Bool bSuccess =hge->System_Start();
 
@@ -147,6 +135,16 @@ void Otb::Start()
 	hge->Release();
 }
 
+void Otb::MainMenu()
+{
+	_Game.Kill();
+	_Menu.Kill();
+
+	_Game.InitDemoMode(this);
+	_Menu.Init(this);
+
+}
+
 bool Otb::Update(const float rDeltaTime)
 {
 	_Input.Update();
@@ -154,8 +152,13 @@ bool Otb::Update(const float rDeltaTime)
 	_Game.Update(rDeltaTime);
 	_Menu.Update(rDeltaTime);
 
+	if (hge->Input_GetKeyState(HGEK_ESCAPE))
+	{
+		MainMenu();
+	}
+
 	// Exit w/ Esc
-	return (hge->Input_GetKeyState(HGEK_ESCAPE) || _bExitApp);
+	return _bExitApp;
 }
 
 bool Otb::Render()

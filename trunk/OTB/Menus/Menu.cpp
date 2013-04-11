@@ -91,10 +91,13 @@ void Menu::Update(Float32 dt)
 			_pGUI->ChangeItem(false);
 		}
 
-		const Float32 rInputValidate =Input.GetMenuInput(InputCore::MC_VALIDATE);
-		if (TAbs(rInputValidate)>0.5f)
+		if (Input.GetMenuInput(InputCore::MC_VALIDATE)>=0.5f)
 		{
 			ItemValidate(_pGUI->GetFocus());
+		}
+		else if (Input.GetMenuInput(InputCore::MC_CANCEL)>0.5f)
+		{
+			ItemCancel();
 		}
 		else
 		{
@@ -164,9 +167,9 @@ void Menu::ItemValidate(const int id)
 	case MII_START_POINTS:
 		break;
 
-	case MII_START_BACK:
-		StartMenuMain();
-		break;
+// 	case MII_START_BACK:
+// 		StartMenuMain();
+// 		break;
 
 		// ------------- Menu Options ------------- 
 	case MII_OPTIONS_VIDEO:
@@ -178,9 +181,9 @@ void Menu::ItemValidate(const int id)
 	case MII_OPTIONS_INPUT:
 		StartMenuInput();
 		break;
-	case MII_OPTIONS_BACK:
-		StartMenuMain();
-		break;
+// 	case MII_OPTIONS_BACK:
+// 		StartMenuMain();
+// 		break;
 
 		// ------------- Menu Video ------------- 
 	case MII_OPTVIDEO_RESOLUTION:
@@ -189,9 +192,9 @@ void Menu::ItemValidate(const int id)
 	case MII_OPTVIDEO_WINDOWED:
 		break;
 
-	case MII_OPTVIDEO_BACK:
-		StartMenuOptions();
-		break;
+// 	case MII_OPTVIDEO_BACK:
+// 		StartMenuOptions();
+// 		break;
 
 		// ------------- Menu Audio ------------- 
 	case MII_OPTAUDIO_MUSIC:
@@ -199,26 +202,53 @@ void Menu::ItemValidate(const int id)
 	case MII_OPTAUDIO_EFFECTS:
 		break;
 
-	case MII_OPTAUDIO_BACK:
-		StartMenuOptions();
-		break;
+// 	case MII_OPTAUDIO_BACK:
+// 		StartMenuOptions();
+// 		break;
 
 		// ------------- Menu Input ------------- 
-	case MII_OPTINPUT_BACK:
-		StartMenuOptions();
-		break;
+// 	case MII_OPTINPUT_BACK:
+// 		StartMenuOptions();
+// 		break;
 
 		// ------------- Menu Help ------------- 
-	case MII_HELP_BACK:
-		StartMenuMain();
-		break;
+// 	case MII_HELP_BACK:
+// 		StartMenuMain();
+// 		break;
 
 		// ------------- Menu Credits ------------- 
-	case MII_CREDITS_BACK:
+// 	case MII_CREDITS_BACK:
+// 		StartMenuMain();
+// 		break;
+
+	default:;
+	}
+}
+
+
+// ****************************************************************************************
+//	ItemCancel
+// ****************************************************************************************
+void Menu::ItemCancel()
+{
+	switch(_nMenuCurrent)
+	{
+	case MS_MAIN:
+		// exit ?
+		break;
+
+	case MS_START:
+	case MS_OPTIONS:
+	case MS_HELP:
+	case MS_CREDITS:
 		StartMenuMain();
 		break;
 
-	default:;
+	case MS_VIDEO:
+	case MS_AUDIO:
+	case MS_INPUT:
+		StartMenuOptions();
+		break;
 	}
 }
 
@@ -276,7 +306,7 @@ void Menu::StartMenuStart()
 	AddMenuItem( MII_START_VS,				"Vs"			);
 	AddMenuItem( MII_START_CPU_TRAINNING,	"CPU Training"	);
 	AddMenuItem( MII_START_POINTS,			"Points"		);
-	AddMenuItem( MII_START_BACK,			"Back"			);
+//	AddMenuItem( MII_START_BACK,			"Back"			);
 
 	_pGUI->SetFocus(MII_START_SINGLE);
 	_pGUI->Enter();
@@ -294,7 +324,7 @@ void Menu::StartMenuOptions()
 	AddMenuItem( MII_OPTIONS_VIDEO,	"Video"		);
 	AddMenuItem( MII_OPTIONS_AUDIO,	"Audio"		);
 	AddMenuItem( MII_OPTIONS_INPUT,	"Input"		);
-	AddMenuItem( MII_OPTIONS_BACK,	"Back"		);
+//	AddMenuItem( MII_OPTIONS_BACK,	"Back"		);
 
 	_pGUI->SetFocus(MII_OPTIONS_VIDEO);
 	_pGUI->Enter();
@@ -311,7 +341,7 @@ void Menu::StartMenuVideo()
 
 	AddMenuItem( MII_OPTVIDEO_RESOLUTION,	"Resolution"	);
 	AddMenuItem( MII_OPTVIDEO_WINDOWED,		"Windowed"		);
-	AddMenuItem( MII_OPTVIDEO_BACK,			"Back"			);
+//	AddMenuItem( MII_OPTVIDEO_BACK,			"Back"			);
 
 	_pGUI->SetFocus(MII_OPTVIDEO_RESOLUTION);
 	_pGUI->Enter();
@@ -326,9 +356,9 @@ void Menu::StartMenuAudio()
 {
 	ClearMenu();
 
-	AddMenuItem( MII_OPTAUDIO_BACK,			"Back"			);
+//	AddMenuItem( MII_OPTAUDIO_BACK,			"Back"			);
 
-	_pGUI->SetFocus(MII_OPTAUDIO_BACK);
+//	_pGUI->SetFocus(MII_OPTAUDIO_BACK);
 	_pGUI->Enter();
 
 	_nMenuCurrent =MS_AUDIO;
@@ -341,9 +371,9 @@ void Menu::StartMenuInput()
 {
 	ClearMenu();
 
-	AddMenuItem( MII_OPTINPUT_BACK,			"Back"			);
+//	AddMenuItem( MII_OPTINPUT_BACK,			"Back"			);
 
-	_pGUI->SetFocus(MII_OPTINPUT_BACK);
+//	_pGUI->SetFocus(MII_OPTINPUT_BACK);
 	_pGUI->Enter();
 
 	_nMenuCurrent =MS_INPUT;
@@ -356,9 +386,9 @@ void Menu::StartMenuHelp()
 {
 	ClearMenu();
 
-	AddMenuItem( MII_HELP_BACK,			"Back"			);
+//	AddMenuItem( MII_HELP_BACK,			"Back"			);
 
-	_pGUI->SetFocus(MII_HELP_BACK);
+//	_pGUI->SetFocus(MII_HELP_BACK);
 	_pGUI->Enter();
 
 	_nMenuCurrent =MS_HELP;
@@ -371,9 +401,9 @@ void Menu::StartMenuCredits()
 {
 	ClearMenu();
 
-	AddMenuItem( MII_CREDITS_BACK,			"Back"			);
+//	AddMenuItem( MII_CREDITS_BACK,			"Back"			);
 
-	_pGUI->SetFocus(MII_CREDITS_BACK);
+//	_pGUI->SetFocus(MII_CREDITS_BACK);
 	_pGUI->Enter();
 
 	_nMenuCurrent =MS_CREDITS;

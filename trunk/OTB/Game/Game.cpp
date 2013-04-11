@@ -192,6 +192,7 @@ void Game::InitTrainingMode(Otb* pOTB)
 	InitAiMode(pOTB);
 	_bDemoMode	=false;
 	SetTraining(true);
+	_Rules.SetShowScores(true);
 }
 
 // ********************************************
@@ -207,8 +208,8 @@ void Game::InitSingle(Otb* pOTB)
 	_pCmd[1] =CreateCommand(CommandAbc::CMD_CPU);
 	_pCmd[1]->Init(this, &_Players[1], 1);
 
-	_Rules.SetShowRulesMsg(false);
-	_Rules.SetShowScores(false);
+	_Rules.SetShowRulesMsg(true);
+	_Rules.SetShowScores(true);
 
 	_Rules.ActionStartGame(0);		// start w/ player[0]
 }
@@ -226,8 +227,8 @@ void Game::InitVs(Otb* pOTB)
 	_pCmd[1] =CreateCommand(CommandAbc::CMD_PAD);
 	_pCmd[1]->Init(this, &_Players[1], 1);
 
-	_Rules.SetShowRulesMsg(false);
-	_Rules.SetShowScores(false);
+	_Rules.SetShowRulesMsg(true);
+	_Rules.SetShowScores(true);
 
 	_Rules.ActionStartGame(0);		// start w/ player[0]
 }
@@ -249,16 +250,19 @@ void Game::Update(const float rDeltaTime)
 {
 	if (_bDemoMode)
 	{
-		Float32 rDistance0 =(_Ball.GetPos()-_Players[0].GetRaquetPos1()).LengthSq();
-		Float32 rDistance1 =(_Ball.GetPos()-_Players[1].GetRaquetPos1()).LengthSq();
-
-		Float32 rDistMin =TMin(rDistance0, rDistance1);
-
-		Float32 rTimeScaleRaw = TChangeRange(0.0f, 3.0f, 0.3f, 3.0f, rDistMin);
-		_rTimeScale =TClamp(rTimeScaleRaw, 0.5f, 2.0f);
+		_rTimeScale =2.0f;
 	}
 
-	if (GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_BTN_VALIDATE)>0.5f)
+// 		Float32 rDistance0 =(_Ball.GetPos()-_Players[0].GetRaquetPos1()).LengthSq();
+// 		Float32 rDistance1 =(_Ball.GetPos()-_Players[1].GetRaquetPos1()).LengthSq();
+// 
+// 		Float32 rDistMin =TMin(rDistance0, rDistance1);
+// 
+// 		Float32 rTimeScaleRaw = TChangeRange(0.0f, 3.0f, 0.3f, 3.0f, rDistMin);
+// 		_rTimeScale =TClamp(rTimeScaleRaw, 0.5f, 2.0f);
+// 	}
+
+	// Game update
 	{
 //		const Float32 rTimeFactor =TChangeRange(0.5f, 1.0f, 1.0f, 0.3f, GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_TIME_SCALE));
 
@@ -291,17 +295,20 @@ void Game::Update(const float rDeltaTime)
 	_BallRecorder._bDbgRecord	^=hge->Input_KeyDown(HGEK_2);
 	_BallRecorder._bDbgHeat		^=hge->Input_KeyDown(HGEK_3);
 
-	if (hge->Input_GetKeyState(HGEK_DELETE)!=0)
+	if (_bTraining)
 	{
-		_BallRecorder.DeleteCurrentRecord();
-	}
+		if (hge->Input_GetKeyState(HGEK_DELETE)!=0)
+		{
+			_BallRecorder.DeleteCurrentRecord();
+		}
 
-	if (hge->Input_KeyDown(HGEK_5))		_rTimeScale =0.2f;
-	if (hge->Input_KeyDown(HGEK_6))		_rTimeScale =0.5f;
-	if (hge->Input_KeyDown(HGEK_7))		_rTimeScale =1.0f;
-	if (hge->Input_KeyDown(HGEK_8))		_rTimeScale =2.0f;
-	if (hge->Input_KeyDown(HGEK_9))		_rTimeScale =10.0f;
-	if (hge->Input_KeyDown(HGEK_0))		_rTimeScale =100.0f;
+		if (hge->Input_KeyDown(HGEK_5))		_rTimeScale =0.2f;
+		if (hge->Input_KeyDown(HGEK_6))		_rTimeScale =0.5f;
+		if (hge->Input_KeyDown(HGEK_7))		_rTimeScale =1.0f;
+		if (hge->Input_KeyDown(HGEK_8))		_rTimeScale =2.0f;
+		if (hge->Input_KeyDown(HGEK_9))		_rTimeScale =10.0f;
+		if (hge->Input_KeyDown(HGEK_0))		_rTimeScale =100.0f;
+	}
 }
 
 // ********************************************
@@ -309,8 +316,6 @@ void Game::Update(const float rDeltaTime)
 // ********************************************
 void Game::Render()
 {
-	return;
-
 	_Level.Render();
 	_Ball.Render();
 	_BallRecorder.Render();
