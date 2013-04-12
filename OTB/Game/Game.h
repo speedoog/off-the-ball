@@ -39,11 +39,11 @@ public:
 							Game();
 							~Game();
 
-			void			InitByXml(Otb* pOTB, XML_PARSER* pXml=NULL);
-			void			InitDemoMode(Otb* pOTB);
-			void			InitTrainingMode(Otb* pOTB);
-			void			InitSingle(Otb* pOTB);
-			void			InitVs(Otb* pOTB);
+			void			InitByXml(XML_PARSER* pXml=NULL);
+			void			InitDemoMode();
+			void			InitTrainingMode();
+			void			InitSingle();
+			void			InitVs();
 			void			Kill();
 
 			void			Update(const float rDeltaTime);
@@ -64,8 +64,8 @@ public:
 	inline	void			SetTraining(const Bool bTraining) 	{ _bTraining =bTraining;	}
 
 protected:
-			void			InitBase(Otb* pOTB);
-			void			InitAiMode(Otb* pOTB);
+			void			InitBase();
+			void			InitAiMode();
 
 protected:
 	Level			_Level;
@@ -73,8 +73,6 @@ protected:
 	Ball			_Ball;
 	BallRecorder	_BallRecorder;
 	Rules			_Rules;
-
-	Otb*			_pOTB;
 
 	Float32			_rTimeScale;
 //	Bool			_bUseTimeScale;

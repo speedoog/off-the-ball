@@ -11,7 +11,7 @@
 
 #include "MenuItem.h"
 
-#include "Menu.h"
+#include "MenuMain.h"
 #include "../OTB.h"
 #include "HGE/hgerect.h"
 
@@ -22,7 +22,7 @@
 // ****************************************************************************************
 //	Ctor
 // ****************************************************************************************
-hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, Menu* pMenu, const Float32 rPosx, const Float32 rPosy, const TString& sTitle)
+hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, MenuMain* pMenu, const Float32 rPosx, const Float32 rPosy, const TString& sTitle)
 {
 	id		=nId;
 	_pMenu	=pMenu;
@@ -34,7 +34,8 @@ hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, Menu* pMenu, const Float32 rPosx
 	bEnabled=true;
 	_bFocused =false;
 
-	hgeFont* pFontMenu =_pMenu->GetOTB()->GetResources()._pFontMenus;
+	Otb* pOTB =Otb::GetInstance();
+	hgeFont* pFontMenu =pOTB->GetResources()._pFontMenus;
 
 	const Float32 rTextHalfWidth =pFontMenu->GetStringWidth(sTitle.GetCharconst())/2.0f;
 	rect.Set(rPosx-rTextHalfWidth, rPosy, rPosx+rTextHalfWidth, rPosy+pFontMenu->GetHeight()*pFontMenu->GetScale());
@@ -52,7 +53,8 @@ void hgeGUIMenuItem::Update(float dt)
 // ****************************************************************************************
 void hgeGUIMenuItem::Render()
 {
-	hgeFont* pFontMenu =_pMenu->GetOTB()->GetResources()._pFontMenus;
+	Otb* pOTB =Otb::GetInstance();
+	hgeFont* pFontMenu =pOTB->GetResources()._pFontMenus;
 
 	hgeColor ColorCurrent =_bFocused?MENU_COLOR_SELECTED:MENU_COLOR_NORMAL;
 

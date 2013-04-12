@@ -138,10 +138,10 @@ void Otb::Start()
 void Otb::MainMenu()
 {
 	_Game.Kill();
-	_Menu.Kill();
+	_MenuMain.Kill();
 
-	_Game.InitDemoMode(this);
-	_Menu.Init(this);
+	_Game.InitDemoMode();
+	_MenuMain.Init(this);
 
 }
 
@@ -150,7 +150,7 @@ bool Otb::Update(const float rDeltaTime)
 	_Input.Update();
 
 	_Game.Update(rDeltaTime);
-	_Menu.Update(rDeltaTime);
+	_MenuMain.Update(rDeltaTime);
 
 	if (hge->Input_GetKeyState(HGEK_ESCAPE))
 	{
@@ -170,7 +170,7 @@ bool Otb::Render()
 	hge->Gfx_Clear(0);
 
 	_Game.Render();
-	_Menu.Render();
+	_MenuMain.Render();
 	_Input.Render();
 
 //	_Game.GetResources()._pFontDebug->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );

@@ -37,7 +37,6 @@ const char* XML_ATTRIBUTE_ID		="Id";
 Game::Game()
 : _bTraining	(true)
 , _bDemoMode	(false)
-, _pOTB			(NULL)
 {
 }
 
@@ -54,7 +53,8 @@ Game::~Game()
 // ********************************************
 Resources& Game::GetResources()
 {
-	return _pOTB->GetResources();
+	Otb* pOTB =Otb::GetInstance();
+	return pOTB->GetResources();
 }
 
 // ********************************************
@@ -62,7 +62,8 @@ Resources& Game::GetResources()
 // ********************************************
 InputCore& Game::GetInputCommand()
 {
-	return _pOTB->GetInputCommand();
+	Otb* pOTB =Otb::GetInstance();
+	return pOTB->GetInputCommand();
 }
 
 CommandAbc* CreateCommand(const CommandAbc::CmdType cmd)
@@ -85,9 +86,8 @@ CommandAbc* CreateCommand(const CommandAbc::CmdType cmd)
 // ********************************************
 //	InitBase
 // ********************************************
-void Game::InitBase(Otb* pOTB)
+void Game::InitBase()
 {
-	_pOTB =pOTB;
 	_rTimeScale =1.0f;
 
 	_Level.Init(this, hgeVector(7.0f,7.5f), 1.3f);
@@ -104,9 +104,9 @@ void Game::InitBase(Otb* pOTB)
 // ********************************************
 //	InitByXml
 // ********************************************
-void Game::InitByXml(Otb* pOTB, XML_PARSER* pXml)
+void Game::InitByXml(XML_PARSER* pXml)
 {
-	InitBase(pOTB);
+	InitBase();
 
 	const int nOffset =4;
 	const char* pCmd1Default =SMARTENUM_GET_STRING(CommandAbc::CmdType, CommandAbc::CMD_PAD)+nOffset;
@@ -159,9 +159,9 @@ void Game::InitByXml(Otb* pOTB, XML_PARSER* pXml)
 // ********************************************
 //	InitAiMode
 // ********************************************
-void Game::InitAiMode(Otb* pOTB)
+void Game::InitAiMode()
 {
-	InitBase(pOTB);
+	InitBase();
 
 	_pCmd[0] =CreateCommand(CommandAbc::CMD_CPU);
 	_pCmd[0]->Init(this, &_Players[0], 0);
@@ -178,18 +178,18 @@ void Game::InitAiMode(Otb* pOTB)
 // ********************************************
 //	InitDemoMode
 // ********************************************
-void Game::InitDemoMode(Otb* pOTB)
+void Game::InitDemoMode()
 {
-	InitAiMode(pOTB);
+	InitAiMode();
 	_bDemoMode	=true;
 }
 
 // ********************************************
 //	InitTrainingMode
 // ********************************************
-void Game::InitTrainingMode(Otb* pOTB)
+void Game::InitTrainingMode()
 {
-	InitAiMode(pOTB);
+	InitAiMode();
 	_bDemoMode	=false;
 	SetTraining(true);
 	_Rules.SetShowScores(true);
@@ -198,9 +198,9 @@ void Game::InitTrainingMode(Otb* pOTB)
 // ********************************************
 //	InitSingle
 // ********************************************
-void Game::InitSingle(Otb* pOTB)
+void Game::InitSingle()
 {
-	InitBase(pOTB);
+	InitBase();
 
 	_pCmd[0] =CreateCommand(CommandAbc::CMD_PAD);
 	_pCmd[0]->Init(this, &_Players[0], 0);
@@ -217,9 +217,9 @@ void Game::InitSingle(Otb* pOTB)
 // ********************************************
 //	InitVs
 // ********************************************
-void Game::InitVs(Otb* pOTB)
+void Game::InitVs()
 {
-	InitBase(pOTB);
+	InitBase();
 
 	_pCmd[0] =CreateCommand(CommandAbc::CMD_PAD);
 	_pCmd[0]->Init(this, &_Players[0], 0);
@@ -329,6 +329,7 @@ void Game::Render()
 
 	if (_bDemoMode==false && _rTimeScale!=1.0f)
 	{
-		_pOTB->GetResources()._pFontDebug->printf(0.0f, 0.0f, HGETEXT_CENTER, "Timescale =%.1f", _rTimeScale);
+		Otb* pOTB =Otb::GetInstance();
+		pOTB->GetResources()._pFontDebug->printf(0.0f, 0.0f, HGETEXT_CENTER, "Timescale =%.1f", _rTimeScale);
 	}
 }

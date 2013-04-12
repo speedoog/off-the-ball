@@ -8,7 +8,7 @@
 */
 
 
-#include "Menu.h"
+#include "MenuMain.h"
 
 #include "MenuItem.h"
 #include "../OTB.h"
@@ -16,18 +16,16 @@
 // ****************************************************************************************
 //	Ctor
 // ****************************************************************************************
-Menu::Menu()
-: _pOTB(NULL)
-, _pGUI(NULL)
+MenuMain::MenuMain()
+: _pGUI(NULL)
 {
 }
 
 // ****************************************************************************************
 //	Init
 // ****************************************************************************************
-void Menu::Init(Otb* pOTB)
+void MenuMain::Init(Otb* pOTB)
 {
-	_pOTB =pOTB;
 	_pGUI =new hgeGUI();
 	_pGUI->SetNavMode(HGEGUI_UPDOWN | HGEGUI_CYCLED);
 //	_pGUI->SetCursor(spr);
@@ -38,17 +36,16 @@ void Menu::Init(Otb* pOTB)
 // ****************************************************************************************
 //	Kill
 // ****************************************************************************************
-void Menu::Kill()
+void MenuMain::Kill()
 {
 	delete _pGUI;
 	_pGUI =NULL;
-	_pOTB =NULL;
 }
 
 // ****************************************************************************************
 //	ClearMenu
 // ****************************************************************************************
-void Menu::ClearMenu()
+void MenuMain::ClearMenu()
 {
 	_pGUI->Leave();
 	_pGUI->Clear();
@@ -58,7 +55,7 @@ void Menu::ClearMenu()
 // ****************************************************************************************
 //	AddMenuItem
 // ****************************************************************************************
-void Menu::AddMenuItem(const MenuItemId ItemId, const TString& sLabel)
+void MenuMain::AddMenuItem(const MenuItemId ItemId, const TString& sLabel)
 {
 	_pGUI->AddCtrl(new hgeGUIMenuItem(ItemId, this, 0.0f, _rCurrentY, sLabel.GetCharconst()) );
 	_rCurrentY -=0.4f;
@@ -67,20 +64,22 @@ void Menu::AddMenuItem(const MenuItemId ItemId, const TString& sLabel)
 // ****************************************************************************************
 //	Update
 // ****************************************************************************************
-void Menu::Update(Float32 dt)
+void MenuMain::Update(Float32 dt)
 {
-	if (_pOTB && _pGUI)
+	Otb* pOTB =Otb::GetInstance();
+
+	if (_pGUI)
 	{
 		// Title
 		{
-			hgeFont* pFont=GetOTB()->GetResources()._pFontTitle;
+			hgeFont* pFont=pOTB->GetResources()._pFontTitle;
 			static float rHue =0.0f;
 			rHue+=dt*0.1f; if (rHue>1.0f) rHue-=1.0f;
 			hgeColorHSV colTitle(rHue, 0.9f, 0.8f, 1.0f);
 			pFont->SetColor(colTitle.GetHWColor());
 		}
 
-		InputCore& Input =_pOTB->GetInputCommand();
+		InputCore& Input =pOTB->GetInputCommand();
 		if (Input.GetMenuInput(InputCore::MC_UP)>=0.5f)
 		{
 			_pGUI->ChangeItem(true);
@@ -122,8 +121,11 @@ void Menu::Update(Float32 dt)
 // ****************************************************************************************
 //	ItemValidate
 // ****************************************************************************************
-void Menu::ItemValidate(const int id)
+void MenuMain::ItemValidate(const int id)
 {
+	Otb*  pOTB =Otb::GetInstance();
+	Game& game =pOTB->GetGame();
+
 	switch(id)
 	{
 		// ------------- Menu Main ------------- 
@@ -144,32 +146,28 @@ void Menu::ItemValidate(const int id)
 		break;
 
 	case MII_MAIN_EXIT:
-		_pOTB->ExitApp();
+		pOTB->ExitApp();
 		break;
 
 		// ------------- Start Options ------------- 
 	case MII_START_SINGLE:
-		_pOTB->GetGame().Kill();
-		_pOTB->GetGame().InitSingle(_pOTB);
+		game.Kill();
+		game.InitSingle();
 		Kill();
 		break;
 	case MII_START_VS:
-		_pOTB->GetGame().Kill();
-		_pOTB->GetGame().InitVs(_pOTB);
+		game.Kill();
+		game.InitVs();
 		Kill();
 		break;
 	case MII_START_CPU_TRAINNING:
-		_pOTB->GetGame().Kill();
-		_pOTB->GetGame().InitTrainingMode(_pOTB);
+		game.Kill();
+		game.InitTrainingMode();
 		Kill();
 		break;
 
 	case MII_START_POINTS:
 		break;
-
-// 	case MII_START_BACK:
-// 		StartMenuMain();
-// 		break;
 
 		// ------------- Menu Options ------------- 
 	case MII_OPTIONS_VIDEO:
@@ -181,9 +179,6 @@ void Menu::ItemValidate(const int id)
 	case MII_OPTIONS_INPUT:
 		StartMenuInput();
 		break;
-// 	case MII_OPTIONS_BACK:
-// 		StartMenuMain();
-// 		break;
 
 		// ------------- Menu Video ------------- 
 	case MII_OPTVIDEO_RESOLUTION:
@@ -191,10 +186,6 @@ void Menu::ItemValidate(const int id)
 
 	case MII_OPTVIDEO_WINDOWED:
 		break;
-
-// 	case MII_OPTVIDEO_BACK:
-// 		StartMenuOptions();
-// 		break;
 
 		// ------------- Menu Audio ------------- 
 	case MII_OPTAUDIO_MUSIC:
@@ -229,7 +220,7 @@ void Menu::ItemValidate(const int id)
 // ****************************************************************************************
 //	ItemCancel
 // ****************************************************************************************
-void Menu::ItemCancel()
+void MenuMain::ItemCancel()
 {
 	switch(_nMenuCurrent)
 	{
@@ -255,20 +246,19 @@ void Menu::ItemCancel()
 // ****************************************************************************************
 //	Render
 // ****************************************************************************************
-void Menu::Render()
+void MenuMain::Render()
 {
-	if (_pOTB && _pGUI)
+	if (_pGUI)
 	{
+		Otb* pOTB =Otb::GetInstance();
 		// Title
-/*
 		{
-			hgeFont* pFont=GetOTB()->GetResources()._pFontTitle;
-			float rPosY =GetOTB()->GetGame().GetLevel().GetSize().y;
-			pFont->printf(0.0f, rPosY*0.96f, HGETEXT_CENTER, "Off  the  wall");
+			hgeFont* pFont=pOTB->GetResources()._pFontTitle;
+			float rPosY =pOTB->GetGame().GetLevel().GetSize().y;
+			pFont->printf(0.0f, rPosY*0.96f, HGETEXT_CENTER, "Off  the  ball");
 		}
-*/
 
-		hgeFont* pFontMenu =GetOTB()->GetResources()._pFontMenus;
+		hgeFont* pFontMenu =pOTB->GetResources()._pFontMenus;
 		pFontMenu->SetColor(0xFFFFFFFF);
 		pFontMenu->Render(0.0f, GetMenuPosY(), HGETEXT_CENTER, SMARTENUM_GET_STRING(MenuScreen, _nMenuCurrent)+3 );
 
@@ -279,7 +269,7 @@ void Menu::Render()
 // ****************************************************************************************
 //	StartMenuMain
 // ****************************************************************************************
-void Menu::StartMenuMain()
+void MenuMain::StartMenuMain()
 {
 	ClearMenu();
 
@@ -298,7 +288,7 @@ void Menu::StartMenuMain()
 // ****************************************************************************************
 //	StartMenuStart
 // ****************************************************************************************
-void Menu::StartMenuStart()
+void MenuMain::StartMenuStart()
 {
 	ClearMenu();
 
@@ -306,7 +296,6 @@ void Menu::StartMenuStart()
 	AddMenuItem( MII_START_VS,				"Vs"			);
 	AddMenuItem( MII_START_CPU_TRAINNING,	"CPU Training"	);
 	AddMenuItem( MII_START_POINTS,			"Points"		);
-//	AddMenuItem( MII_START_BACK,			"Back"			);
 
 	_pGUI->SetFocus(MII_START_SINGLE);
 	_pGUI->Enter();
@@ -317,14 +306,13 @@ void Menu::StartMenuStart()
 // ****************************************************************************************
 //	StartMenuOptions
 // ****************************************************************************************
-void Menu::StartMenuOptions()
+void MenuMain::StartMenuOptions()
 {
 	ClearMenu();
 
 	AddMenuItem( MII_OPTIONS_VIDEO,	"Video"		);
 	AddMenuItem( MII_OPTIONS_AUDIO,	"Audio"		);
 	AddMenuItem( MII_OPTIONS_INPUT,	"Input"		);
-//	AddMenuItem( MII_OPTIONS_BACK,	"Back"		);
 
 	_pGUI->SetFocus(MII_OPTIONS_VIDEO);
 	_pGUI->Enter();
@@ -335,13 +323,12 @@ void Menu::StartMenuOptions()
 // ****************************************************************************************
 //	StartMenuVideo
 // ****************************************************************************************
-void Menu::StartMenuVideo()
+void MenuMain::StartMenuVideo()
 {
 	ClearMenu();
 
 	AddMenuItem( MII_OPTVIDEO_RESOLUTION,	"Resolution"	);
 	AddMenuItem( MII_OPTVIDEO_WINDOWED,		"Windowed"		);
-//	AddMenuItem( MII_OPTVIDEO_BACK,			"Back"			);
 
 	_pGUI->SetFocus(MII_OPTVIDEO_RESOLUTION);
 	_pGUI->Enter();
@@ -352,7 +339,7 @@ void Menu::StartMenuVideo()
 // ****************************************************************************************
 //	StartMenuAudio
 // ****************************************************************************************
-void Menu::StartMenuAudio()
+void MenuMain::StartMenuAudio()
 {
 	ClearMenu();
 
@@ -367,7 +354,7 @@ void Menu::StartMenuAudio()
 // ****************************************************************************************
 //	StartMenuInput
 // ****************************************************************************************
-void Menu::StartMenuInput()
+void MenuMain::StartMenuInput()
 {
 	ClearMenu();
 
@@ -382,7 +369,7 @@ void Menu::StartMenuInput()
 // ****************************************************************************************
 //	StartMenuHelp
 // ****************************************************************************************
-void Menu::StartMenuHelp()
+void MenuMain::StartMenuHelp()
 {
 	ClearMenu();
 
@@ -397,7 +384,7 @@ void Menu::StartMenuHelp()
 // ****************************************************************************************
 //	StartMenuCredits
 // ****************************************************************************************
-void Menu::StartMenuCredits()
+void MenuMain::StartMenuCredits()
 {
 	ClearMenu();
 
@@ -412,7 +399,8 @@ void Menu::StartMenuCredits()
 // ****************************************************************************************
 //	GetMenuPosY
 // ****************************************************************************************
-Float32	Menu::GetMenuPosY()
+Float32	MenuMain::GetMenuPosY()
 {
-	return _pOTB->GetGame().GetLevel().GetSize().y*0.75f;
+	Otb* pOTB =Otb::GetInstance();
+	return pOTB->GetGame().GetLevel().GetSize().y*0.75f;
 }

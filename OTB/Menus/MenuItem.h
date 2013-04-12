@@ -21,12 +21,12 @@
 #include "../Base/Base.h"
 #include "../Base/TString.h"
 
-class Menu;
+class MenuMain;
 
 class hgeGUIMenuItem : public hgeGUIObject
 {
 public:
-					hgeGUIMenuItem(const Int32 nId, Menu* pMenu, const Float32 rPosx, const Float32 rPosy, const TString& sTitle);
+					hgeGUIMenuItem(const Int32 nId, MenuMain* pMenu, const Float32 rPosx, const Float32 rPosy, const TString& sTitle);
 
 	virtual void	Render();
 	virtual void	Update(float dt);
@@ -41,7 +41,7 @@ public:
 	virtual bool	KeyClick(int key, int chr);
 
 private:
-	Menu*		_pMenu;
+	MenuMain*		_pMenu;
 	TString		_sTitle;
 	Bool		_bFocused;
 };
