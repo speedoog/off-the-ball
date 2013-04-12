@@ -6,8 +6,8 @@
 
 */
 
-#ifndef __MENU_H__
-#define __MENU_H__
+#ifndef __MENU_MAIN_H__
+#define __MENU_MAIN_H__
 
 #pragma once
 
@@ -18,7 +18,7 @@ class Otb;
 class hgeGUI;
 class TString;
 
-class Menu
+class MenuMain
 {
 public:
 	enum MenuItemId
@@ -35,23 +35,19 @@ public:
 	,	MII_START_VS
 	,	MII_START_CPU_TRAINNING
 	,	MII_START_POINTS
-//	,	MII_START_BACK
 
 	// Options Menu
 	,	MII_OPTIONS_VIDEO
 	,	MII_OPTIONS_AUDIO
 	,	MII_OPTIONS_INPUT
-//	,	MII_OPTIONS_BACK
 
 	// Video Menu
 	,	MII_OPTVIDEO_RESOLUTION
 	,	MII_OPTVIDEO_WINDOWED
-//	,	MII_OPTVIDEO_BACK
 
 	// Audio Menu
 	,	MII_OPTAUDIO_MUSIC
 	,	MII_OPTAUDIO_EFFECTS
-//	,	MII_OPTAUDIO_BACK
 
 	// Input Menu
 //	,	MII_OPTINPUT_BACK
@@ -74,14 +70,12 @@ public:
 						,	MS_CREDITS
 						);
 
-			Menu();
+			MenuMain();
 	void	Init(Otb* pOTB);
 	void	Kill();
 
 	void	Render();
 	void	Update(float dt);
-
-	inline	Otb*	GetOTB()	{ return _pOTB; }
 
 protected:
 	Float32	GetMenuPosY();
@@ -102,11 +96,10 @@ protected:
 	void	ItemCancel();
 
 protected:
-	Otb*			_pOTB;
 	hgeGUI*			_pGUI;
 
 	MenuScreen		_nMenuCurrent;
 	Float32			_rCurrentY;
 };
 
-#endif //__MENU_H__
+#endif //__MENU_MAIN_H__

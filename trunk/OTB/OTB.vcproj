@@ -456,19 +456,19 @@
 			Name="Menus"
 			>
 			<File
-				RelativePath=".\Menus\Menu.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Menus\Menu.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Menus\MenuItem.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Menus\MenuItem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Menus\MenuMain.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Menus\MenuMain.h"
 				>
 			</File>
 		</Filter>

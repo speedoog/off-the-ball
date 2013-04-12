@@ -24,7 +24,7 @@
 
 #include "Base/Base.h"
 #include "Game/Game.h"
-#include "Menus/Menu.h"
+#include "Menus/MenuMain.h"
 #include "Input/InputDirectX.h"
 #include "Xml/XMLParser.h"
 
@@ -58,7 +58,7 @@ protected:
 protected:
 	XML_PARSER		_XmlTree;
 	Game			_Game;
-	Menu			_Menu;
+	MenuMain		_MenuMain;
 	InputDirectX	_PadManager;
 
 	Resources		_Resources;
