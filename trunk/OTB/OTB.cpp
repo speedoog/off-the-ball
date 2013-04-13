@@ -16,13 +16,12 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#include "..\HGE\hge.h"
-#include "..\HGE\hgeparticle.h"
+#include "../HGE/hge.h"
 #include "Otb.h"
 
 #include "Base/TList.h"
 
-HGE*			hge	  =0;
+HGE*	hge	  =NULL;
 
 // OTB Singleton
 Otb* Otb::_pOTB =NULL;
@@ -32,21 +31,30 @@ const char* XML_SECTION_VIDEO			="Video";
 const char* XML_ATTRIB_VIDEO_SCREENX	="ScreenSizeX";
 const char* XML_ATTRIB_VIDEO_SCREENY	="ScreenSizeY";
 const char* XML_ATTRIB_VIDEO_WINDOWED	="Windowed";
-const int  	DEFAULT_SCREENSIZEX 		=1280;
-const int  	DEFAULT_SCREENSIZEY 		=720;
-const bool 	DEFAULT_SCREENWINDOWED   	=true;
+const Int32 DEFAULT_SCREENSIZEX 		=1280;
+const Int32 DEFAULT_SCREENSIZEY 		=720;
+const Bool 	DEFAULT_SCREENWINDOWED   	=true;
 
+// ****************************************************************************************
+//	FrameFunc
+// ****************************************************************************************
 bool FrameFunc()
 {
-	const float rDeltaTime =hge->Timer_GetDelta();
+	const Float32 rDeltaTime =hge->Timer_GetDelta();
 	return Otb::GetInstance()->Update(rDeltaTime);
 }
 
+// ****************************************************************************************
+//	RenderFunc
+// ****************************************************************************************
 bool RenderFunc()
 {
 	return Otb::GetInstance()->Render();
 }
 
+// ****************************************************************************************
+//	GfxRestoreFunc
+// ****************************************************************************************
 bool GfxRestoreFunc()
 {
 //	Otb::GetInstance()->GetResources().Kill();
@@ -54,9 +62,11 @@ bool GfxRestoreFunc()
 	return false;
 }
 
+// ****************************************************************************************
+//	Ctor
+// ****************************************************************************************
 Otb::Otb()
-: _bExitApp				(false)
-, _bChangeVideoSettings	(false)
+: _bExitApp	(false)
 {
 	// initial video settings
 	_nScreenSizeX 		=DEFAULT_SCREENSIZEX;
@@ -72,11 +82,16 @@ Otb::Otb()
 	_pOTB =this;
 }
 
+// ****************************************************************************************
+//	Dtor
+// ****************************************************************************************
 Otb::~Otb()
 {
-
 }
 
+// ****************************************************************************************
+//	Start
+// ****************************************************************************************
 void Otb::Start()
 {
 	LoadSettings();
@@ -135,17 +150,22 @@ void Otb::Start()
 	hge->Release();
 }
 
+// ****************************************************************************************
+//	MainMenu
+// ****************************************************************************************
 void Otb::MainMenu()
 {
 	_Game.Kill();
 	_MenuMain.Kill();
 
 	_Game.InitDemoMode();
-	_MenuMain.Init(this);
-
+	_MenuMain.Init();
 }
 
-bool Otb::Update(const float rDeltaTime)
+// ****************************************************************************************
+//	Update
+// ****************************************************************************************
+bool Otb::Update(const Float32 rDeltaTime)
 {
 	_Input.Update();
 
@@ -154,13 +174,16 @@ bool Otb::Update(const float rDeltaTime)
 
 	if (hge->Input_GetKeyState(HGEK_ESCAPE))
 	{
+		// Exit w/ Esc
 		MainMenu();
 	}
 
-	// Exit w/ Esc
 	return _bExitApp;
 }
 
+// ****************************************************************************************
+//	Render
+// ****************************************************************************************
 bool Otb::Render()
 {
 	ApplyWorldTransform();
@@ -173,57 +196,36 @@ bool Otb::Render()
 	_MenuMain.Render();
 	_Input.Render();
 
-//	_Game.GetResources()._pFontDebug->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", int(1.0f/hge->Timer_GetDelta()) );
+//	_Game.GetResources()._pFontDebug->printf(-5.0f, 5.0f, HGETEXT_LEFT, "%d", Int32(1.0f/hge->Timer_GetDelta()) );
 
-//	DrawInputs();
 //	par->Render();
 
 	hge->Gfx_EndScene();
 	return false;
 }
 
+// ****************************************************************************************
+//	ApplyWorldTransform
+// ****************************************************************************************
 void Otb::ApplyWorldTransform()
 {
 	_nScreenSizeX =hge->System_GetState(HGE_SCREENWIDTH);
 	_nScreenSizeY =hge->System_GetState(HGE_SCREENHEIGHT);
 
-	const float rSizeY		=_rWorldTxTop-_rWorldTxBottom;
-	const float rCenterY 	=_rWorldTxBottom+(rSizeY/2.0f);
-	const float rCenterDx	=float(_nScreenSizeX)/2.0f;
-	const float rCenterDy	=float(_nScreenSizeY)/2.0f;
+	const Float32 rSizeY	=_rWorldTxTop-_rWorldTxBottom;
+	const Float32 rCenterY 	=_rWorldTxBottom+(rSizeY/2.0f);
+	const Float32 rCenterDx	=Float32(_nScreenSizeX)/2.0f;
+	const Float32 rCenterDy	=Float32(_nScreenSizeY)/2.0f;
 
-	const float rGlobalScale =float(_nScreenSizeY)/rSizeY;
+	const Float32 rGlobalScale =Float32(_nScreenSizeY)/rSizeY;
 
 	// Transformations are applied in this order: first scaling, then rotation and finally displacement. 
 	hge->Gfx_SetTransform(_rWorldTxCenterX, rCenterY, rCenterDx, rCenterDy, _rWorldTxRotation, rGlobalScale, -rGlobalScale);
 }
 
-void Otb::DrawInputs()
-{
-	/*
-	InputCommand& Input =_Game.GetInputCommand();
-	hgeFont*	  pFont	 =_Game.GetResources()._pFontDebug;
-
-	float rTextPosY=7.6f;
-	for (int i=0; i<InputDirectX::PAD_MAX_ENTRIES; ++i)
-	{
-		pFont->SetColor(0xFFFFA000);
-		pFont->printf(-7.4f, rTextPosY, HGETEXT_LEFT, "%d %s", i, SMARTENUM_GET_STRING(InputDirectX::CtrlIdx, i)+4);
-
-		pFont->SetColor(0xFFFF00A0);
-		{
-			InputDirectX::CtrlStatus status =Input.GetCtrlState(0, (InputDirectX::CtrlIdx)i);
-			pFont->printf(-3, rTextPosY, HGETEXT_LEFT, "%d", status);
-		}
-		{
-			InputDirectX::CtrlStatus status =Input.GetCtrlState(1, (InputDirectX::CtrlIdx)i);
-			pFont->printf(0, rTextPosY, HGETEXT_LEFT, "%d", status);
-		}
-		rTextPosY-=0.3f;
-	}
-	*/
-}
-
+// ****************************************************************************************
+//	LoadSettings
+// ****************************************************************************************
 void Otb::LoadSettings()
 {
 	XML_PARSER::XMLRC rc =_XmlTree.LoadFromFile("OTB.xml");
