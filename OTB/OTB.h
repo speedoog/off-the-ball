@@ -37,7 +37,7 @@ public:
 
 			void		MainMenu();
 
-			bool		Update(const float rDeltaTime);
+			bool		Update(const Float32 rDeltaTime);
 			bool		Render();
 
 	// Accessors
@@ -51,37 +51,34 @@ public:
 	static	Otb*		GetInstance()					{ return _pOTB;			}
 
 protected:
-			void		DrawInputs();
 			void		LoadSettings();
 			void		ApplyWorldTransform();
 
 protected:
+	// singleton
+	static Otb*		_pOTB;
+
+	// Main objects
 	XML_PARSER		_XmlTree;
 	Game			_Game;
 	MenuMain		_MenuMain;
 	InputDirectX	_PadManager;
-
 	Resources		_Resources;
 	InputCore		_Input;
 
+	// Exit request ?
 	Bool			_bExitApp;
-	Bool			_bChangeVideoSettings;
 
-	static Otb*	_pOTB;
-
-public:
 	// video settings
-	int  	_nScreenSizeX;
-	int  	_nScreenSizeY;
-	bool 	_bWindowed;
+	Int32  			_nScreenSizeX;
+	Int32  			_nScreenSizeY;
+	Bool 			_bWindowed;
 
 	// World Transform
-	float 	_rWorldTxTop;
-	float 	_rWorldTxBottom;
-	float 	_rWorldTxCenterX;
-	float 	_rWorldTxRotation;
-
-
+	Float32 		_rWorldTxTop;
+	Float32 		_rWorldTxBottom;
+	Float32 		_rWorldTxCenterX;
+	Float32 		_rWorldTxRotation;
 };
 
 
