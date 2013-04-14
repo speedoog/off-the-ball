@@ -22,7 +22,9 @@
 #include "../../hge/hgeColor.h"
 #include "../../hge/hgeSprite.h"
 
-//-----------------------------------------------------------------------------
+// ****************************************************************************************
+//	Ctor
+// ****************************************************************************************
 BallHistory::BallHistory(const Float32 rMinTimeBetweenSamples, const Float32 rMaxRecordingTime, const UInt32 nMaxFrameCount)
 : _rMaxRecordingTime		(rMaxRecordingTime)
 , _nMaxFrameCount			(nMaxFrameCount)
@@ -33,12 +35,16 @@ BallHistory::BallHistory(const Float32 rMinTimeBetweenSamples, const Float32 rMa
 {
 }
 
-//-----------------------------------------------------------------------------
+// ****************************************************************************************
+//	Dtor
+// ****************************************************************************************
 BallHistory::~BallHistory()
 {
 }
 
-//-----------------------------------------------------------------------------
+// ****************************************************************************************
+//	Update
+// ****************************************************************************************
 void BallHistory::Update(const hgeVector& vPosition, const Float32 rAngle, const Float32 rDeltaTime)
 {
 	if (rDeltaTime>0.0f)
@@ -62,7 +68,9 @@ void BallHistory::Update(const hgeVector& vPosition, const Float32 rAngle, const
 	_bTeleport =false;
 }
 
-//-----------------------------------------------------------------------------
+// ****************************************************************************************
+//	ClearOldFrames
+// ****************************************************************************************
 void BallHistory::ClearOldFrames()
 {
 	const Float32 rTimeOut =_rCurrentTime-_rMaxRecordingTime;
@@ -89,13 +97,17 @@ void BallHistory::ClearOldFrames()
 	}
 }
 
-//-----------------------------------------------------------------------------
+// ****************************************************************************************
+//	Reset
+// ****************************************************************************************
 void BallHistory::Reset()
 {
 	_lFrames.DeleteAllElements();
 }
 
-//-----------------------------------------------------------------------------
+// ****************************************************************************************
+//	Draw
+// ****************************************************************************************
 void BallHistory::Draw(hgeSprite* pSpriteBallTrail)
 {
 	UInt32 nElementCount =_lFrames.GetNbElements();
@@ -127,9 +139,9 @@ void BallHistory::Draw(hgeSprite* pSpriteBallTrail)
 
 				hgeColorRGB clCurrent2 =TBlend(clSrc, clDst2, rRatio);
 
-				for(UInt32 i=0; i<4; ++i)
+				for(Float32 i=0; i<(2.0f*M_PI); i+=(2.0f*M_PI)/3.0f)
 				{
-					Float32 rOffsetAngle =Float32(i)*M_PI_2;
+					Float32 rOffsetAngle =Float32(i);//*M_PI_2;
 					Float32 rSin1 =sinf(pPrev->_rAngle+rOffsetAngle)*rRatio;
 					Float32 rSin2 =sinf(pFrame->_rAngle+rOffsetAngle)*rRatio;
 

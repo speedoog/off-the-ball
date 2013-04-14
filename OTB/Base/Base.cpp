@@ -21,6 +21,9 @@
 #include <stdarg.h>
 #include "windows.h"
 
+// ****************************************************************************************
+//	TPrintMessage
+// ****************************************************************************************
 void TPrintMessage(char* pFormatedMsg, ...)
 {
 	const int MAX_SIZE =1024;
@@ -32,6 +35,9 @@ void TPrintMessage(char* pFormatedMsg, ...)
 	OutputDebugString(buf);
 }
 
+// ****************************************************************************************
+//	TPrintWarning
+// ****************************************************************************************
 void TPrintWarning(char* pFormatedMsg, ...)
 {
 	const int MAX_SIZE =1024;
@@ -43,6 +49,9 @@ void TPrintWarning(char* pFormatedMsg, ...)
 	OutputDebugString(buf);
 }
 
+// ****************************************************************************************
+//	TPrintError
+// ****************************************************************************************
 void TPrintError(char* pFormatedMsg, ...)
 {
 	const int MAX_SIZE =1024;
@@ -54,6 +63,9 @@ void TPrintError(char* pFormatedMsg, ...)
 	OutputDebugString(buf);
 }
 
+// ****************************************************************************************
+//	TAssertFunction
+// ****************************************************************************************
 void TAssertFunction(char* msg, const char* file, int line)
 {
 	TPrintMessage("*** ASSERT Failed in file %s on line %d ***\n> %s\n", file, line, msg);

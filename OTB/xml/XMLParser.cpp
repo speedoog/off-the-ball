@@ -15,20 +15,20 @@
 
 #pragma warning( disable : 4996)
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_PARSER::XML_PARSER()
 : _Root(NULL)
 {
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_PARSER::~XML_PARSER()
 {
 	if(_Root)
 		delete _Root;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_PARSER::XMLRC XML_PARSER::SaveToFile(const char *pFileName)
 {
 	if(!_Root)
@@ -51,7 +51,7 @@ XML_PARSER::XMLRC XML_PARSER::SaveToFile(const char *pFileName)
 	return XP_NO_ERROR;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_PARSER::XMLRC XML_PARSER::LoadFromFile(const char *pFileName)
 {
 	FILE			*pFile			= fopen(pFileName, "rb");
@@ -253,7 +253,7 @@ XML_PARSER::XMLRC XML_PARSER::LoadFromFile(const char *pFileName)
 	return XP_NO_ERROR;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_ELEMENT	*XML_PARSER::FindElement(char *pName, bool bRecursiveSearch)
 {
 	if(!_Root)
@@ -261,7 +261,7 @@ XML_ELEMENT	*XML_PARSER::FindElement(char *pName, bool bRecursiveSearch)
 	return _Root->FindElement(pName, bRecursiveSearch);
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_ELEMENT	*XML_PARSER::CreateRootElement(char *pName)
 {
 	if(!_Root)
