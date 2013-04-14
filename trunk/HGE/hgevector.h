@@ -23,6 +23,9 @@ float InvSqrt(float x);
 class hgeVector
 {
 public:
+	static hgeVector UNIT_X;
+	static hgeVector UNIT_Y;
+
 	float	x,y;
 
 	inline				hgeVector(float _x, float _y)			{ x=_x; y=_y; }

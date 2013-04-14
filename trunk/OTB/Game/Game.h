@@ -46,22 +46,24 @@ public:
 			void			InitVs();
 			void			Kill();
 
-			void			Update(const float rDeltaTime);
+			void			Update(const Float32 rDeltaTime);
 			void			Render();
 
 	// Accessors
 			Resources&		GetResources();
 			InputCore&		GetInputCommand();
-	inline	Player&			GetPlayer(const UInt32 iSide)	{ return _Players[iSide]; 	}
-	inline	Ball&			GetBall()						{ return _Ball;				}
-	inline	BallRecorder&	GetBallRecorder()				{ return _BallRecorder;		}
-	inline	Level&			GetLevel()						{ return _Level;			}
-	inline	Rules&			GetRules()						{ return _Rules;			}
-	inline	Bool			UseTimeScale()					{ return _Players[0].UseTimeScale() || _Players[1].UseTimeScale();	}
-	inline	CommandAbc*		GetCmd(const UInt32 iSide)		{ return _pCmd[iSide];		}
+	inline	Player&			GetPlayer(const UInt32 iSide)		{ return _Players[iSide]; 	}
+	inline	Ball&			GetBall()							{ return _Ball;				}
+	inline	BallRecorder&	GetBallRecorder()					{ return _BallRecorder;		}
+	inline	Level&			GetLevel()							{ return _Level;			}
+	inline	Rules&			GetRules()							{ return _Rules;			}
+	inline	Bool			UseTimeScale()						{ return _Players[0].UseTimeScale() || _Players[1].UseTimeScale();	}
+	inline	CommandAbc*		GetCmd(const UInt32 iSide)			{ return _pCmd[iSide];		}
 
 	inline	Bool			GetTraining() const					{ return _bTraining;		}
 	inline	void			SetTraining(const Bool bTraining) 	{ _bTraining =bTraining;	}
+
+	static	CommandAbc*		CreateCommand(const CommandAbc::CmdType cmd);
 
 protected:
 			void			InitBase();

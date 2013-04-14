@@ -45,7 +45,6 @@ Game::Game()
 // ****************************************************************************************
 Game::~Game()
 {
-
 }
 
 // ****************************************************************************************
@@ -66,7 +65,10 @@ InputCore& Game::GetInputCommand()
 	return pOTB->GetInputCommand();
 }
 
-CommandAbc* CreateCommand(const CommandAbc::CmdType cmd)
+// ****************************************************************************************
+//	CreateCommand
+// ****************************************************************************************
+CommandAbc* Game::CreateCommand(const CommandAbc::CmdType cmd)
 {
 	switch(cmd)
 	{
@@ -81,7 +83,6 @@ CommandAbc* CreateCommand(const CommandAbc::CmdType cmd)
 		return new CommandCpu();
 	}
 }
-
 
 // ****************************************************************************************
 //	InitBase
@@ -246,21 +247,12 @@ void Game::Kill()
 // ****************************************************************************************
 //	Update
 // ****************************************************************************************
-void Game::Update(const float rDeltaTime)
+void Game::Update(const Float32 rDeltaTime)
 {
 	if (_bDemoMode)
 	{
 		_rTimeScale =2.0f;
 	}
-
-// 		Float32 rDistance0 =(_Ball.GetPos()-_Players[0].GetRaquetPos1()).LengthSq();
-// 		Float32 rDistance1 =(_Ball.GetPos()-_Players[1].GetRaquetPos1()).LengthSq();
-// 
-// 		Float32 rDistMin =TMin(rDistance0, rDistance1);
-// 
-// 		Float32 rTimeScaleRaw = TChangeRange(0.0f, 3.0f, 0.3f, 3.0f, rDistMin);
-// 		_rTimeScale =TClamp(rTimeScaleRaw, 0.5f, 2.0f);
-// 	}
 
 	// Game update
 	{
