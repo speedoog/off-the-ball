@@ -1,4 +1,4 @@
-
+//////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                      //
 //     ________   _____  _____    __  .__             __________        .__  .__        //
 //     \_____  \_/ ____\/ ____\ _/  |_|  |__   ____   \______   \_____  |  | |  |       //
@@ -20,12 +20,12 @@
 
 #include "Game.h"
 
-const float rRacketInputDeadZone	=0.3f;
-const float rRacketRestitution		=0.75f;
-const float rRacketOffsetMin		=0.35f;
-const float rRacketOffsetMax		=0.35f;
-const float rRacketRotationSpeedMax =4.0f*M_PI;
-const float rPlayerStrenght			=0.65f;
+const Float32 rRacketInputDeadZone	=0.3f;
+const Float32 rRacketRestitution		=0.75f;
+const Float32 rRacketOffsetMin		=0.35f;
+const Float32 rRacketOffsetMax		=0.35f;
+const Float32 rRacketRotationSpeedMax =4.0f*M_PI;
+const Float32 rPlayerStrenght			=0.65f;
 
 // ****************************************************************************************
 //	Ctor
@@ -52,14 +52,14 @@ Player::~Player()
 // ****************************************************************************************
 //	Init
 // ****************************************************************************************
-void Player::Init(Game* pGame, const int nPlayerId)
+void Player::Init(Game* pGame, const Int32 nPlayerId)
 {
 	_pGame =pGame;
 	_nPlayerId =nPlayerId;
 
 	const Float32 rFieldPosRatio =1.0f;		// back of the field
 
-	float rCenterX =pGame->GetLevel().GetSize().y / 2.0f;
+	Float32 rCenterX =pGame->GetLevel().GetSize().y / 2.0f;
 	_vInitialPos =hgeVector(0,0);
 	if (nPlayerId==0)
 	{
@@ -100,14 +100,14 @@ void Player::ResetPosition()
 	_bUseTimeScale =false;
 }
 
-float SegmentDist(const hgeVector& v0, const hgeVector& v1, const hgeVector& p, hgeVector* pProj=NULL, float* pRatio=NULL)
+Float32 SegmentDist(const hgeVector& v0, const hgeVector& v1, const hgeVector& p, hgeVector* pProj=NULL, Float32* pRatio=NULL)
 {
 	hgeVector vAB =p-v0;
 	hgeVector vCD =v1-v0;
 
-	float rDot	 =vAB.Dot(vCD);
-	float rLenSq =vCD.LengthSq();
-	float rParam =rDot/rLenSq;
+	Float32 rDot	 =vAB.Dot(vCD);
+	Float32 rLenSq =vCD.LengthSq();
+	Float32 rParam =rDot/rLenSq;
 
 	hgeVector vProj;
 	if (rParam<0)
@@ -137,9 +137,9 @@ hgeVector LineProj(const hgeVector& v0, const hgeVector& v1, const hgeVector& p)
 	hgeVector vAB =p-v0;
 	hgeVector vCD =v1-v0;
 
-	float rDot	 =vAB.Dot(vCD);
-	float rLenSq =vCD.LengthSq();
-	float rParam =rDot/rLenSq;
+	Float32 rDot	 =vAB.Dot(vCD);
+	Float32 rLenSq =vCD.LengthSq();
+	Float32 rParam =rDot/rLenSq;
 
 	hgeVector vProj;
 	vProj =v0+rParam*vCD;
@@ -150,7 +150,7 @@ hgeVector LineProj(const hgeVector& v0, const hgeVector& v1, const hgeVector& p)
 // ****************************************************************************************
 //	Update
 // ****************************************************************************************
-void Player::Update(const float rDeltaTime)
+void Player::Update(const Float32 rDeltaTime)
 {
 	Rules* pRules =&_pGame->GetRules();
 	const Bool bWaitServe =pRules->IsWaitingToServe(_nPlayerId);
@@ -158,8 +158,8 @@ void Player::Update(const float rDeltaTime)
 	// input char
 	if (bWaitServe==false)
 	{
-		const float rAcceleration =300.0f;
-		const float rDamping =40.0f;
+		const Float32 rAcceleration =300.0f;
+		const Float32 rDamping =40.0f;
 		if (fabsf(_vInputMove.x)>0.15f)						// deadzone
 		{
 			_vVelocity.x+=_vInputMove.x*rDeltaTime*rAcceleration;
@@ -175,7 +175,7 @@ void Player::Update(const float rDeltaTime)
 	}
 
 	// check wall/net collision
-	bool bHitWall =false;
+	Bool bHitWall =false;
 	if (_vPos.x<_rPosMin)
 	{
 		_vPos.x =_rPosMin;
@@ -198,9 +198,9 @@ void Player::Update(const float rDeltaTime)
 		hgeVector vInputRacketNorm(_vInputRacket);
 		vInputRacketNorm.Normalize();
 		
-		float rAngleInput	=vInputRacketNorm.Angle();
-		float rAngleRacket	=_vRacketDir.Angle();
-		float rAngleDiff =rAngleInput-rAngleRacket;
+		Float32 rAngleInput	=vInputRacketNorm.Angle();
+		Float32 rAngleRacket	=_vRacketDir.Angle();
+		Float32 rAngleDiff =rAngleInput-rAngleRacket;
 		if (rAngleDiff>(M_PI))		rAngleDiff-=2.0f*M_PI;
 		if (rAngleDiff<(-M_PI))		rAngleDiff+=2.0f*M_PI;
 
@@ -226,7 +226,7 @@ void Player::Update(const float rDeltaTime)
 			ball.Launch(_vInputMove);
 		}
 	}
-	else
+	//else
 	{
 		// check ball collide
 		hgeVector vBallPos		=ball.GetPos();
@@ -259,14 +259,23 @@ void Player::Update(const float rDeltaTime)
 				hgeVector vRacketDirNext =_vRacketDir;
 				vRacketDirNext.Rotate(_rRacketRotationSpeed*rDeltaTime);
 
-				hgeVector vRacketNorm=vRacketDirNext-_vRacketDir;
-				//vRacketNorm.Normalize();
-				vRacketNorm *=rPlayerStrenght*(1.0f/rDeltaTime);
+				hgeVector vRacketNorm =vRacketDirNext-_vRacketDir;
+				hgeVector vRacketHit =vRacketNorm;
+				vRacketHit *=rPlayerStrenght*(1.0f/rDeltaTime);
 
 //				Float32 rRacketSpeedAbs =TAbs(_rRacketRotationSpeed);
 //				Float32 rImpactSpeed	=TClamp(rRacketSpeedAbs, 4.0f, 9.0f);
 
-				hgeVector vNewVel =vReturnVel+vRacketNorm;
+				vRacketNorm.Normalize();
+				Float32 rPlayerVelFactor =TAbs(vRacketNorm.Dot(hgeVector::UNIT_Y));
+
+				hgeVector vNewVel =vReturnVel + vRacketHit+ (_vVelocity*rPlayerVelFactor);
+
+				if (bWaitServe)
+				{
+					pRules->EventServeStart();
+					ball.Launch(hgeVector(0.0f, 0.0f));
+				}
 
 				ball.RacketHit(vNewVel);	// test
 				_rHitCooldown =0.3f;
@@ -303,7 +312,7 @@ void Player::Render()
 						_vPos.x+_vCharSize.x, _vPos.y+_vCharSize.y, 0xFF39588E);
 
 	// Eye test
-	float rEyeRadius =_vCharSize.x*0.25f;
+	Float32 rEyeRadius =_vCharSize.x*0.25f;
 	hgeVector vEyeCenter(_vPos.x+_vCharSize.x*0.75f*GetFront(), _vPos.y+_vCharSize.y*0.85f);
 	hge->Gfx_RenderCircle(vEyeCenter.x, vEyeCenter.y, rEyeRadius, 0xFFFFFFFF);
 

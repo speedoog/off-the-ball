@@ -352,9 +352,10 @@ void MenuMain::StartMenuAudio()
 {
 	ClearMenu();
 
-//	AddMenuItem( MII_OPTAUDIO_BACK,			"Back"			);
+	AddMenuItem( MII_OPTAUDIO_MUSIC,	"Music"	);
+	AddMenuItem( MII_OPTAUDIO_EFFECTS,	"Sfx"	);
 
-//	_pGUI->SetFocus(MII_OPTAUDIO_BACK);
+	_pGUI->SetFocus(MII_OPTAUDIO_MUSIC);
 	_pGUI->Enter();
 
 	_nMenuCurrent =MS_AUDIO;

@@ -67,7 +67,7 @@ void Ball::Kill()
 // ****************************************************************************************
 void Ball::Reset(Player* pPlayer)
 {
-	Float32 rPosX =pPlayer->GetPosition().x + pPlayer->GetFront()*0.1f;
+	Float32 rPosX =pPlayer->GetPosition().x + -0.1f*pPlayer->GetFront();
 
 	_vPos		=hgeVector(rPosX,1.8f);
 	_nSide		=pPlayer->GetPlayerId();

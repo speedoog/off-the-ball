@@ -29,10 +29,10 @@ class Player
 public:
 								Player();
 								~Player();
-			void				Init(Game* pGame, const int nPlayerId);
+			void				Init(Game* pGame, const Int32 nPlayerId);
 			void				ResetPosition();
 
-			void				Update(const float rDeltaTime);
+			void				Update(const Float32 rDeltaTime);
 			void				Render();
 
 	inline	void				SetPosition(const hgeVector& vPos)				{ _vPos =vPos;						}
@@ -42,11 +42,11 @@ public:
 	inline	const hgeVector&	GetVelocity() const								{ return _vVelocity;				}
 	inline	Float32				GetFront() const								{ return (_nPlayerId*-2.0f)+1.0f;	}
 	inline	Float32				GetBack() const									{ return (_nPlayerId*2.0f)-1.0f;	}
-	inline	int					GetPlayerId() const								{ return _nPlayerId;				}
+	inline	Int32				GetPlayerId() const								{ return _nPlayerId;				}
 
 	inline	void				ScoreInc()										{ ++_nScore;						}
 	inline	void				ScoreReset()									{ _nScore =0;						}
-	inline	int					ScoreGet()										{ return _nScore;					}
+	inline	Int32				ScoreGet()										{ return _nScore;					}
 
 	inline	bool				UseTimeScale()									{ return _bUseTimeScale;			}
 
@@ -69,22 +69,22 @@ protected:
 	// Physic
 	hgeVector	_vPos, _vInitialPos;
 	hgeVector	_vVelocity;
-	float		_rRacketRotationSpeed;
+	Float32		_rRacketRotationSpeed;
 
 	// Settings
-	float 		_rCharSpeedMax;
+	Float32 	_rCharSpeedMax;
 	hgeVector	_vCharSize;
-	float 		_rCharRacketY;
-	float 		_rRacketLen;
+	Float32 	_rCharRacketY;
+	Float32 	_rRacketLen;
 	hgeVector	_vRacketDir;
-	float		_rRacketOffset;
-	float		_rPosMin, _rPosMax;
-	int			_nPlayerId;
+	Float32		_rRacketOffset;
+	Float32		_rPosMin, _rPosMax;
+	Int32		_nPlayerId;
 
 	// runtime values
-	float		_rHitCooldown;
-	int			_nScore;
-	bool		_bUseTimeScale;
+	Float32		_rHitCooldown;
+	Int32		_nScore;
+	Bool		_bUseTimeScale;
 
 	// Input
 	hgeVector	_vInputMove, _vInputRacket;
