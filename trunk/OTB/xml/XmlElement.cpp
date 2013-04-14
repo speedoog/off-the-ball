@@ -15,7 +15,7 @@
 
 #pragma warning( disable : 4996)
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_ATTRIBUTE *XML_ELEMENT::FindAttribute(const char *pAttribName)
 {
 	XML_ATTRIBUTE *pAtt = (XML_ATTRIBUTE*)_lAttributes.GetHead();
@@ -29,7 +29,7 @@ XML_ATTRIBUTE *XML_ELEMENT::FindAttribute(const char *pAttribName)
 	return 0;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 int XML_ELEMENT::GetAttributeAsData(const char *pAttrib, unsigned char *Destination)
 {
 	XML_ATTRIBUTE	*pAtt = FindAttribute(pAttrib);
@@ -57,7 +57,7 @@ int XML_ELEMENT::GetAttributeAsData(const char *pAttrib, unsigned char *Destinat
 	return -1;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 int XML_ELEMENT::GetAttributeAsData(const char *pAttrib, DYNAMIC_BUFFER &Destination)
 {
 	XML_ATTRIBUTE	*pAtt = FindAttribute(pAttrib);
@@ -85,7 +85,7 @@ int XML_ELEMENT::GetAttributeAsData(const char *pAttrib, DYNAMIC_BUFFER &Destina
 	return -1;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 float XML_ELEMENT::GetAttribute(const char *pAttrib, float fDef)
 {
 	XML_ATTRIBUTE *pAtt = FindAttribute(pAttrib);
@@ -100,7 +100,7 @@ float XML_ELEMENT::GetAttribute(const char *pAttrib, float fDef)
 	return fDef;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 const char *XML_ELEMENT::GetAttribute(const char *pAttrib, const char *pDef)
 {
 	XML_ATTRIBUTE *pAtt = FindAttribute(pAttrib);
@@ -111,7 +111,7 @@ const char *XML_ELEMENT::GetAttribute(const char *pAttrib, const char *pDef)
 	return pDef;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 int XML_ELEMENT::GetAttribute(const char *pAttrib, int nDef)
 {
 	int nDest;
@@ -119,7 +119,7 @@ int XML_ELEMENT::GetAttribute(const char *pAttrib, int nDef)
 	return nDest;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 int XML_ELEMENT::GetAttributeAsChar(const char *pAttrib, char *Destination, char *pDefaultValue)
 {
 	XML_ATTRIBUTE *pAtt = FindAttribute(pAttrib);
@@ -134,7 +134,7 @@ int XML_ELEMENT::GetAttributeAsChar(const char *pAttrib, char *Destination, char
 	return -1;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 int XML_ELEMENT::GetAttributeAsInt(const char *pAttrib, int &Destination, int DefaultValue)
 {
 	XML_ATTRIBUTE *pAtt = FindAttribute(pAttrib);
@@ -149,7 +149,7 @@ int XML_ELEMENT::GetAttributeAsInt(const char *pAttrib, int &Destination, int De
 	return -1;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 int XML_ELEMENT::SaveToFile(FILE *pFile, int IndentLevel)
 {
 	int				indent;
@@ -197,7 +197,7 @@ int XML_ELEMENT::SaveToFile(FILE *pFile, int IndentLevel)
 	return 0;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_ELEMENT	*XML_ELEMENT::FindElement(const char *pName, bool bRecursiveSearch)
 {
 	XML_ELEMENT	*pElem = (XML_ELEMENT*)_lChilds.GetHead();
@@ -219,7 +219,7 @@ XML_ELEMENT	*XML_ELEMENT::FindElement(const char *pName, bool bRecursiveSearch)
 	return 0;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_ELEMENT	*XML_ELEMENT::FindElementEx(char *pName, char *pAttributeMatch, char *pMatch)
 {
 	XML_ELEMENT	*pScanChilds = (XML_ELEMENT*)_lChilds.GetHead();
@@ -237,7 +237,7 @@ XML_ELEMENT	*XML_ELEMENT::FindElementEx(char *pName, char *pAttributeMatch, char
 	return 0;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_ATTRIBUTE *XML_ELEMENT::CreateAttribute(char *pName, unsigned char *pBuffer, int nSize)
 {
 	XML_ATTRIBUTE	*pNewAttrib = new XML_ATTRIBUTE(pName);
@@ -256,7 +256,7 @@ XML_ATTRIBUTE *XML_ELEMENT::CreateAttribute(char *pName, unsigned char *pBuffer,
 	return pNewAttrib;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_ATTRIBUTE *XML_ELEMENT::CreateAttribute(char *pName, const char *pValue)
 {
 	XML_ATTRIBUTE	*pNewAttrib = new XML_ATTRIBUTE(pName);
@@ -265,7 +265,7 @@ XML_ATTRIBUTE *XML_ELEMENT::CreateAttribute(char *pName, const char *pValue)
 	return pNewAttrib;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_ATTRIBUTE *XML_ELEMENT::CreateAttribute(char *pName, int nValue)
 {
 	char	Tmp[32];
@@ -275,7 +275,7 @@ XML_ATTRIBUTE *XML_ELEMENT::CreateAttribute(char *pName, int nValue)
 	return pNewAttrib;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_ATTRIBUTE *XML_ELEMENT::CreateAttribute(char *pName, float fValue)
 {
 	char	Tmp[32];
@@ -286,7 +286,7 @@ XML_ATTRIBUTE *XML_ELEMENT::CreateAttribute(char *pName, float fValue)
 	return pNewAttrib;
 }
 
-//-------------------------------------------------------------------------------
+// ****************************************************************************************
 XML_ELEMENT	*XML_ELEMENT::CreateChildElement(char *pName)
 {
 	XML_ELEMENT	*pNewElem = new XML_ELEMENT(pName);

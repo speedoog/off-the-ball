@@ -32,9 +32,9 @@ static BOOL CALLBACK EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, v
 	return pThis->EnumObjects(pdidoi);
 }
 
-// ********************************************
+// ****************************************************************************************
 //	Ctor
-// ********************************************
+// ****************************************************************************************
 InputDirectX::InputDirectX()
 {
 	_hWnd			=NULL;
@@ -42,17 +42,17 @@ InputDirectX::InputDirectX()
 	_bInited		=false;
 }
 
-// ********************************************
+// ****************************************************************************************
 //	Dtor
-// ********************************************
+// ****************************************************************************************
 InputDirectX::~InputDirectX()
 {
 	TAssert(!_bInited);
 }
 
-// ********************************************
+// ****************************************************************************************
 //	Init
-// ********************************************
+// ****************************************************************************************
 int	InputDirectX::Init(HWND	hWnd)
 {
 	TAssert(!_bInited);
@@ -110,9 +110,9 @@ int	InputDirectX::Init(HWND	hWnd)
 	return	0;
 }
 
-// ********************************************
+// ****************************************************************************************
 //	Kill
-// ********************************************
+// ****************************************************************************************
 void InputDirectX::Kill()
 {
 	TAssert(_bInited);
@@ -135,9 +135,9 @@ void InputDirectX::Kill()
 	_bInited =false;
 }
 
-// ********************************************
+// ****************************************************************************************
 //	Update
-// ********************************************
+// ****************************************************************************************
 void InputDirectX::Update(void)
 {
 	TAssert(_bInited);
@@ -188,11 +188,11 @@ bool IsPs3Pad(const DIDEVICEINSTANCE* pCurrentDevice)
 	return (p!=NULL);
 }
 
-// ********************************************
+// ****************************************************************************************
 //	Name: EnumJoysticks()
 //	Desc: Called once for each enumerated joystick. If we find one, create a
 //       device interface on it so we can play with it.
-// ********************************************
+// ****************************************************************************************
 Bool InputDirectX::EnumJoysticks(const DIDEVICEINSTANCE* pdidInstance)
 {
 	Device& PadCurrent =_Device[_nPadCurrent];
@@ -226,12 +226,12 @@ Bool InputDirectX::EnumJoysticks(const DIDEVICEINSTANCE* pdidInstance)
 	return DIENUM_CONTINUE;
 }
 
-// ********************************************
+// ****************************************************************************************
 // Name: EnumObjects()
 // Desc: Callback function for enumerating objects (axes, buttons, POVs) on a 
 //       joystick. This function enables user interface elements for objects
 //       that are found to exist, and scales axes min/max values.
-// ********************************************
+// ****************************************************************************************
 Bool  InputDirectX::EnumObjects(const DIDEVICEOBJECTINSTANCE* pdidoi)
 {
 	Device& PadCurrent =_Device[_nPadCurrent];

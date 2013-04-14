@@ -35,7 +35,7 @@ public:
 			void		Kill();
 
 			void		Reset(Player* pPlayer);
-			void		Update(const float rDeltaTime);
+			void		Update(const Float32 rDeltaTime);
 			void		Render();
 
 			void		Launch(const hgeVector& vDir);
@@ -44,7 +44,7 @@ public:
 	// inline
 	inline	hgeVector&	GetPos() 						{ return _vPos;			}
 	inline	hgeVector&	GetVelocity() 					{ return _vVelocity;	}
-	inline	int			GetSide()						{ return _nSide;		}
+	inline	Int32		GetSide()						{ return _nSide;		}
 	inline	Float32		GetRadius() 					{ return _rRadius;		}
 	inline	void		SetPaused(const bool bPaused)	{ _bPaused =bPaused;	}
 
@@ -54,8 +54,8 @@ protected:
 	hgeVector	_vVelocity;
 	Float32		_rRadius;
 	Float32		_rSpriteAngle;
-	int			_nSide;				// 0 or 1
-	bool		_bPaused;
+	Int32		_nSide;				// 0 or 1
+	Bool		_bPaused;
 
 	BallHistory	_History;
 };
