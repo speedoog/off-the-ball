@@ -71,8 +71,10 @@ void BallRecorder::Init(Game* pGame)
 // ****************************************************************************************
 void BallRecorder::Kill()
 {
-	if (_Database._lDatabase.GetSize()!=0)
+	if (_Database._lDatabase.IsEmpty()==false)
 	{
+		_Database.Cleanup();
+
 		// Save DB
 		TStream Stream;
 		Stream.OpenFile("Database.AI", TStream::SM_WRITE);

@@ -249,10 +249,10 @@ void Game::Kill()
 // ****************************************************************************************
 void Game::Update(const Float32 rDeltaTime)
 {
-	if (_bDemoMode)
-	{
-		_rTimeScale =2.0f;
-	}
+// 	if (_bDemoMode)
+// 	{
+// 		_rTimeScale =2.0f;
+// 	}
 
 	// Game update
 	{
