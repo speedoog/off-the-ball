@@ -205,14 +205,14 @@ public:
 
 			UInt32 nSize =ballRec._aArray.GetSize();
 
-			if ((*ballRec._aArray.GetLast())._vBallPos.y<1.45f)
-				bRemove =true;
+// 			if ((*ballRec._aArray.GetLast())._vBallPos.y<1.45f)
+// 				bRemove =true;
 
-			if (nSize>300 || nSize<50)
+			if (nSize>350 || nSize<40)
 				bRemove =true;
 
 			Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry+1);
-			if (rRatio<0.8f)
+			if (rRatio<0.75f)
 				bRemove =true;
 
 			if (bRemove)

@@ -78,13 +78,13 @@ void CommandCpu::OnUpdate(const float rDeltaTime)
 
 	if (rules.IsWaitingToServe(_nPlayerId))								// Waiting for my serve
 	{
-		vInputMove	 =hgeVector(TRand(0.75f*rBack, rBack), 1.0f);
+		vInputMove	 =hgeVector(TRand(0.2f*rBack, rBack), 1.0f);
 		vInputRacket =hgeVector(TRand(0.75f*rBack, rBack), TRand(0.75f, 1.0f));
 		_rTimeCurrent =0.0f;
 		//_rShootRand =(Float32(rand())/Float32(RAND_MAX))*0.2f+0.70f;
 		//_rShootRandMin =0.68f;
 		//_rShootRandMax =0.83f;
-		_rShootRand =TRand(0.7f, 0.8f);
+		_rShootRand =TRand(0.75f, 0.8f);
 	}
 	else
 	{
