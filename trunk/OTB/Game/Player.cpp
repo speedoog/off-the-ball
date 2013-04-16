@@ -311,17 +311,9 @@ const UInt32 nColorPlayerEye	=0xFFFFFFFF;
 // ****************************************************************************************
 void Player::Render()
 {
-	hgeColorHSV	colBody;	colBody.SetHWColor(nColorPlayerBody);	
-	hgeColorHSV	colRaquet;	colRaquet.SetHWColor(nColorPlayerRaquet);		
-	hgeColorHSV	colEye;		colEye.SetHWColor(nColorPlayerEye);			
-
-	if (_pGame->GetDemoMode())
-	{
-		hgeColorHSV colScale(1.0f, 0.4f, 0.3f, 1.0f);
-		colBody		=colBody*colScale;
-		colRaquet	=colRaquet*colScale;
-		colEye		=colEye*colScale;
-	}
+	hgeColorRGB	colBody;	colBody.SetHWColor(nColorPlayerBody);
+	hgeColorRGB colRaquet;	colRaquet.SetHWColor(nColorPlayerRaquet);
+	hgeColorRGB colEye;		colEye.SetHWColor(nColorPlayerEye);
 
 	// Player
 	hge->Gfx_RenderBox(	_vPos.x-_vCharSize.x, _vPos.y,

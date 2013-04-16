@@ -87,19 +87,10 @@ void Level::Update(const Float32 rDeltaTime)
 // ****************************************************************************************
 void Level::Render()
 {
-	hgeColorHSV	colGround;	colGround.SetHWColor(nColorLevelGround);	
-	hgeColorHSV	colSides;	colSides.SetHWColor(nColorLevelSides);		
-	hgeColorHSV	colNet;		colNet.SetHWColor(nColorLevelNet);			
-	hgeColorHSV	colNetGrow;	colNetGrow.SetHWColor(nColorLevelNetGrow);
-
-	if (_pGame->GetDemoMode())
-	{
-		hgeColorHSV colScale(1.0f, 0.4f, 0.3f, 1.0f);
-		colGround	=colGround*colScale;
-		colSides	=colSides*colScale;
-		colNet		=colNet*colScale;
-		colNetGrow	=colNetGrow*colScale;
-	}
+	hgeColorRGB	colGround;	colGround.SetHWColor(nColorLevelGround);	
+	hgeColorRGB	colSides;	colSides.SetHWColor(nColorLevelSides);		
+	hgeColorRGB	colNet;		colNet.SetHWColor(nColorLevelNet);			
+	hgeColorRGB	colNetGrow;	colNetGrow.SetHWColor(nColorLevelNetGrow);
 
 	hge->Gfx_RenderLine(-_vSize.x, 0,			 _vSize.x, 0,			colGround.GetHWColor());	// gnd
 	hge->Gfx_RenderLine(-_vSize.x, _vSize.y,	 _vSize.x, _vSize.y,	colSides.GetHWColor());		// top
