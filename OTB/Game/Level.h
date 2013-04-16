@@ -30,23 +30,23 @@ public:
 								Level();
 								~Level();
 
-			void				Init(Game* pGame, const hgeVector& vSize, const float rInitialNetY);
+			void				Init(Game* pGame, const hgeVector& vSize, const Float32 rInitialNetY);
 			void				Kill();
 			void				Reset();
-			void				Update(const float rDeltaTime);
+			void				Update(const Float32 rDeltaTime);
 			void				Render();
 
 	// inlines
 	inline	const hgeVector&	GetSize()		{ return _vSize; }
-	inline	float				GetNetY()		{ return _rNetY; }
-	inline	float				GetFutureNetY()	{ if (_rCounter>15.0f) return _rNetY+0.2f; else return _rNetY; }
+	inline	Float32				GetNetY()		{ return _rNetY; }
+	inline	Float32				GetFutureNetY()	{ if (_rCounter>15.0f) return _rNetY+0.2f; else return _rNetY; }
 
 protected:
 	Game*		_pGame;
 	hgeVector	_vSize;
-	float		_rNetY;
-	float		_rInitialNetY;
-	float		_rCounter;
+	Float32		_rNetY;
+	Float32		_rInitialNetY;
+	Float32		_rCounter;
 };
 
 

@@ -20,6 +20,11 @@
 #include "Level.h"
 #include "Game.h"
 
+const UInt32 nColorLevelGround	=0xFFFF5000;
+const UInt32 nColorLevelSides	=0xFF00FF00;
+const UInt32 nColorLevelNet		=0xFFFFFF00;
+const UInt32 nColorLevelNetGrow	=0xFFFF6000;
+
 // ****************************************************************************************
 //	Ctor
 // ****************************************************************************************
@@ -38,7 +43,7 @@ Level::~Level()
 // ****************************************************************************************
 //	Init
 // ****************************************************************************************
-void Level::Init(Game* pGame, const hgeVector& vSize, const float rInitialNetY)
+void Level::Init(Game* pGame, const hgeVector& vSize, const Float32 rInitialNetY)
 {
 	_pGame			=pGame;
 	_vSize		  	=vSize;
@@ -65,7 +70,7 @@ void Level::Reset()
 // ****************************************************************************************
 //	Update
 // ****************************************************************************************
-void Level::Update(const float rDeltaTime)
+void Level::Update(const Float32 rDeltaTime)
 {
 	if (_pGame->GetRules().IsWaitingToServe()==false)
 	{
@@ -82,11 +87,25 @@ void Level::Update(const float rDeltaTime)
 // ****************************************************************************************
 void Level::Render()
 {
-	hge->Gfx_RenderLine(-_vSize.x, 0,			 _vSize.x, 0,			0xFFFF5000);	// gnd
-	hge->Gfx_RenderLine(-_vSize.x, _vSize.y,	 _vSize.x, _vSize.y,	0xFF00FF00);	// top
-	hge->Gfx_RenderLine(-_vSize.x, 0,			-_vSize.x, _vSize.y,	0xFF00FF00);	// left
-	hge->Gfx_RenderLine( _vSize.x, 0,			 _vSize.x, _vSize.y,	0xFF00FF00);	// right
+	hgeColorHSV	colGround;	colGround.SetHWColor(nColorLevelGround);	
+	hgeColorHSV	colSides;	colSides.SetHWColor(nColorLevelSides);		
+	hgeColorHSV	colNet;		colNet.SetHWColor(nColorLevelNet);			
+	hgeColorHSV	colNetGrow;	colNetGrow.SetHWColor(nColorLevelNetGrow);
 
-	hge->Gfx_RenderLine( 0, 0, 0, _rInitialNetY, 0xFFFFFF00);	// net
-	hge->Gfx_RenderLine( 0, _rInitialNetY, 0, _rNetY, 0xFFFF6000);	// net
+	if (_pGame->GetDemoMode())
+	{
+		hgeColorHSV colScale(1.0f, 0.4f, 0.3f, 1.0f);
+		colGround	=colGround*colScale;
+		colSides	=colSides*colScale;
+		colNet		=colNet*colScale;
+		colNetGrow	=colNetGrow*colScale;
+	}
+
+	hge->Gfx_RenderLine(-_vSize.x, 0,			 _vSize.x, 0,			colGround.GetHWColor());	// gnd
+	hge->Gfx_RenderLine(-_vSize.x, _vSize.y,	 _vSize.x, _vSize.y,	colSides.GetHWColor());		// top
+	hge->Gfx_RenderLine(-_vSize.x, 0,			-_vSize.x, _vSize.y,	colSides.GetHWColor());		// left
+	hge->Gfx_RenderLine( _vSize.x, 0,			 _vSize.x, _vSize.y,	colSides.GetHWColor());		// right
+
+	hge->Gfx_RenderLine( 0, 0,				0, _rInitialNetY,	colNet.GetHWColor());		// net
+	hge->Gfx_RenderLine( 0, _rInitialNetY,	0, _rNetY,			colNetGrow.GetHWColor());	// net growing part
 }

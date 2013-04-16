@@ -115,7 +115,7 @@ void BallHistory::Draw(hgeSprite* pSpriteBallTrail)
 
 	hgeColorRGB clSrc(0.0f, 0.0f, 0.0f, 0.0f);
 	hgeColorRGB clDst(0.0f, 0.7f, 0.0f, 0.1f);
-	hgeColorRGB clDst2(1.0f, 1.0f, 1.0f, 0.2f);
+	hgeColorRGB clDst2(0.5f, 0.5f, 0.5f, 0.2f);
 
 	UInt32 nCurrentElement =0;
 

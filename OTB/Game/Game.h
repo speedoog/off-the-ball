@@ -62,6 +62,7 @@ public:
 
 	inline	Bool			GetTraining() const					{ return _bTraining;		}
 	inline	void			SetTraining(const Bool bTraining) 	{ _bTraining =bTraining;	}
+	inline	Bool			GetDemoMode() const					{ return _bDemoMode;		}
 
 	static	CommandAbc*		CreateCommand(const CommandAbc::CmdType cmd);
 
