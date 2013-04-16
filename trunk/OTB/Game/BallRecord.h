@@ -226,7 +226,8 @@ public:
 			}
 		}
 
-		// remove duplicate
+		// remove duplicate (NEEED OPTIM !)
+		/*
 		UInt32 nDup	 =0;
 		UInt32 nDup1 =0;
 		UInt32 nDup2 =0;
@@ -238,17 +239,6 @@ public:
 				BallRecord& br2 =*it2;
 
 				Float32 rDiff =br1.ComputeDiff(br2);
-				/*
-				Bool bPos =TEqual(br1._vInitialBallPos.y,br2._vInitialBallPos.y, 0.025f);
-				if (bPos)	++nDup1;
-
-				Bool bVel =TEqual(br1._vInitialBallVelocity.x, br2._vInitialBallVelocity.x, 0.25f)
-						&& TEqual(br1._vInitialBallVelocity.y, br2._vInitialBallVelocity.y, 0.25f);
-
-				if (bVel)	++nDup2;
-
-				if (bPos && bVel)
-				*/
 
 				if (rDiff<0.2f)
 				{
@@ -261,6 +251,7 @@ public:
 				}
 			}
 		}
+		*/
 
 		int t=0;
 	}

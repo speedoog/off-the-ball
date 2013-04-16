@@ -273,6 +273,7 @@ void Game::Update(const Float32 rDeltaTime)
 			_BallRecorder.Update(rSliceTime);
 			_Players[0].Update(rSliceTime);
 			_Players[1].Update(rSliceTime);
+			_Rules.Update(rSliceTime);
 		}
 	}
 

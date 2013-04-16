@@ -197,11 +197,22 @@ void Ball::Launch(const hgeVector& vDir)
 // ****************************************************************************************
 void Ball::Render()
 {
+	hgeColorHSV	colBall;		colBall.SetHWColor(0xFFFFFFFF);
+	hgeColorHSV	colBallTrail;	colBallTrail.SetHWColor(0xFFFFFFFF);
+	if (_pGame->GetDemoMode())
+	{
+		hgeColorHSV colScale(1.0f, 0.4f, 0.3f, 1.0f);
+		colBall		 =colBall*colScale;
+		colBallTrail =colBallTrail*colScale;
+	}
+	_pGame->GetResources()._pSpriteBall->SetColor(colBall.GetHWColor());
+	_pGame->GetResources()._pSpriteBallTrail->SetColor(colBallTrail.GetHWColor());
+
+	// draw
 	_History.Draw(_pGame->GetResources()._pSpriteBallTrail);
 
-	hgeSprite* spriteBall =_pGame->GetResources()._pSpriteBall;
 	Float32 rScale =_rRadius/8.0f;
-	spriteBall->RenderEx(_vPos.x, _vPos.y, _rSpriteAngle, rScale, rScale);
+	_pGame->GetResources()._pSpriteBall->RenderEx(_vPos.x, _vPos.y, _rSpriteAngle, rScale, rScale);
 
 // 	hge->Gfx_RenderCircle(_vPos.x, _vPos.y, _rRadius, 0xFFFFFF00);
 }
