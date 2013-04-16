@@ -21,6 +21,7 @@
 
 #include "MenuItem.h"
 #include "../OTB.h"
+#include "../../HGE/hgecolor.h"
 
 // ****************************************************************************************
 //	Ctor
@@ -260,6 +261,47 @@ void MenuMain::Render()
 	if (_pGUI)
 	{
 		Otb* pOTB =Otb::GetInstance();
+		{
+			Float32 rXMin 	=-50.0f;
+			Float32 rXMax 	=50.0f;
+
+			hgeColorRGB cl(0.0f, 0.0f, 0.0f, 0.35f);
+
+			Float32 rYMin =-50.0f;
+			Float32 rYMax =50.0f;
+
+			hgeQuad quad;
+			quad.v[0].x =rXMin;
+			quad.v[0].y =rYMin;
+			quad.v[0].z =0;
+			quad.v[0].tx=0;
+			quad.v[0].ty=0;
+
+			quad.v[1].x =rXMin;
+			quad.v[1].y =rYMax;
+			quad.v[1].z =0;
+			quad.v[1].tx=0;
+			quad.v[1].ty=1;
+
+			quad.v[2].x =rXMax;
+			quad.v[2].y =rYMax;
+			quad.v[2].z =0;
+			quad.v[2].tx=1;
+			quad.v[2].ty=1;
+
+			quad.v[3].x =rXMax;
+			quad.v[3].y =rYMin;
+			quad.v[3].z =0;
+			quad.v[3].tx=1;
+			quad.v[3].ty=0;
+
+			quad.blend	=BLEND_DEFAULT;
+			quad.tex	=pOTB->GetResources()._texPowerBar;
+			quad.v[0].col = quad.v[1].col = quad.v[2].col = quad.v[3].col = cl.GetHWColor();
+
+			hge->Gfx_RenderQuad(&quad);
+		}
+
 		// Title
 		{
 			hgeFont* pFont=pOTB->GetResources()._pFontTitle;

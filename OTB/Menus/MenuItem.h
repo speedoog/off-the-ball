@@ -21,10 +21,8 @@
 
 #pragma once
 
-#include "..\..\HGE\hge.h"
-#include "..\..\HGE\hgegui.h"
-#include "..\..\HGE\hgefont.h"
-#include "..\..\HGE\hgecolor.h"
+#include "../../HGE/hge.h"
+#include "../../HGE/hgegui.h"
 #include "../Base/Base.h"
 #include "../Base/TString.h"
 
@@ -48,7 +46,7 @@ public:
 	virtual bool	KeyClick(int key, int chr);
 
 private:
-	MenuMain*		_pMenu;
+	MenuMain*	_pMenu;
 	TString		_sTitle;
 	Bool		_bFocused;
 };
