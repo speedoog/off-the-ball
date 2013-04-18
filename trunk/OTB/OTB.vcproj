@@ -456,6 +456,22 @@
 			Name="Menus"
 			>
 			<File
+				RelativePath=".\Menus\MenuAbc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Menus\MenuAbc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Menus\MenuInGame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Menus\MenuInGame.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Menus\MenuItem.cpp"
 				>
 			</File>

@@ -16,39 +16,48 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __MENU_ITEM_H__
-#define __MENU_ITEM_H__
+#ifndef __MENU_INGAME_H__
+#define __MENU_INGAME_H__
 
 #pragma once
 
-#include "../../HGE/hge.h"
-#include "../../HGE/hgegui.h"
 #include "../Base/Base.h"
-#include "../Base/TString.h"
+#include "../Base/SmartEnum.h"
+#include "MenuAbc.h"
 
-class MenuAbc;
+class Otb;
+class hgeGUI;
+class TString;
 
-class hgeGUIMenuItem : public hgeGUIObject
+class MenuInGame : public MenuAbc
 {
 public:
-					hgeGUIMenuItem(const Int32 nId, MenuAbc* pMenu, const Float32 rPosx, const Float32 rPosy, const TString& sTitle);
+	enum MenuItemId
+	{
+	// Main Menu
+		MII_MAIN_RESUME	=1
+	,	MII_MAIN_EXIT
+	};
 
-	virtual void	Render();
-	virtual void	Update(float dt);
+	SMARTENUM_DECLARE(	MenuScreen
+						,	MS_MAIN
+						);
 
-	virtual void	Enter();
-	virtual void	Leave();
-	virtual bool	IsDone();
-	virtual void	Focus(bool bFocused);
-	virtual void	MouseOver(bool bOver);
+			MenuInGame();
+	void	Init();
+	void	Kill();
 
-	virtual bool	MouseLButton(bool bDown);
-	virtual bool	KeyClick(int key, int chr);
+	void	Render();
+	void	Update(Float32 dt);
 
-private:
-	MenuAbc*	_pMenu;
-	TString		_sTitle;
-	Bool		_bFocused;
+protected:
+	void	StartMenuMain();
+
+	void	ItemValidate(const int id);
+	void	ItemCancel();
+
+protected:
+	MenuScreen	_nMenuCurrent;
 };
 
-#endif	//__MENU_ITEM_H__
+#endif //__MENU_INGAME_H__
