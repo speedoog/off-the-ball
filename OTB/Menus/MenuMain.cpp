@@ -27,48 +27,8 @@
 //	Ctor
 // ****************************************************************************************
 MenuMain::MenuMain()
-: _pGUI(NULL)
+: MenuAbc()
 {
-}
-
-// ****************************************************************************************
-//	Init
-// ****************************************************************************************
-void MenuMain::Init()
-{
-	_pGUI =new hgeGUI();
-	_pGUI->SetNavMode(HGEGUI_UPDOWN | HGEGUI_CYCLED);
-//	_pGUI->SetCursor(spr);
-
-	StartMenuMain();
-}
-
-// ****************************************************************************************
-//	Kill
-// ****************************************************************************************
-void MenuMain::Kill()
-{
-	delete _pGUI;
-	_pGUI =NULL;
-}
-
-// ****************************************************************************************
-//	ClearMenu
-// ****************************************************************************************
-void MenuMain::ClearMenu()
-{
-	_pGUI->Leave();
-	_pGUI->Clear();
-	_rCurrentY =GetMenuPosY()-0.6f;
-}
-
-// ****************************************************************************************
-//	AddMenuItem
-// ****************************************************************************************
-void MenuMain::AddMenuItem(const MenuItemId ItemId, const TString& sLabel)
-{
-	_pGUI->AddCtrl(new hgeGUIMenuItem(ItemId, this, 0.0f, _rCurrentY, sLabel.GetCharconst()) );
-	_rCurrentY -=0.4f;
 }
 
 // ****************************************************************************************
@@ -260,47 +220,9 @@ void MenuMain::Render()
 {
 	if (_pGUI)
 	{
+		RenderBackground();
+
 		Otb* pOTB =Otb::GetInstance();
-		{
-			Float32 rXMin 	=-50.0f;
-			Float32 rXMax 	=50.0f;
-
-			hgeColorRGB cl(0.0f, 0.0f, 0.0f, 0.35f);
-
-			Float32 rYMin =-50.0f;
-			Float32 rYMax =50.0f;
-
-			hgeQuad quad;
-			quad.v[0].x =rXMin;
-			quad.v[0].y =rYMin;
-			quad.v[0].z =0;
-			quad.v[0].tx=0;
-			quad.v[0].ty=0;
-
-			quad.v[1].x =rXMin;
-			quad.v[1].y =rYMax;
-			quad.v[1].z =0;
-			quad.v[1].tx=0;
-			quad.v[1].ty=1;
-
-			quad.v[2].x =rXMax;
-			quad.v[2].y =rYMax;
-			quad.v[2].z =0;
-			quad.v[2].tx=1;
-			quad.v[2].ty=1;
-
-			quad.v[3].x =rXMax;
-			quad.v[3].y =rYMin;
-			quad.v[3].z =0;
-			quad.v[3].tx=1;
-			quad.v[3].ty=0;
-
-			quad.blend	=BLEND_DEFAULT;
-			quad.tex	=pOTB->GetResources()._texPowerBar;
-			quad.v[0].col = quad.v[1].col = quad.v[2].col = quad.v[3].col = cl.GetHWColor();
-
-			hge->Gfx_RenderQuad(&quad);
-		}
 
 		// Title
 		{
@@ -446,13 +368,4 @@ void MenuMain::StartMenuCredits()
 	_pGUI->Enter();
 
 	_nMenuCurrent =MS_CREDITS;
-}
-
-// ****************************************************************************************
-//	GetMenuPosY
-// ****************************************************************************************
-Float32	MenuMain::GetMenuPosY()
-{
-	Otb* pOTB =Otb::GetInstance();
-	return pOTB->GetGame().GetLevel().GetSize().y*0.75f;
 }

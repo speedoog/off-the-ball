@@ -24,11 +24,13 @@
 #include "../Base/Base.h"
 #include "../Base/SmartEnum.h"
 
+#include "MenuAbc.h"
+
 class Otb;
 class hgeGUI;
 class TString;
 
-class MenuMain
+class MenuMain : public MenuAbc
 {
 public:
 	enum MenuItemId
@@ -80,20 +82,14 @@ public:
 						,	MS_CREDITS
 						);
 
-			MenuMain();
-	void	Init();
-	void	Kill();
+					MenuMain();
 
-	void	Render();
-	void	Update(Float32 dt);
+	virtual void	Render();
+	virtual void	Update(Float32 dt);
 
 protected:
-	Float32	GetMenuPosY();
+	virtual void	StartMenuMain();
 
-	void	ClearMenu();
-	void	AddMenuItem(const MenuItemId ItemId, const TString& sLabel);
-
-	void	StartMenuMain();
 	void	StartMenuStart();
 	void	StartMenuOptions();
 	void	StartMenuVideo();
@@ -106,10 +102,7 @@ protected:
 	void	ItemCancel();
 
 protected:
-	hgeGUI*			_pGUI;
-
 	MenuScreen		_nMenuCurrent;
-	Float32			_rCurrentY;
 };
 
 #endif //__MENU_MAIN_H__

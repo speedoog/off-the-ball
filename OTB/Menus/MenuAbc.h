@@ -16,39 +16,40 @@
 //                        Copyright(c) 2012 by Bertrand Faure                           //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __MENU_ITEM_H__
-#define __MENU_ITEM_H__
+#ifndef __MENU_ABC_H__
+#define __MENU_ABC_H__
 
 #pragma once
 
-#include "../../HGE/hge.h"
-#include "../../HGE/hgegui.h"
 #include "../Base/Base.h"
-#include "../Base/TString.h"
+#include "../Base/SmartEnum.h"
 
-class MenuAbc;
+class Otb;
+class hgeGUI;
+class TString;
 
-class hgeGUIMenuItem : public hgeGUIObject
+class MenuAbc
 {
 public:
-					hgeGUIMenuItem(const Int32 nId, MenuAbc* pMenu, const Float32 rPosx, const Float32 rPosy, const TString& sTitle);
+					MenuAbc();
+			void	Init();
+			void	Kill();
 
-	virtual void	Render();
-	virtual void	Update(float dt);
+	virtual void	Render()					{ }
+	virtual void	Update(Float32 dt)			{ }
+	virtual void	StartMenuMain()				{ }
 
-	virtual void	Enter();
-	virtual void	Leave();
-	virtual bool	IsDone();
-	virtual void	Focus(bool bFocused);
-	virtual void	MouseOver(bool bOver);
+protected:
+	Float32	GetMenuPosY();
 
-	virtual bool	MouseLButton(bool bDown);
-	virtual bool	KeyClick(int key, int chr);
+	void	ClearMenu();
+	void	AddMenuItem(const UInt32 ItemId, const TString& sLabel);
 
-private:
-	MenuAbc*	_pMenu;
-	TString		_sTitle;
-	Bool		_bFocused;
+	void	RenderBackground();
+
+protected:
+	hgeGUI*		_pGUI;
+	Float32		_rCurrentY;
 };
 
-#endif	//__MENU_ITEM_H__
+#endif //__MENU_ABC_H__

@@ -29,7 +29,7 @@
 // ****************************************************************************************
 //	Ctor
 // ****************************************************************************************
-hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, MenuMain* pMenu, const Float32 rPosx, const Float32 rPosy, const TString& sTitle)
+hgeGUIMenuItem::hgeGUIMenuItem(const Int32 nId, MenuAbc* pMenu, const Float32 rPosx, const Float32 rPosy, const TString& sTitle)
 {
 	id		=nId;
 	_pMenu	=pMenu;
