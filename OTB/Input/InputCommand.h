@@ -86,6 +86,7 @@ public:
 		, MC_RIGHT
 		, MC_VALIDATE
 		, MC_CANCEL
+		, MC_PAUSE
 
 		, MC_MAX
 		)

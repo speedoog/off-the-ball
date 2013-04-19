@@ -29,6 +29,7 @@
 #include "../Input/InputCommand.h"
 #include "Rules.h"
 #include "../Cmd/CommandAbc.h"
+#include "../Menus/MenuInGame.h"
 
 class XML_PARSER;
 class Otb;
@@ -63,6 +64,7 @@ public:
 	inline	Bool			GetTraining() const					{ return _bTraining;		}
 	inline	void			SetTraining(const Bool bTraining) 	{ _bTraining =bTraining;	}
 	inline	Bool			GetDemoMode() const					{ return _bDemoMode;		}
+	inline	void			SetPaused(const Bool bPaused)		{ _bPaused =bPaused;		}
 
 	static	CommandAbc*		CreateCommand(const CommandAbc::CmdType cmd);
 
@@ -82,6 +84,9 @@ protected:
 
 	Bool			_bTraining;
 	Bool			_bDemoMode;
+	Bool			_bPaused;
+
+	MenuInGame		_MenuInGame;
 
 	// temp ...
 	CommandAbc*		_pCmd[2];

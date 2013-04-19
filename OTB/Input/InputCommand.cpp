@@ -202,6 +202,12 @@ void InputCore::Update()
 		UpdateMenuInput(rAnalog, _InputMenuArray[MC_CANCEL]);
 	}
 
+	// ---- PAUSE ----
+	{
+		Float32 rAnalog	 =TClamp(GetCtrlStateFloat(0, InputMapper::PAD_BTN_PAUSE), 0.0f, 1.0f);
+		UpdateMenuInput(rAnalog, _InputMenuArray[MC_PAUSE]);
+	}
+
 	int t=0;
 }
 

@@ -169,8 +169,8 @@ bool Otb::Update(const Float32 rDeltaTime)
 {
 	_Input.Update();
 
-	_Game.Update(rDeltaTime);
 	_MenuMain.Update(rDeltaTime);
+	_Game.Update(rDeltaTime);
 
 	if (hge->Input_GetKeyState(HGEK_ESCAPE))
 	{

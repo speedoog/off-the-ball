@@ -85,13 +85,20 @@ Float32	MenuAbc::GetMenuPosY()
 // ****************************************************************************************
 void MenuAbc::RenderBackground()
 {
-	Float32 rXMin 	=-50.0f;
-	Float32 rXMax 	=50.0f;
+	RenderQuad( hgeVector(-50.0f, -50.0f), hgeVector(50.0f, 50.0f), hgeColorRGB(0.0f, 0.0f, 0.0f, 0.4f));
 
-	hgeColorRGB cl(0.0f, 0.0f, 0.0f, 0.4f);
+	RenderQuad( hgeVector(-3.0f, 1.0f), hgeVector(3.0f, 7.0f), hgeColorRGB(0.0f, 0.0f, 0.63f, 0.4f));
+}
 
-	Float32 rYMin =-50.0f;
-	Float32 rYMax =50.0f;
+// ****************************************************************************************
+//	RenderQuad
+// ****************************************************************************************
+void MenuAbc::RenderQuad(const hgeVector& vMin, const hgeVector& vMax, const hgeColorRGB& color)
+{
+	Float32 rXMin 	=vMin.x;
+	Float32 rXMax 	=vMax.x;
+	Float32 rYMin	=vMin.y;
+	Float32 rYMax	=vMax.y;
 
 	hgeQuad quad;
 	quad.v[0].x =rXMin;
@@ -119,7 +126,7 @@ void MenuAbc::RenderBackground()
 	quad.v[3].ty=0;
 
 	quad.blend	=BLEND_DEFAULT;
-	quad.v[0].col = quad.v[1].col = quad.v[2].col = quad.v[3].col = cl.GetHWColor();
+	quad.v[0].col = quad.v[1].col = quad.v[2].col = quad.v[3].col = color.GetHWColor();
 
 	Otb* pOTB =Otb::GetInstance();
 	quad.tex	=pOTB->GetResources()._texPowerBar;

@@ -46,6 +46,7 @@ protected:
 	void	AddMenuItem(const UInt32 ItemId, const TString& sLabel);
 
 	void	RenderBackground();
+	void	RenderQuad(const hgeVector& vMin, const hgeVector& vMax, const hgeColorRGB& color);
 
 protected:
 	hgeGUI*		_pGUI;
