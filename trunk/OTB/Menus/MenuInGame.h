@@ -40,12 +40,10 @@ public:
 	};
 
 	SMARTENUM_DECLARE(	MenuScreen
-						,	MS_MAIN
+						,	MS_PAUSE
 						);
 
 			MenuInGame();
-	void	Init();
-	void	Kill();
 
 	void	Render();
 	void	Update(Float32 dt);

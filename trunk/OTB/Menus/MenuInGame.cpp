@@ -79,9 +79,11 @@ void MenuInGame::ItemValidate(const int id)
 	{
 		// ------------- Menu Main ------------- 
 	case MII_MAIN_RESUME:
+		game.SetPaused(false);
 		break;
 
 	case MII_MAIN_EXIT:
+		pOTB->MainMenu();
 		break;
 
 	default:;
@@ -96,7 +98,7 @@ void MenuInGame::ItemCancel()
 {
 	switch(_nMenuCurrent)
 	{
-	case MS_MAIN:
+	case MS_PAUSE:
 		// exit ?
 		break;
 	}
@@ -134,5 +136,5 @@ void MenuInGame::StartMenuMain()
 	_pGUI->SetFocus(MII_MAIN_RESUME);
 	_pGUI->Enter();
 
-	_nMenuCurrent =MS_MAIN;
+	_nMenuCurrent =MS_PAUSE;
 }

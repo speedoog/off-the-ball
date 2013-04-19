@@ -37,6 +37,7 @@ const char* XML_ATTRIBUTE_ID		="Id";
 Game::Game()
 : _bTraining	(true)
 , _bDemoMode	(false)
+, _bPaused		(false)
 {
 }
 
@@ -100,6 +101,9 @@ void Game::InitBase()
 
 	SetTraining(false);
 	_bDemoMode	=false;
+	_bPaused	=false;
+
+	_MenuInGame.Init();
 }
 
 // ****************************************************************************************
@@ -242,6 +246,7 @@ void Game::Kill()
 	_Level.Kill();
 	_Ball.Kill();
 	_BallRecorder.Kill();
+	_MenuInGame.Kill();
 }
 
 // ****************************************************************************************
@@ -254,8 +259,20 @@ void Game::Update(const Float32 rDeltaTime)
 // 		_rTimeScale =2.0f;
 // 	}
 
-	// Game update
+	// Cheat to restart (select btn)
+	InputCore& Input =GetInputCommand();
+	if (Input.GetMenuInput(InputCore::MC_PAUSE)>=0.5f)
 	{
+		_bPaused =!_bPaused;
+	}
+
+	if (_bPaused)
+	{
+		_MenuInGame.Update(rDeltaTime);
+	}
+	else
+	{
+		// Game update
 //		const Float32 rTimeFactor =TChangeRange(0.5f, 1.0f, 1.0f, 0.3f, GetInputCommand().GetCtrlStateFloat(0, InputMapper::PAD_TIME_SCALE));
 
 		//	const Float32 rTimeFactor =(UseTimeScale()==true)?0.3f:1.0f;
@@ -275,32 +292,25 @@ void Game::Update(const Float32 rDeltaTime)
 			_Players[1].Update(rSliceTime);
 			_Rules.Update(rSliceTime);
 		}
-	}
 
-	// Cheat to restart (select btn)
-	InputCore& Input =GetInputCommand();
-	if (Input.GetCtrlState(0, InputMapper::PAD_BTN_PAUSE))
-	{
-		_Rules.ActionServiceStart(0);
-	}
+		_BallRecorder._bDbgBest		^=hge->Input_KeyDown(HGEK_1);
+		_BallRecorder._bDbgRecord	^=hge->Input_KeyDown(HGEK_2);
+		_BallRecorder._bDbgHeat		^=hge->Input_KeyDown(HGEK_3);
 
-	_BallRecorder._bDbgBest		^=hge->Input_KeyDown(HGEK_1);
-	_BallRecorder._bDbgRecord	^=hge->Input_KeyDown(HGEK_2);
-	_BallRecorder._bDbgHeat		^=hge->Input_KeyDown(HGEK_3);
-
-	if (_bTraining)
-	{
-		if (hge->Input_GetKeyState(HGEK_DELETE)!=0)
+		if (_bTraining)
 		{
-			_BallRecorder.DeleteCurrentRecord();
-		}
+			if (hge->Input_GetKeyState(HGEK_DELETE)!=0)
+			{
+				_BallRecorder.DeleteCurrentRecord();
+			}
 
-		if (hge->Input_KeyDown(HGEK_5))		_rTimeScale =0.2f;
-		if (hge->Input_KeyDown(HGEK_6))		_rTimeScale =0.5f;
-		if (hge->Input_KeyDown(HGEK_7))		_rTimeScale =1.0f;
-		if (hge->Input_KeyDown(HGEK_8))		_rTimeScale =2.0f;
-		if (hge->Input_KeyDown(HGEK_9))		_rTimeScale =10.0f;
-		if (hge->Input_KeyDown(HGEK_0))		_rTimeScale =100.0f;
+			if (hge->Input_KeyDown(HGEK_5))		_rTimeScale =0.2f;
+			if (hge->Input_KeyDown(HGEK_6))		_rTimeScale =0.5f;
+			if (hge->Input_KeyDown(HGEK_7))		_rTimeScale =1.0f;
+			if (hge->Input_KeyDown(HGEK_8))		_rTimeScale =2.0f;
+			if (hge->Input_KeyDown(HGEK_9))		_rTimeScale =10.0f;
+			if (hge->Input_KeyDown(HGEK_0))		_rTimeScale =100.0f;
+		}
 	}
 }
 
@@ -319,6 +329,11 @@ void Game::Render()
 	_pCmd[1]->Render();
 
 	_Rules.Render();
+
+	if (_bPaused)
+	{
+		_MenuInGame.Render();
+	}
 
 	if (_bDemoMode==false && _rTimeScale!=1.0f)
 	{
