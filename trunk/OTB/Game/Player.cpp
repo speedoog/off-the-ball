@@ -226,7 +226,8 @@ void Player::Update(const Float32 rDeltaTime)
 			ball.Launch(_vInputMove);
 		}
 	}
-	//else
+	
+	if (pRules->GetFailMode()==false)
 	{
 		// check ball collide
 		hgeVector vBallPos		=ball.GetPos();

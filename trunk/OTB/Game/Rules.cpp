@@ -44,6 +44,7 @@ void Rules::Init(Game* pGame)
 	_nDbgFails			=0;
 	_bShowScores		=true;
 	_bShowRulesMsg		=true;
+	_bFailMode			=false;
 }
 
 // ****************************************************************************************
@@ -51,6 +52,14 @@ void Rules::Init(Game* pGame)
 // ****************************************************************************************
 void Rules::Update(const Float32 rDeltaTime)
 {
+	if (_bFailMode)
+	{
+		_rFailTimer -=rDeltaTime;
+		if (_rFailTimer<0)
+		{
+			ActionServiceStart(_nServicePlayer);
+		}
+	}
 }
 
 // ****************************************************************************************
@@ -77,7 +86,13 @@ void Rules::Render()
 
 	if (_bShowRulesMsg)
 	{
-		if (_bServing)
+		if (_bScoreMsg)
+		{
+			int nOtherPlayer =1-_nBallSide;
+			pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"P%d ++", nOtherPlayer+1);
+		}
+
+		if (_bServing && !_bFailMode)
 		{
 			if (_bWaitServe)
 			{
@@ -125,6 +140,8 @@ void Rules::ActionStartGame(int nPlayerStart)
 // ****************************************************************************************
 void Rules::ActionServiceStart(int nPlayerServe)
 {
+	_bScoreMsg		=false;
+	_bFailMode		=false;
 	_bServing		=true;
 	_bRacketHit 	=false;
 	_nBallSide		=nPlayerServe;
@@ -151,10 +168,22 @@ void Rules::ActionFail()
 	// update score
 	int nOtherPlayer =1-_nBallSide;
 	_pGame->GetPlayer(nOtherPlayer).ScoreInc();		// other player gain a point
+	_bScoreMsg =true;
 
 	_nServicePlayer =1-_nServicePlayer;				// change server
 	_bSecondServe	=false;
-	ActionServiceStart(_nServicePlayer);
+
+	// start Fail
+	FailStart();
+}
+
+// ****************************************************************************************
+//	FailStart
+// ****************************************************************************************
+void Rules::FailStart()
+{
+	_bFailMode	=true;
+	_rFailTimer	=3.0f;
 }
 
 // ****************************************************************************************
@@ -171,7 +200,7 @@ void Rules::ActionServiceFailed()
 	{
 		// Second serve allowed, same player
 		_bSecondServe =true;
-		ActionServiceStart(_nServicePlayer);
+		FailStart();
 	}
 }
 
@@ -186,6 +215,11 @@ void Rules::ActionServiceFailed()
 // ****************************************************************************************
 void Rules::EventBallChangeSide(int nSide)
 {
+	if (_bFailMode)
+	{
+		return;
+	}
+
 	_bServing		=false;
 	_bRacketHit 	=false;
 	_nBallSide		=nSide;
@@ -201,6 +235,11 @@ void Rules::EventBallChangeSide(int nSide)
 // ****************************************************************************************
 void Rules::EventBallHitGround()
 {
+	if (_bFailMode)
+	{
+		return;
+	}
+
 	if (_bServing)
 	{
 		ActionServiceFailed();
@@ -227,6 +266,10 @@ void Rules::EventBallHitGround()
 // ****************************************************************************************
 void Rules::EventBallHitWall()
 {
+	if (_bFailMode)
+	{
+		return;
+	}
 
 }
 
@@ -235,6 +278,11 @@ void Rules::EventBallHitWall()
 // ****************************************************************************************
 void Rules::EventBallHitRacket()
 {
+	if (_bFailMode)
+	{
+		return;
+	}
+
 	if (_bServing && _bRacketHit)			// double hit during service
 	{
 		ActionServiceFailed();
@@ -250,6 +298,11 @@ void Rules::EventBallHitRacket()
 // ****************************************************************************************
 void Rules::EventBallHitNet()
 {
+	if (_bFailMode)
+	{
+		return;
+	}
+
 	if (_bServing)
 	{
 		ActionServiceFailed();
