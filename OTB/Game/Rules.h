@@ -40,6 +40,8 @@ public:
 			void		ActionFail();
 			void		ActionServiceFailed();
 
+			void		FailStart();
+
 	// Events
 			void		EventBallChangeSide(Int32 nSide);
 			void		EventBallHitGround();
@@ -53,6 +55,7 @@ public:
 	inline	Bool		IsServing()									{ return _bServing;					}
 	inline	Int32		GetBallSide() const							{ return _nBallSide;				}
 	inline	Bool		GetRacketHit() const						{ return _bRacketHit;				}
+	inline	Bool		GetFailMode() const							{ return _bFailMode;				}
 
 	inline	void		SetShowScores(const Bool bShowScores)		{ _bShowScores =bShowScores;		}
 	inline	void		SetShowRulesMsg(const Bool bShowRulesMsg)	{ _bShowRulesMsg =bShowRulesMsg;	}
@@ -67,6 +70,10 @@ protected:
 	Int32	_nBallSide;
 	Int32	_nGroundTouch;
 	Int32	_nServicePlayer;
+
+	Bool	_bScoreMsg;
+	Bool	_bFailMode;
+	Float32	_rFailTimer;
 
 	Bool	_bShowScores, _bShowRulesMsg;
 	Int32	_nDbgExchanges, _nDbgFails;
