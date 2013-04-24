@@ -21,10 +21,10 @@
 #include "Game.h"
 
 Float32 rGravity			=-8.0f;
-Float32 rGroundResitution	=1.0f;
-Float32 rWallResitution		=0.75f;
-Float32 rCeilResitution		=0.5f;
-Float32 rNetResitution		=0.1f;
+Float32 rGroundRestitution	=1.0f;
+Float32 rWallRestitution	=0.75f;
+Float32 rCeilRestitution	=0.5f;
+Float32 rNetRestitution		=0.1f;
 Float32 rAirFriction		=0.075f;
 
 // ****************************************************************************************
@@ -36,7 +36,7 @@ Ball::Ball()
 , _vVelocity	(0,0)
 , _rRadius		(0.1f)
 , _rSpriteAngle	(0.0f)
-, _History		(1.0f/200.0f, 2.3f, 1000)
+, _History		(1.0f/200.0f, 1.7f, 1000)
 {
 }
 
@@ -87,6 +87,12 @@ void Ball::Update(const Float32 rDeltaTime)
 	if (_bPaused)
 		return;
 
+	Float32 rRestitutionScale =1.0f;
+	if (_pGame->GetRules().GetFailMode())
+	{
+		rRestitutionScale =0.5f;
+	}
+
 	// update ball physic
 	{
 		_vLastPos	=_vPos;
@@ -104,7 +110,7 @@ void Ball::Update(const Float32 rDeltaTime)
 	if (_vPos.y<_rRadius)
 	{
 		_vPos.y =_rRadius;
-		_vVelocity.y =-rGroundResitution*_vVelocity.y;
+		_vVelocity.y =-rGroundRestitution*rRestitutionScale*_vVelocity.y;
 
 		_pGame->GetRules().EventBallHitGround();
 	}
@@ -115,13 +121,13 @@ void Ball::Update(const Float32 rDeltaTime)
 	if (_vPos.x>rWall)
 	{
 		_vPos.x =rWall;
-		_vVelocity.x =-rWallResitution*_vVelocity.x;
+		_vVelocity.x =-rWallRestitution*rRestitutionScale*_vVelocity.x;
 		_pGame->GetRules().EventBallHitWall();
 	}
 	if (_vPos.x<-rWall)
 	{
 		_vPos.x =-rWall;
-		_vVelocity.x =-rWallResitution*_vVelocity.x;
+		_vVelocity.x =-rWallRestitution*rRestitutionScale*_vVelocity.x;
 		_pGame->GetRules().EventBallHitWall();
 	}
 
@@ -130,7 +136,7 @@ void Ball::Update(const Float32 rDeltaTime)
 	if (_vPos.y>rCeil)
 	{
 		_vPos.y =rCeil;
-		_vVelocity.y =-rWallResitution*_vVelocity.y;
+		_vVelocity.y =-rWallRestitution*rRestitutionScale*_vVelocity.y;
 	}
 
 	// Collision Net
@@ -145,7 +151,7 @@ void Ball::Update(const Float32 rDeltaTime)
 		if (bHitNet)
 		{
 			// hit net
-			_vVelocity.x *=-rNetResitution;
+			_vVelocity.x *=-rNetRestitution*rRestitutionScale;
 			_vPos.x=0.0f;
 			nSide =_nSide;	// stay same side !
 			_pGame->GetRules().EventBallHitNet();

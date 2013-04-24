@@ -20,6 +20,8 @@
 #include "Rules.h"
 #include "Game.h"
 
+static const Float32 rFailDuration =3.0f;
+
 // ****************************************************************************************
 //	Ctor
 // ****************************************************************************************
@@ -72,13 +74,15 @@ void Rules::Render()
 
 	Float32 rPosY =_pGame->GetLevel().GetSize().y;
 
+	hgeVector vLvlSize =level.GetSize();
+	hgeVector vPosScore[2] ={ hgeVector(-vLvlSize.x*0.98f, vLvlSize.y), hgeVector(vLvlSize.x*0.98f, vLvlSize.y) };
+
 	// render score (move it in another class ?)
 	if (_bShowScores)
 	{
-		hgeVector vLvlSize =level.GetSize();
 		hgeFont* pFontScore =resources._pFontScore;
-		pFontScore->printf(-vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_LEFT,  "%d", _pGame->GetPlayer(0).ScoreGet());
-		pFontScore->printf( vLvlSize.x*0.98f, vLvlSize.y, HGETEXT_RIGHT, "%d", _pGame->GetPlayer(1).ScoreGet());
+		pFontScore->printf( vPosScore[0].x, vPosScore[0].y, HGETEXT_LEFT,  "%d", _pGame->GetPlayer(0).ScoreGet());
+		pFontScore->printf( vPosScore[1].x, vPosScore[1].y, HGETEXT_RIGHT, "%d", _pGame->GetPlayer(1).ScoreGet());
 	}
 
 	hgeFont* pFontMessages =resources._pFontMessages;
@@ -88,8 +92,15 @@ void Rules::Render()
 	{
 		if (_bScoreMsg)
 		{
-			int nOtherPlayer =1-_nBallSide;
-			pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"P%d ++", nOtherPlayer+1);
+			hgeFont* pFontScore =resources._pFontScore;
+			Int32 nOtherPlayer =1-_nBallSide;
+
+			hgeVector vTargetPos =vPosScore[nOtherPlayer];
+
+			Float32 rMsgRatio =TChangeRange(rFailDuration, 0.0f, 0.0f, 1.0f, _rFailTimer);
+			hgeVector vPosMsg =TBlend(_vFailStartPos, vTargetPos, TSmoothStep(TSmoothStep(rMsgRatio)));
+
+			pFontScore->printf(vPosMsg.x, vPosMsg.y,	HGETEXT_CENTER,	"+1", nOtherPlayer+1);
 		}
 
 		if (_bServing && !_bFailMode)
@@ -127,7 +138,7 @@ void Rules::Render()
 // ****************************************************************************************
 //	ActionStartGame
 // ****************************************************************************************
-void Rules::ActionStartGame(int nPlayerStart)
+void Rules::ActionStartGame(Int32 nPlayerStart)
 {
 	_nServicePlayer =nPlayerStart;
 	_pGame->GetPlayer(0).ScoreReset();
@@ -138,7 +149,7 @@ void Rules::ActionStartGame(int nPlayerStart)
 // ****************************************************************************************
 //	ActionServiceStart
 // ****************************************************************************************
-void Rules::ActionServiceStart(int nPlayerServe)
+void Rules::ActionServiceStart(Int32 nPlayerServe)
 {
 	_bScoreMsg		=false;
 	_bFailMode		=false;
@@ -166,7 +177,7 @@ void Rules::ActionFail()
 	_pGame->GetBallRecorder().StopRecord(false);
 
 	// update score
-	int nOtherPlayer =1-_nBallSide;
+	Int32 nOtherPlayer =1-_nBallSide;
 	_pGame->GetPlayer(nOtherPlayer).ScoreInc();		// other player gain a point
 	_bScoreMsg =true;
 
@@ -182,8 +193,9 @@ void Rules::ActionFail()
 // ****************************************************************************************
 void Rules::FailStart()
 {
-	_bFailMode	=true;
-	_rFailTimer	=3.0f;
+	_bFailMode		=true;
+	_rFailTimer		=rFailDuration;
+	_vFailStartPos	=_pGame->GetBall().GetPos();
 }
 
 // ****************************************************************************************
@@ -213,7 +225,7 @@ void Rules::ActionServiceFailed()
 // ****************************************************************************************
 //	EventBallChangeSide
 // ****************************************************************************************
-void Rules::EventBallChangeSide(int nSide)
+void Rules::EventBallChangeSide(Int32 nSide)
 {
 	if (_bFailMode)
 	{

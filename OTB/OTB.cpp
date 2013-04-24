@@ -172,12 +172,6 @@ bool Otb::Update(const Float32 rDeltaTime)
 	_MenuMain.Update(rDeltaTime);
 	_Game.Update(rDeltaTime);
 
-	if (hge->Input_GetKeyState(HGEK_ESCAPE))
-	{
-		// Exit w/ Esc
-		MainMenu();
-	}
-
 	return _bExitApp;
 }
 

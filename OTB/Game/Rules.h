@@ -71,9 +71,10 @@ protected:
 	Int32	_nGroundTouch;
 	Int32	_nServicePlayer;
 
-	Bool	_bScoreMsg;
-	Bool	_bFailMode;
-	Float32	_rFailTimer;
+	Bool		_bScoreMsg;
+	Bool		_bFailMode;
+	Float32		_rFailTimer;
+	hgeVector	_vFailStartPos;
 
 	Bool	_bShowScores, _bShowRulesMsg;
 	Int32	_nDbgExchanges, _nDbgFails;

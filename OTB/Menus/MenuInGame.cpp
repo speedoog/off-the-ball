@@ -55,7 +55,7 @@ void MenuInGame::Update(Float32 dt)
 		{
 			ItemValidate(_pGUI->GetFocus());
 		}
-		else if (Input.GetMenuInput(InputCore::MC_CANCEL)>0.5f)
+		else if (Input.GetMenuInput(InputCore::MC_CANCEL)>0.5f || hge->Input_KeyDown(HGEK_ESCAPE))
 		{
 			ItemCancel();
 		}

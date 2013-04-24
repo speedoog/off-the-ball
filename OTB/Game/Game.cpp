@@ -261,7 +261,7 @@ void Game::Update(const Float32 rDeltaTime)
 
 	// Cheat to restart (select btn)
 	InputCore& Input =GetInputCommand();
-	if (Input.GetMenuInput(InputCore::MC_PAUSE)>=0.5f)
+	if (_bDemoMode==false && (Input.GetMenuInput(InputCore::MC_PAUSE)>=0.5f || hge->Input_KeyDown(HGEK_ESCAPE)) )
 	{
 		_bPaused =!_bPaused;
 	}
