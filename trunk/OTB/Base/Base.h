@@ -84,6 +84,33 @@ inline static void TMemMove(void* dest, const void* src, UInt32 nSize)
 	}
 }
 
+// -------------------------------------------- Assert --------------------------------------------
+
+void TPrintMessage(char* pFormatedMsg, ...);
+void TPrintWarning(char* pFormatedMsg, ...);
+void TPrintError(char* pFormatedMsg, ...);
+void TAssertFunction(char* msg, const char* file, int line);
+
+#ifdef NDEBUG
+// ************************* Release *************************
+#	define	TAssert(a)      	{}
+#	define	TFail()      		{}
+#else
+// ************************* Debug *************************
+#	define TAssert(a)			if	(!(a))	TAssertFunction(#a, __FILE__, __LINE__)
+#	define TFail()				TAssertFunction("Fail", __FILE__, __LINE__)
+#	define T_DEBUG				1
+#endif
+
+// Helper macro T_JOIN:
+// The following piece of macro magic joins the two arguments together, even when one of the arguments is itself a macro 
+// The key is that macro expansion of macro arguments does not occur in T_DO_JOIN2 but does in T_DO_JOIN.
+#define T_JOIN(_part1_, _part2_)		T_DO_JOIN(_part1_, _part2_)
+#define T_DO_JOIN(_part1_, _part2_)		T_DO_JOIN2(_part1_, _part2_)
+#define T_DO_JOIN2(_part1_, _part2_)	_part1_##_part2_
+
+static const char* UID_BUILD = "Build : "__DATE__" "__TIME__;
+
 // -------------------------------------------- clip / clamp / Min / Max --------------------------------------------
 
 template<typename T>
@@ -163,6 +190,93 @@ template <class C> static C TChangeRange(C SourceRangeMin, C SourceRangeMax, C D
 	return DestinationRangeMin+dy*k;
 }
 
+// Range Check
+// Boundaries are inclusive
+template <typename C> static Bool	TIsInRange(const C Val, const C Min, const C Max)
+{
+	return (Val>=Min) && (Val<=Max);
+}
+
+// Overlapping check:               
+//								    
+//    [ ------ A ------- ]		    
+//           [ ------- B ------- ]  
+//								    
+// Warning : The overlapping check is boundary exclusive 
+//			 so for exemple: [1..3] does not overlap [3..8]
+//           use the Epsilon verion to manage this case
+template <typename C> static Bool	TOverlap(const C& Amin, const C& Amax, const C& Bmin, const C& Bmax)
+{
+	return (Amin<Bmax) && (Bmin<Amax);
+}
+
+template <typename C> static Bool	TOverlap(const C& Amin, const C& Amax, const C& Bmin, const C& Bmax, const C& Epsilon)
+{
+	TAssert(Amin<=Amax);
+	TAssert(Bmin<=Bmax);
+	return TOverlap(Amin+Epsilon, Amax-Epsilon, Bmin, Bmax);
+}
+
+// Inside check:                       
+//							           
+//        [ ---- A --- ]  	           
+//    [ ------ B ------- ]	           
+//							           
+// Checks B range is entirely inside A 
+//							           
+template <typename C> static Bool	TInside(const C& Amin, const C& Amax, const C& Bmin, const C& Bmax)
+{
+	TAssert(Amin<=Amax);
+	TAssert(Bmin<=Bmax);
+	return (Amin>=Bmin) && (Amax<=Bmax);
+}
+
+// SmoothStep(fMin, fMax, x)   y = 3 x^2 - 2 x^3 
+//                                               
+// /!\ Warning : ONLY VALID in [0..1] range ! /!\_ 
+//                                               
+// 1 ^            ,~-+   Output                  
+//   |         ,²¨   .                           
+//   |        .      .                           
+//   |       /       .                           
+//   |      i        .                           
+//   |    ,²         .                           
+// 0 +-~²'-----------+-> x                       
+//   0               1                           
+//                                               
+static Float32 TSmoothStep(const Float32 x)
+{
+	TAssert(x>=0.0f);
+	TAssert(x<=1.0f);
+
+	const Float32 fRes = x*x*(3.f - 2.f*x);
+	return fRes;
+}
+
+// SmoothStep(fMin, fMax, x)   same with an input range
+//                                              
+// 1 ^      .            ,~-+------  Output     
+//   |	    .         ,²¨   .                   
+//   |	    .        .      .                   
+//   |	    .       /       .                   
+//   |	    .      i        .                   
+//   |      .    ,²         .                   
+// 0 + -----+-~²'-----------+------> x          
+//         fmin            fmax                 
+//                                              
+// ref: http://www.planetside.co.uk/docs/tg2/noderef/window_1_16_2_image_0.png
+static Float32 TSmoothStep(const Float32 fMin, const Float32 fMax, const Float32 x)
+{
+	TAssert(fMin <= fMax);
+
+	if (x >= fMax) return 1.0f;
+	if (x <= fMin) return 0.0f;
+
+	const Float32 fRange =fMax - fMin;
+	const Float32 fDiv	 =(x - fMin) / fRange;
+	const Float32 fRes	 =TSmoothStep(fDiv);
+	return fRes;
+}
 static inline Float32 TRand()
 {
 	return Float32(rand())/Float32(RAND_MAX);
@@ -195,31 +309,5 @@ static Bool TEqual(const Float32 rValue1, const Float32 rValue2, const Float32 r
 
 #define GET_CONTAINER_OF(_ptr_, _type_, _member_)				(_type_*) ( (IntPtr)(_ptr_)-GET_ATTR_OFFSET(_type_, _member_) )
 
-// -------------------------------------------- Assert --------------------------------------------
-
-void TPrintMessage(char* pFormatedMsg, ...);
-void TPrintWarning(char* pFormatedMsg, ...);
-void TPrintError(char* pFormatedMsg, ...);
-void TAssertFunction(char* msg, const char* file, int line);
-
-#ifdef NDEBUG
-// ************************* Release *************************
-#	define	TAssert(a)      	{}
-#	define	TFail()      		{}
-#else
-// ************************* Debug *************************
-#	define TAssert(a)			if	(!(a))	TAssertFunction(#a, __FILE__, __LINE__)
-#	define TFail()				TAssertFunction("Fail", __FILE__, __LINE__)
-#	define T_DEBUG				1
-#endif
-
-// Helper macro T_JOIN:
-// The following piece of macro magic joins the two arguments together, even when one of the arguments is itself a macro 
-// The key is that macro expansion of macro arguments does not occur in T_DO_JOIN2 but does in T_DO_JOIN.
-#define T_JOIN(_part1_, _part2_)		T_DO_JOIN(_part1_, _part2_)
-#define T_DO_JOIN(_part1_, _part2_)		T_DO_JOIN2(_part1_, _part2_)
-#define T_DO_JOIN2(_part1_, _part2_)	_part1_##_part2_
-
-static const char* UID_BUILD = "Build : "__DATE__" "__TIME__;
 
 #endif	//__BASE_H__
