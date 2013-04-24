@@ -20,7 +20,7 @@
 #include "Rules.h"
 #include "Game.h"
 
-static const Float32 rFailDuration =3.0f;
+static const Float32 rFailDuration =2.0f;
 
 // ****************************************************************************************
 //	Ctor
@@ -47,6 +47,8 @@ void Rules::Init(Game* pGame)
 	_bShowScores		=true;
 	_bShowRulesMsg		=true;
 	_bFailMode			=false;
+	_nFailPlayerScore	=0;
+	_bSecondServe		=false;
 }
 
 // ****************************************************************************************
@@ -59,6 +61,7 @@ void Rules::Update(const Float32 rDeltaTime)
 		_rFailTimer -=rDeltaTime;
 		if (_rFailTimer<0)
 		{
+			_pGame->GetPlayer(_nFailPlayerScore).ScoreInc();		// player gain a point
 			ActionServiceStart(_nServicePlayer);
 		}
 	}
@@ -81,6 +84,8 @@ void Rules::Render()
 	if (_bShowScores)
 	{
 		hgeFont* pFontScore =resources._pFontScore;
+		pFontScore->SetScale(-0.01f * 1.0f);
+		pFontScore->SetColor(0xFFFFFFFF);
 		pFontScore->printf( vPosScore[0].x, vPosScore[0].y, HGETEXT_LEFT,  "%d", _pGame->GetPlayer(0).ScoreGet());
 		pFontScore->printf( vPosScore[1].x, vPosScore[1].y, HGETEXT_RIGHT, "%d", _pGame->GetPlayer(1).ScoreGet());
 	}
@@ -100,6 +105,9 @@ void Rules::Render()
 			Float32 rMsgRatio =TChangeRange(rFailDuration, 0.0f, 0.0f, 1.0f, _rFailTimer);
 			hgeVector vPosMsg =TBlend(_vFailStartPos, vTargetPos, TSmoothStep(TSmoothStep(rMsgRatio)));
 
+			pFontScore->SetScale(-0.01f*TChangeRange(0.0f, 1.0f, 1.0f, 0.5f, rMsgRatio));
+			hgeColorRGB colMsg(1.0f, 1.0f, 1.0f, 1.0f-rMsgRatio);
+			pFontScore->SetColor(colMsg.GetHWColor());
 			pFontScore->printf(vPosMsg.x, vPosMsg.y,	HGETEXT_CENTER,	"+1", nOtherPlayer+1);
 		}
 
@@ -178,7 +186,7 @@ void Rules::ActionFail()
 
 	// update score
 	Int32 nOtherPlayer =1-_nBallSide;
-	_pGame->GetPlayer(nOtherPlayer).ScoreInc();		// other player gain a point
+	_nFailPlayerScore =nOtherPlayer;
 	_bScoreMsg =true;
 
 	_nServicePlayer =1-_nServicePlayer;				// change server

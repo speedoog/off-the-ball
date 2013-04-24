@@ -19,6 +19,7 @@
 #include "player.h"
 
 #include "Game.h"
+#include "../Otb.h"
 
 const Float32 rRacketInputDeadZone		=0.3f;
 const Float32 rRacketRestitution		=0.75f;
@@ -220,7 +221,7 @@ void Player::Update(const Float32 rDeltaTime)
 	if (bWaitServe)
 	{
 		ball.Reset(this);					// sync ball
-		if (_vInputMove.Length()>0.5f)					// deadzone
+		if (_vInputMove.y>0.3f)					// deadzone
 		{
 			pRules->EventServeStart();
 			ball.Launch(_vInputMove);
@@ -303,8 +304,9 @@ void Player::Update(const Float32 rDeltaTime)
 	}
 }
 
-const UInt32 nColorPlayerBody	=0xFF39588E;
-const UInt32 nColorPlayerRaquet	=0xFF60FF60;
+const UInt32 nColorPlayerBody[]	={ 0xFF39588E, 0xFFBE3839};
+//const UInt32 nColorPlayerRaquet	=0xFF60E060;
+const UInt32 nColorPlayerRaquet	=0xFFFFFFFF;
 const UInt32 nColorPlayerEye	=0xFFFFFFFF;
 
 // ****************************************************************************************
@@ -312,13 +314,14 @@ const UInt32 nColorPlayerEye	=0xFFFFFFFF;
 // ****************************************************************************************
 void Player::Render()
 {
-	hgeColorRGB	colBody;	colBody.SetHWColor(nColorPlayerBody);
+	hgeColorRGB	colBody;	colBody.SetHWColor(nColorPlayerBody[_nPlayerId]);
 	hgeColorRGB colRaquet;	colRaquet.SetHWColor(nColorPlayerRaquet);
 	hgeColorRGB colEye;		colEye.SetHWColor(nColorPlayerEye);
 
 	// Player
+	Otb::RenderQuad(hgeVector(_vPos.x-_vCharSize.x, _vPos.y), hgeVector(_vPos.x+_vCharSize.x, _vPos.y+_vCharSize.y), colBody.GetHWColor());
 	hge->Gfx_RenderBox(	_vPos.x-_vCharSize.x, _vPos.y,
-						_vPos.x+_vCharSize.x, _vPos.y+_vCharSize.y, colBody.GetHWColor());
+						_vPos.x+_vCharSize.x, _vPos.y+_vCharSize.y, nColorPlayerEye);
 
 	// Eye test
 	Float32 rEyeRadius =_vCharSize.x*0.25f;
@@ -329,8 +332,9 @@ void Player::Render()
 	hgeVector vRaquet0=GetRaquetPos0();
 	hgeVector vRaquet1=GetRaquetPos1();
 
-	hge->Gfx_RenderLine(vRaquet0.x, vRaquet0.y,
-						vRaquet1.x, vRaquet1.y, colRaquet.GetHWColor());
+	Otb::RenderLine(vRaquet0, vRaquet1, colRaquet, 0.03f);
+//	hge->Gfx_RenderLine(vRaquet0.x, vRaquet0.y,
+//						vRaquet1.x, vRaquet1.y, colRaquet.GetHWColor());
 
 	if (_pGame->GetTraining())
 	{

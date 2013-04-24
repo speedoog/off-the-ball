@@ -50,6 +50,9 @@ public:
 
 	static	Otb*		GetInstance()					{ return _pOTB;			}
 
+	static	void		RenderQuad(const hgeVector& vMin, const hgeVector& vMax, const hgeColorRGB& color, HTEXTURE tex=0);
+	static	void		RenderLine(const hgeVector& v0, const hgeVector& v1, const hgeColorRGB& color, const Float32 rSize, HTEXTURE tex=0);
+
 protected:
 			void		LoadSettings();
 			void		ApplyWorldTransform();

@@ -85,51 +85,7 @@ Float32	MenuAbc::GetMenuPosY()
 // ****************************************************************************************
 void MenuAbc::RenderBackground()
 {
-	RenderQuad( hgeVector(-50.0f, -50.0f), hgeVector(50.0f, 50.0f), hgeColorRGB(0.0f, 0.0f, 0.0f, 0.4f));
-
-	RenderQuad( hgeVector(-3.0f, 2.0f), hgeVector(3.0f, 7.0f), hgeColorRGB(0.0f, 0.0f, 0.63f, 0.4f));
-}
-
-// ****************************************************************************************
-//	RenderQuad
-// ****************************************************************************************
-void MenuAbc::RenderQuad(const hgeVector& vMin, const hgeVector& vMax, const hgeColorRGB& color)
-{
-	Float32 rXMin 	=vMin.x;
-	Float32 rXMax 	=vMax.x;
-	Float32 rYMin	=vMin.y;
-	Float32 rYMax	=vMax.y;
-
-	hgeQuad quad;
-	quad.v[0].x =rXMin;
-	quad.v[0].y =rYMin;
-	quad.v[0].z =0;
-	quad.v[0].tx=0;
-	quad.v[0].ty=0;
-
-	quad.v[1].x =rXMin;
-	quad.v[1].y =rYMax;
-	quad.v[1].z =0;
-	quad.v[1].tx=0;
-	quad.v[1].ty=1;
-
-	quad.v[2].x =rXMax;
-	quad.v[2].y =rYMax;
-	quad.v[2].z =0;
-	quad.v[2].tx=1;
-	quad.v[2].ty=1;
-
-	quad.v[3].x =rXMax;
-	quad.v[3].y =rYMin;
-	quad.v[3].z =0;
-	quad.v[3].tx=1;
-	quad.v[3].ty=0;
-
-	quad.blend	=BLEND_DEFAULT;
-	quad.v[0].col = quad.v[1].col = quad.v[2].col = quad.v[3].col = color.GetHWColor();
-
 	Otb* pOTB =Otb::GetInstance();
-	quad.tex	=pOTB->GetResources()._texPowerBar;
-
-	hge->Gfx_RenderQuad(&quad);
+	Otb::RenderQuad( hgeVector(-50.0f, -50.0f), hgeVector(50.0f, 50.0f), hgeColorRGB(0.0f, 0.0f, 0.0f, 0.4f), pOTB->GetResources()._texPowerBar);
+	Otb::RenderQuad( hgeVector(-3.0f, 2.0f), hgeVector(3.0f, 7.0f), hgeColorRGB(0.0f, 0.0f, 0.63f, 0.4f), pOTB->GetResources()._texPowerBar);
 }
