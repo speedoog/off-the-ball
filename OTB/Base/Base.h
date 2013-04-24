@@ -190,6 +190,11 @@ template <class C> static C TChangeRange(C SourceRangeMin, C SourceRangeMax, C D
 	return DestinationRangeMin+dy*k;
 }
 
+template <class C> static C TChangeRangeClamped(C SourceRangeMin, C SourceRangeMax, C DestinationRangeMin, C DestinationRangeMax, Float32 Value)
+{
+	return TClamp( TChangeRange(SourceRangeMin, SourceRangeMax, DestinationRangeMin, DestinationRangeMax, Value), DestinationRangeMin, DestinationRangeMax);
+}
+
 // Range Check
 // Boundaries are inclusive
 template <typename C> static Bool	TIsInRange(const C Val, const C Min, const C Max)

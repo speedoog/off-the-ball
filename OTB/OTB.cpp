@@ -243,3 +243,88 @@ void Otb::LoadSettings()
 		MessageBox(NULL, "Failed to load OTB.xml", "Error", MB_OK | MB_ICONERROR | MB_APPLMODAL);
 	}
 }
+
+// ****************************************************************************************
+//	RenderQuad
+// ****************************************************************************************
+void Otb::RenderQuad(const hgeVector& vMin, const hgeVector& vMax, const hgeColorRGB& color, HTEXTURE tex)
+{
+	Float32 rXMin 	=vMin.x;
+	Float32 rXMax 	=vMax.x;
+	Float32 rYMin	=vMin.y;
+	Float32 rYMax	=vMax.y;
+
+	hgeQuad quad;
+	quad.v[0].x =rXMin;
+	quad.v[0].y =rYMin;
+	quad.v[0].z =0;
+	quad.v[0].tx=0;
+	quad.v[0].ty=0;
+
+	quad.v[1].x =rXMin;
+	quad.v[1].y =rYMax;
+	quad.v[1].z =0;
+	quad.v[1].tx=0;
+	quad.v[1].ty=1;
+
+	quad.v[2].x =rXMax;
+	quad.v[2].y =rYMax;
+	quad.v[2].z =0;
+	quad.v[2].tx=1;
+	quad.v[2].ty=1;
+
+	quad.v[3].x =rXMax;
+	quad.v[3].y =rYMin;
+	quad.v[3].z =0;
+	quad.v[3].tx=1;
+	quad.v[3].ty=0;
+
+	quad.blend	=BLEND_DEFAULT;
+	quad.v[0].col = quad.v[1].col = quad.v[2].col = quad.v[3].col = color.GetHWColor();
+
+	quad.tex	=tex;
+
+	hge->Gfx_RenderQuad(&quad);
+}
+
+// ****************************************************************************************
+//	RenderQuad
+// ****************************************************************************************
+void Otb::RenderLine(const hgeVector& v0, const hgeVector& v1, const hgeColorRGB& color, const Float32 rSize, HTEXTURE tex)
+{
+	hgeVector vDir	=v1-v0;
+	vDir.Normalize();
+	vDir *=rSize;
+
+	hgeQuad quad;
+	quad.v[0].x =v0.x-vDir.y;
+	quad.v[0].y =v0.y+vDir.x;
+	quad.v[0].z =0;
+	quad.v[0].tx=0;
+	quad.v[0].ty=0;
+
+	quad.v[1].x =v0.x+vDir.y;
+	quad.v[1].y =v0.y-vDir.x;
+	quad.v[1].z =0;
+	quad.v[1].tx=0;
+	quad.v[1].ty=1;
+
+	quad.v[2].x =v1.x+vDir.y;
+	quad.v[2].y =v1.y-vDir.x;
+	quad.v[2].z =0;
+	quad.v[2].tx=1;
+	quad.v[2].ty=1;
+
+	quad.v[3].x =v1.x-vDir.y;
+	quad.v[3].y =v1.y+vDir.x;
+	quad.v[3].z =0;
+	quad.v[3].tx=1;
+	quad.v[3].ty=0;
+
+	quad.blend	=BLEND_DEFAULT;
+	quad.v[0].col = quad.v[1].col = quad.v[2].col = quad.v[3].col = color.GetHWColor();
+
+	quad.tex	=tex;
+
+	hge->Gfx_RenderQuad(&quad);
+}

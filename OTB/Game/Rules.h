@@ -75,6 +75,7 @@ protected:
 	Bool		_bFailMode;
 	Float32		_rFailTimer;
 	hgeVector	_vFailStartPos;
+	Int32		_nFailPlayerScore;
 
 	Bool	_bShowScores, _bShowRulesMsg;
 	Int32	_nDbgExchanges, _nDbgFails;
