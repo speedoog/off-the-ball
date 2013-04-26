@@ -98,8 +98,8 @@ void Level::Render()
 	hge->Gfx_RenderLine(-_vSize.x, 0,			-_vSize.x, _vSize.y,	colSides.GetHWColor());		// left
 	hge->Gfx_RenderLine( _vSize.x, 0,			 _vSize.x, _vSize.y,	colSides.GetHWColor());		// right
 
-	Otb::RenderLine(hgeVector(0,0),				hgeVector(0,_rInitialNetY), colNet.GetHWColor(),	 0.02f);
-	Otb::RenderLine(hgeVector(0,_rInitialNetY), hgeVector(0,_rNetY),		colNetGrow.GetHWColor(), 0.02f);
+	Otb::RenderLine(hgeVector(0,0),				hgeVector(0,_rInitialNetY), 0.0f, colNet.GetHWColor(),	 0.02f);
+	Otb::RenderLine(hgeVector(0,_rInitialNetY), hgeVector(0,_rNetY),		0.0f, colNetGrow.GetHWColor(), 0.02f);
 //	hge->Gfx_RenderLine( 0, 0,				0, _rInitialNetY,	colNet.GetHWColor());		// net
 //	hge->Gfx_RenderLine( 0, _rInitialNetY,	0, _rNetY,			colNetGrow.GetHWColor());	// net growing part
 }
