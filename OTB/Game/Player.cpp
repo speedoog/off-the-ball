@@ -326,15 +326,12 @@ void Player::Render()
 	// Eye test
 	Float32 rEyeRadius =_vCharSize.x*0.25f;
 	hgeVector vEyeCenter(_vPos.x+_vCharSize.x*0.75f*GetFront(), _vPos.y+_vCharSize.y*0.85f);
-	hge->Gfx_RenderCircle(vEyeCenter.x, vEyeCenter.y, rEyeRadius, colEye.GetHWColor());
+	Otb::RenderDisk(vEyeCenter, rEyeRadius, 0.0f, colEye);
 
 	// Racket
 	hgeVector vRaquet0=GetRaquetPos0();
 	hgeVector vRaquet1=GetRaquetPos1();
-
-	Otb::RenderLine(vRaquet0, vRaquet1, colRaquet, 0.03f);
-//	hge->Gfx_RenderLine(vRaquet0.x, vRaquet0.y,
-//						vRaquet1.x, vRaquet1.y, colRaquet.GetHWColor());
+	Otb::RenderLine(vRaquet0, vRaquet1, -1.0f, colRaquet, 0.03f);
 
 	if (_pGame->GetTraining())
 	{

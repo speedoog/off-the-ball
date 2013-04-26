@@ -103,6 +103,7 @@ void Otb::Start()
 	hge->System_SetState(HGE_RENDERFUNC,	RenderFunc);
 	hge->System_SetState(HGE_GFXRESTOREFUNC,GfxRestoreFunc); 
 
+//	hge->System_SetState(HGE_ZBUFFER,		true);
 	hge->System_SetState(HGE_SHOWSPLASH,	false);
 	hge->System_SetState(HGE_SCREENWIDTH,	_nScreenSizeX);
 	hge->System_SetState(HGE_SCREENHEIGHT,	_nScreenSizeY);
@@ -279,7 +280,7 @@ void Otb::RenderQuad(const hgeVector& vMin, const hgeVector& vMax, const hgeColo
 	quad.v[3].tx=1;
 	quad.v[3].ty=0;
 
-	quad.blend	=BLEND_DEFAULT;
+	quad.blend	=BLEND_DEFAULT_Z;
 	quad.v[0].col = quad.v[1].col = quad.v[2].col = quad.v[3].col = color.GetHWColor();
 
 	quad.tex	=tex;
@@ -290,7 +291,7 @@ void Otb::RenderQuad(const hgeVector& vMin, const hgeVector& vMax, const hgeColo
 // ****************************************************************************************
 //	RenderQuad
 // ****************************************************************************************
-void Otb::RenderLine(const hgeVector& v0, const hgeVector& v1, const hgeColorRGB& color, const Float32 rSize, HTEXTURE tex)
+void Otb::RenderLine(const hgeVector& v0, const hgeVector& v1, const Float32 rZ, const hgeColorRGB& color, const Float32 rSize, HTEXTURE tex)
 {
 	hgeVector vDir	=v1-v0;
 	vDir.Normalize();
@@ -321,10 +322,53 @@ void Otb::RenderLine(const hgeVector& v0, const hgeVector& v1, const hgeColorRGB
 	quad.v[3].tx=1;
 	quad.v[3].ty=0;
 
-	quad.blend	=BLEND_DEFAULT;
+	quad.blend	=BLEND_DEFAULT_Z;
 	quad.v[0].col = quad.v[1].col = quad.v[2].col = quad.v[3].col = color.GetHWColor();
 
 	quad.tex	=tex;
 
 	hge->Gfx_RenderQuad(&quad);
+}
+
+// ****************************************************************************************
+//	RenderDisk
+// ****************************************************************************************
+void Otb::RenderDisk(const hgeVector& vCenter, const Float32 rRadius, const Float32 rZ, const hgeColorRGB& color)
+{
+	hgeTriple	triple;
+	triple.blend =BLEND_DEFAULT_Z;
+	triple.tex	 =NULL;
+	for (UInt32 i=0; i<3; ++i)
+	{
+		triple.v[i].x 	=vCenter.x;
+		triple.v[i].y 	=vCenter.y;
+		triple.v[i].z 	=rZ;
+		triple.v[i].tx	=0;
+		triple.v[i].ty	=0;
+		triple.v[i].col	=color.GetHWColor();
+	}
+
+	const int nSections=8;
+	Float32 rAngleInc =(2*M_PI)/Float32(nSections);
+
+	Float32 rAngle=0.0f;
+	Float32 rX=rRadius*sinf(rAngle)+vCenter.x;
+	Float32 rY=rRadius*cosf(rAngle)+vCenter.y;
+	for (int i=0; i<nSections; ++i)
+	{
+		rAngle+=rAngleInc;
+		Float32 rX2=rRadius*sinf(rAngle)+vCenter.x;
+		Float32 rY2=rRadius*cosf(rAngle)+vCenter.y;
+
+		triple.v[1].x =rX;
+		triple.v[1].y =rY;
+
+		triple.v[2].x =rX2;
+		triple.v[2].y =rY2;
+
+		hge->Gfx_RenderTriple(&triple);
+
+		rX =rX2;
+		rY =rY2;
+	}
 }
