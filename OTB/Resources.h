@@ -44,6 +44,8 @@ public:
 
 	HTEXTURE	_texPowerBar;
 
+	static UInt32 ColorPlayerBody[];
+
 protected:
 	hgeFont*	LoadFont(const char* filename, const Float32 rScale =1.0f);
 };

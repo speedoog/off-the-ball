@@ -136,9 +136,6 @@ void MenuMain::ItemValidate(const int id)
 		Kill();
 		break;
 
-	case MII_START_POINTS:
-		break;
-
 		// ------------- Menu Options ------------- 
 	case MII_OPTIONS_VIDEO:
 		StartMenuVideo();
@@ -268,7 +265,6 @@ void MenuMain::StartMenuStart()
 	AddMenuItem( MII_START_SINGLE,			"Single"		);
 	AddMenuItem( MII_START_VS,				"Vs"			);
 	AddMenuItem( MII_START_CPU_TRAINNING,	"CPU Training"	);
-	AddMenuItem( MII_START_POINTS,			"Points"		);
 
 	_pGUI->SetFocus(MII_START_SINGLE);
 	_pGUI->Enter();

@@ -320,10 +320,11 @@ void Game::Update(const Float32 rDeltaTime)
 void Game::Render()
 {
 	_Level.Render();
-	_Ball.Render();
-	_BallRecorder.Render();
 	_Players[0].Render();
 	_Players[1].Render();
+
+	_Ball.Render();
+	_BallRecorder.Render();
 
 	_pCmd[0]->Render();
 	_pCmd[1]->Render();
