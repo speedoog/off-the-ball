@@ -55,7 +55,7 @@ public:
 	inline	Bool		IsServing()									{ return _bServing;					}
 	inline	Int32		GetBallSide() const							{ return _nBallSide;				}
 	inline	Bool		GetRacketHit() const						{ return _bRacketHit;				}
-	inline	Bool		GetFailMode() const							{ return _bFailMode;				}
+	inline	Bool		GetFailMode() const							{ return _rFailTimer>0.0f;			}
 
 	inline	void		SetShowScores(const Bool bShowScores)		{ _bShowScores =bShowScores;		}
 	inline	void		SetShowRulesMsg(const Bool bShowRulesMsg)	{ _bShowRulesMsg =bShowRulesMsg;	}
@@ -71,14 +71,17 @@ protected:
 	Int32	_nGroundTouch;
 	Int32	_nServicePlayer;
 
+	// Fail mode
 	Bool		_bScoreMsg;
-	Bool		_bFailMode;
 	Float32		_rFailTimer;
 	hgeVector	_vFailStartPos;
 	Int32		_nFailPlayerScore;
 
-	Bool	_bShowScores, _bShowRulesMsg;
-	Int32	_nDbgExchanges, _nDbgFails;
+	// Display Settings
+	Bool		_bShowScores, _bShowRulesMsg;
+
+	// Training stats
+	Int32		_nDbgExchanges, _nDbgFails;
 };
 
 

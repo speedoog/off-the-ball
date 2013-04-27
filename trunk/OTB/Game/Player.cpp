@@ -304,7 +304,6 @@ void Player::Update(const Float32 rDeltaTime)
 	}
 }
 
-const UInt32 nColorPlayerBody[]	={ 0xFF39588E, 0xFFBE3839};
 //const UInt32 nColorPlayerRaquet	=0xFF60E060;
 const UInt32 nColorPlayerRaquet	=0xFFFFFFFF;
 const UInt32 nColorPlayerEye	=0xFFFFFFFF;
@@ -314,7 +313,7 @@ const UInt32 nColorPlayerEye	=0xFFFFFFFF;
 // ****************************************************************************************
 void Player::Render()
 {
-	hgeColorRGB	colBody;	colBody.SetHWColor(nColorPlayerBody[_nPlayerId]);
+	hgeColorRGB	colBody;	colBody.SetHWColor(Resources::ColorPlayerBody[_nPlayerId]);
 	hgeColorRGB colRaquet;	colRaquet.SetHWColor(nColorPlayerRaquet);
 	hgeColorRGB colEye;		colEye.SetHWColor(nColorPlayerEye);
 

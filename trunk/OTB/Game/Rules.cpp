@@ -46,7 +46,7 @@ void Rules::Init(Game* pGame)
 	_nDbgFails			=0;
 	_bShowScores		=true;
 	_bShowRulesMsg		=true;
-	_bFailMode			=false;
+	_rFailTimer			=0.0f;
 	_nFailPlayerScore	=0;
 	_bSecondServe		=false;
 }
@@ -56,7 +56,7 @@ void Rules::Init(Game* pGame)
 // ****************************************************************************************
 void Rules::Update(const Float32 rDeltaTime)
 {
-	if (_bFailMode)
+	if (GetFailMode())
 	{
 		_rFailTimer -=rDeltaTime;
 		if (_rFailTimer<0)
@@ -80,15 +80,6 @@ void Rules::Render()
 	hgeVector vLvlSize =level.GetSize();
 	hgeVector vPosScore[2] ={ hgeVector(-vLvlSize.x*0.98f, vLvlSize.y), hgeVector(vLvlSize.x*0.98f, vLvlSize.y) };
 
-	// render score (move it in another class ?)
-	if (_bShowScores)
-	{
-		hgeFont* pFontScore =resources._pFontScore;
-		pFontScore->SetScale(-0.01f * 1.0f);
-		pFontScore->SetColor(0xFFFFFFFF);
-		pFontScore->printf( vPosScore[0].x, vPosScore[0].y, HGETEXT_LEFT,  "%d", _pGame->GetPlayer(0).ScoreGet());
-		pFontScore->printf( vPosScore[1].x, vPosScore[1].y, HGETEXT_RIGHT, "%d", _pGame->GetPlayer(1).ScoreGet());
-	}
 
 	hgeFont* pFontMessages =resources._pFontMessages;
 	pFontMessages->SetScale(-0.005f);
@@ -106,28 +97,33 @@ void Rules::Render()
 			hgeVector vPosMsg =TBlend(_vFailStartPos, vTargetPos, TSmoothStep(TSmoothStep(rMsgRatio)));
 
 			pFontScore->SetScale(-0.01f*TChangeRange(0.0f, 1.0f, 1.0f, 0.5f, rMsgRatio));
-			hgeColorRGB colMsg(1.0f, 1.0f, 1.0f, 1.0f-rMsgRatio);
-			pFontScore->SetColor(colMsg.GetHWColor());
+
+			hgeColorRGB colMsg(Resources::ColorPlayerBody[nOtherPlayer]);
+			hgeColorRGB colScale(1.0f, 1.0f, 1.0f, 1.0f-rMsgRatio);
+			hgeColorRGB colFinal;
+			colFinal =colMsg*colScale;
+
+			pFontScore->SetColor(colFinal.GetHWColor());
 			pFontScore->printf(vPosMsg.x, vPosMsg.y,	HGETEXT_CENTER,	"+1", nOtherPlayer+1);
 		}
 
-		if (_bServing && !_bFailMode)
+		if (_bServing && !GetFailMode())
 		{
-			if (_bWaitServe)
-			{
-				pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Waiting for serve", _nServicePlayer+1);
-			}
-			else
-			{
-				if (_bSecondServe)
-				{
-					pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Second Serve", _nServicePlayer+1);
-				}
-				else
-				{
-					pFontMessages->printf(0.0f, rPosY/2.0f,	HGETEXT_CENTER,	"Player %d Serve", _nServicePlayer+1);
-				}
-			}
+			const Float32 rPosGameMsgX =vPosScore[_nServicePlayer].x*0.7f;
+			const Float32 rPosGameMsgY =rPosY*0.7f;
+			pFontMessages->printf(rPosGameMsgX, rPosGameMsgY,	HGETEXT_CENTER,	_bSecondServe?"Second Serve":"Serve");
+		}
+	}
+
+	// render score (move it in another class ?)
+	if (_bShowScores)
+	{
+		hgeFont* pFontScore =resources._pFontScore;
+		pFontScore->SetScale(-0.01f * 1.0f);
+		for(Int32 iPlayer=0; iPlayer<2; ++iPlayer)
+		{
+			pFontScore->SetColor(0xFFFFFFFF);
+			pFontScore->printf( vPosScore[iPlayer].x, vPosScore[iPlayer].y, iPlayer/*align*/,  "%d", _pGame->GetPlayer(iPlayer).ScoreGet());
 		}
 	}
 
@@ -160,7 +156,7 @@ void Rules::ActionStartGame(Int32 nPlayerStart)
 void Rules::ActionServiceStart(Int32 nPlayerServe)
 {
 	_bScoreMsg		=false;
-	_bFailMode		=false;
+	_rFailTimer		=0.0f;
 	_bServing		=true;
 	_bRacketHit 	=false;
 	_nBallSide		=nPlayerServe;
@@ -201,7 +197,6 @@ void Rules::ActionFail()
 // ****************************************************************************************
 void Rules::FailStart()
 {
-	_bFailMode		=true;
 	_rFailTimer		=rFailDuration;
 	_vFailStartPos	=_pGame->GetBall().GetPos();
 }
@@ -235,7 +230,7 @@ void Rules::ActionServiceFailed()
 // ****************************************************************************************
 void Rules::EventBallChangeSide(Int32 nSide)
 {
-	if (_bFailMode)
+	if (GetFailMode())
 	{
 		return;
 	}
@@ -255,7 +250,7 @@ void Rules::EventBallChangeSide(Int32 nSide)
 // ****************************************************************************************
 void Rules::EventBallHitGround()
 {
-	if (_bFailMode)
+	if (GetFailMode())
 	{
 		return;
 	}
@@ -286,7 +281,7 @@ void Rules::EventBallHitGround()
 // ****************************************************************************************
 void Rules::EventBallHitWall()
 {
-	if (_bFailMode)
+	if (GetFailMode())
 	{
 		return;
 	}
@@ -298,7 +293,7 @@ void Rules::EventBallHitWall()
 // ****************************************************************************************
 void Rules::EventBallHitRacket()
 {
-	if (_bFailMode)
+	if (GetFailMode())
 	{
 		return;
 	}
@@ -318,7 +313,7 @@ void Rules::EventBallHitRacket()
 // ****************************************************************************************
 void Rules::EventBallHitNet()
 {
-	if (_bFailMode)
+	if (GetFailMode())
 	{
 		return;
 	}
