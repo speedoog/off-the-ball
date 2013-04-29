@@ -77,6 +77,10 @@ protected:
 	hgeVector	_vFailStartPos;
 	Int32		_nFailPlayerScore;
 
+	// End of game
+	Int32		_nPlayerWin;
+	Float32		_rWinAnimation;
+
 	// Display Settings
 	Bool		_bShowScores, _bShowRulesMsg;
 
