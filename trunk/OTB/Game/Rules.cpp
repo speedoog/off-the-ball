@@ -20,7 +20,10 @@
 #include "Rules.h"
 #include "Game.h"
 
-static const Float32 rFailDuration =2.0f;
+static const Float32 rFailDuration			=2.0f;
+static const Float32 rWinAnimationDuration	=2.0f;
+
+static const UInt32	 nMaxPoints				=1;
 
 // ****************************************************************************************
 //	Ctor
@@ -46,9 +49,11 @@ void Rules::Init(Game* pGame)
 	_nDbgFails			=0;
 	_bShowScores		=true;
 	_bShowRulesMsg		=true;
-	_rFailTimer			=0.0f;
+	_rFailTimer			=-1.0f;
 	_nFailPlayerScore	=0;
 	_bSecondServe		=false;
+	_nPlayerWin			=-1;
+	_rWinAnimation		=0.0f;
 }
 
 // ****************************************************************************************
@@ -61,9 +66,24 @@ void Rules::Update(const Float32 rDeltaTime)
 		_rFailTimer -=rDeltaTime;
 		if (_rFailTimer<0)
 		{
-			_pGame->GetPlayer(_nFailPlayerScore).ScoreInc();		// player gain a point
-			ActionServiceStart(_nServicePlayer);
+			Player& playerPoint =_pGame->GetPlayer(_nFailPlayerScore);
+			playerPoint.ScoreInc();		// player gain a point
+
+			if (_pGame->GetTraining()==false && playerPoint.ScoreGet()>=nMaxPoints)
+			{
+				_nPlayerWin =_nFailPlayerScore;
+				_rWinAnimation =0.0f;
+			}
+			else
+			{
+				ActionServiceStart(_nServicePlayer);
+			}
 		}
+	}
+
+	if (_nPlayerWin!=-1)
+	{
+		_rWinAnimation+=rDeltaTime;
 	}
 }
 
@@ -78,8 +98,8 @@ void Rules::Render()
 	Float32 rPosY =_pGame->GetLevel().GetSize().y;
 
 	hgeVector vLvlSize =level.GetSize();
-	hgeVector vPosScore[2] ={ hgeVector(-vLvlSize.x*0.98f, vLvlSize.y), hgeVector(vLvlSize.x*0.98f, vLvlSize.y) };
-
+	hgeVector vPosScoreGame[2]	={ hgeVector(-vLvlSize.x*0.98f, vLvlSize.y),		hgeVector(vLvlSize.x*0.98f, vLvlSize.y)		 };
+	hgeVector vPosScoreEnd[2]	={ hgeVector(-vLvlSize.x*0.20f, vLvlSize.y*0.5f),	hgeVector(vLvlSize.x*0.20f, vLvlSize.y*0.5f) };
 
 	hgeFont* pFontMessages =resources._pFontMessages;
 	pFontMessages->SetScale(-0.005f);
@@ -91,7 +111,7 @@ void Rules::Render()
 			hgeFont* pFontScore =resources._pFontScore;
 			Int32 nOtherPlayer =1-_nBallSide;
 
-			hgeVector vTargetPos =vPosScore[nOtherPlayer];
+			hgeVector vTargetPos =vPosScoreGame[nOtherPlayer];
 
 			Float32 rMsgRatio =TChangeRange(rFailDuration, 0.0f, 0.0f, 1.0f, _rFailTimer);
 			hgeVector vPosMsg =TBlend(_vFailStartPos, vTargetPos, TSmoothStep(TSmoothStep(rMsgRatio)));
@@ -109,7 +129,7 @@ void Rules::Render()
 
 		if (_bServing && !GetFailMode())
 		{
-			const Float32 rPosGameMsgX =vPosScore[_nServicePlayer].x*0.7f;
+			const Float32 rPosGameMsgX =vPosScoreGame[_nServicePlayer].x*0.7f;
 			const Float32 rPosGameMsgY =rPosY*0.7f;
 			pFontMessages->printf(rPosGameMsgX, rPosGameMsgY,	HGETEXT_CENTER,	_bSecondServe?"Second Serve":"Serve");
 		}
@@ -122,8 +142,19 @@ void Rules::Render()
 		pFontScore->SetScale(-0.01f * 1.0f);
 		for(Int32 iPlayer=0; iPlayer<2; ++iPlayer)
 		{
+			hgeVector vPosScore;
+			if (_nPlayerWin==-1)
+			{
+				vPosScore =vPosScoreGame[iPlayer];
+			}
+			else
+			{
+				Float32 rMsgRatio =TChangeRangeClamped(0.0f, rWinAnimationDuration, 0.0f, 1.0f, _rWinAnimation);
+				vPosScore =TBlend(vPosScoreGame[iPlayer], vPosScoreEnd[iPlayer], TSmoothStep(TSmoothStep(rMsgRatio)));
+			}
+
 			pFontScore->SetColor(0xFFFFFFFF);
-			pFontScore->printf( vPosScore[iPlayer].x, vPosScore[iPlayer].y, iPlayer/*align*/,  "%d", _pGame->GetPlayer(iPlayer).ScoreGet());
+			pFontScore->printf( vPosScore.x, vPosScore.y, iPlayer/*align*/,  "%d", _pGame->GetPlayer(iPlayer).ScoreGet());
 		}
 	}
 
@@ -156,7 +187,7 @@ void Rules::ActionStartGame(Int32 nPlayerStart)
 void Rules::ActionServiceStart(Int32 nPlayerServe)
 {
 	_bScoreMsg		=false;
-	_rFailTimer		=0.0f;
+	_rFailTimer		=-1.0f;
 	_bServing		=true;
 	_bRacketHit 	=false;
 	_nBallSide		=nPlayerServe;
