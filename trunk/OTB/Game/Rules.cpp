@@ -23,7 +23,7 @@
 static const Float32 rFailDuration			=2.0f;
 static const Float32 rWinAnimationDuration	=2.0f;
 
-static const UInt32	 nMaxPoints				=1;
+static const UInt32	 nMaxPoints				=2;
 
 // ****************************************************************************************
 //	Ctor
@@ -50,7 +50,7 @@ void Rules::Init(Game* pGame)
 	_bShowScores		=true;
 	_bShowRulesMsg		=true;
 	_rFailTimer			=-1.0f;
-	_nFailPlayerScore	=0;
+	_nFailPlayerScore	=-1;
 	_bSecondServe		=false;
 	_nPlayerWin			=-1;
 	_rWinAnimation		=0.0f;
@@ -66,16 +66,24 @@ void Rules::Update(const Float32 rDeltaTime)
 		_rFailTimer -=rDeltaTime;
 		if (_rFailTimer<0)
 		{
-			Player& playerPoint =_pGame->GetPlayer(_nFailPlayerScore);
-			playerPoint.ScoreInc();		// player gain a point
-
-			if (_pGame->GetTraining()==false && playerPoint.ScoreGet()>=nMaxPoints)
+			if (_nFailPlayerScore!=-1)
 			{
-				_nPlayerWin =_nFailPlayerScore;
-				_rWinAnimation =0.0f;
+				Player& playerPoint =_pGame->GetPlayer(_nFailPlayerScore);
+				playerPoint.ScoreInc();		// player gain a point
+
+				if (_pGame->GetDemoMode()==false && _pGame->GetTraining()==false && playerPoint.ScoreGet()>=nMaxPoints)
+				{
+					_nPlayerWin =_nFailPlayerScore;
+					_rWinAnimation =0.0f;
+				}
+				else
+				{
+					ActionServiceStart(_nServicePlayer);
+				}
 			}
 			else
 			{
+				// second serve ...
 				ActionServiceStart(_nServicePlayer);
 			}
 		}
@@ -84,6 +92,10 @@ void Rules::Update(const Float32 rDeltaTime)
 	if (_nPlayerWin!=-1)
 	{
 		_rWinAnimation+=rDeltaTime;
+		if (_rWinAnimation>rWinAnimationDuration)
+		{
+			_pGame->SetPaused(true);
+		}
 	}
 }
 
@@ -103,10 +115,11 @@ void Rules::Render()
 
 	hgeFont* pFontMessages =resources._pFontMessages;
 	pFontMessages->SetScale(-0.005f);
+	pFontMessages->SetColor(0xFFFFFFFF);
 
 	if (_bShowRulesMsg)
 	{
-		if (_bScoreMsg)
+		if (_bScoreMsg && _nFailPlayerScore!=-1)
 		{
 			hgeFont* pFontScore =resources._pFontScore;
 			Int32 nOtherPlayer =1-_nBallSide;
@@ -127,11 +140,23 @@ void Rules::Render()
 			pFontScore->printf(vPosMsg.x, vPosMsg.y,	HGETEXT_CENTER,	"+1", nOtherPlayer+1);
 		}
 
+		const Float32 rPosGameMsgX =vPosScoreGame[_nServicePlayer].x*0.7f;
+		const Float32 rPosGameMsgY =rPosY*0.7f;
+
 		if (_bServing && !GetFailMode())
 		{
-			const Float32 rPosGameMsgX =vPosScoreGame[_nServicePlayer].x*0.7f;
-			const Float32 rPosGameMsgY =rPosY*0.7f;
 			pFontMessages->printf(rPosGameMsgX, rPosGameMsgY,	HGETEXT_CENTER,	_bSecondServe?"Second Serve":"Serve");
+		}
+
+		if (_nPlayerWin==0)
+		{
+			pFontMessages->SetColor(Resources::ColorPlayerBody[0]);
+			pFontMessages->printf(0.0f, rPosGameMsgY, HGETEXT_CENTER, "Blue Player Win");
+		}
+		else if (_nPlayerWin==1)
+		{
+			pFontMessages->SetColor(Resources::ColorPlayerBody[1]);
+			pFontMessages->printf(0.0f, rPosGameMsgY, HGETEXT_CENTER, "Red Player Win");
 		}
 	}
 
@@ -247,6 +272,7 @@ void Rules::ActionServiceFailed()
 		// Second serve allowed, same player
 		_bSecondServe =true;
 		FailStart();
+		_nFailPlayerScore =-1;
 	}
 }
 
