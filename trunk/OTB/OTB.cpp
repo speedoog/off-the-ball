@@ -21,6 +21,7 @@
 
 #include "Base/TList.h"
 
+
 HGE*	hge	  =NULL;
 
 // OTB Singleton
@@ -34,6 +35,11 @@ const char* XML_ATTRIB_VIDEO_WINDOWED	="Windowed";
 const Int32 DEFAULT_SCREENSIZEX 		=1280;
 const Int32 DEFAULT_SCREENSIZEY 		=720;
 const Bool 	DEFAULT_SCREENWINDOWED   	=true;
+
+// ---------- AUDIO -------------
+#include "Audio/Mp3.h"
+Mp3 mp3, mp4;
+// ---------- AUDIO -------------
 
 // ****************************************************************************************
 //	FrameFunc
@@ -128,6 +134,14 @@ void Otb::Start()
 		// start
 		MainMenu();
 
+		// ---------- AUDIO -------------
+		com_init init;
+		mp3.Load("data/music/freezepop_Lazy.mp3");
+		mp4.Load("data/snd/checkpoint_flag.wav");
+		mp3.Play();
+		mp4.Play();
+		// ---------- AUDIO -------------
+
 		Bool bSuccess =hge->System_Start();
 
 		_Game.Kill();
@@ -172,6 +186,19 @@ bool Otb::Update(const Float32 rDeltaTime)
 
 	_MenuMain.Update(rDeltaTime);
 	_Game.Update(rDeltaTime);
+
+	// ---------- AUDIO -------------
+	long evCode=0;
+	if (mp4.WaitForCompletion(0, &evCode))
+	{
+		mp4.Stop();
+
+		__int64 duration = mp4.GetDuration();
+		__int64 pos =  0;
+		mp4.SetPositions(&pos, &duration, true);
+		mp4.Play();
+	}
+	// ---------- AUDIO -------------
 
 	return _bExitApp;
 }
