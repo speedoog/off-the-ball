@@ -149,7 +149,6 @@ void Otb::Start()
 		// kill low level
 		_Resources.Kill();
 		_Input.Kill();
-
 	}
 	else
 	{
@@ -188,15 +187,22 @@ bool Otb::Update(const Float32 rDeltaTime)
 	_Game.Update(rDeltaTime);
 
 	// ---------- AUDIO -------------
+	static long nVolume =0;
+	mp3.SetVolume(nVolume);
+
 	long evCode=0;
 	if (mp4.WaitForCompletion(0, &evCode))
 	{
-		mp4.Stop();
+		bool loop =false;
+		if (loop)
+		{
+			mp4.Stop();
 
-		__int64 duration = mp4.GetDuration();
-		__int64 pos =  0;
-		mp4.SetPositions(&pos, &duration, true);
-		mp4.Play();
+			__int64 duration = mp4.GetDuration();
+			__int64 pos =  0;
+			mp4.SetPositions(&pos, &duration, true);
+			mp4.Play();
+		}
 	}
 	// ---------- AUDIO -------------
 

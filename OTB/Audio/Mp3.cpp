@@ -131,6 +131,7 @@ bool Mp3::WaitForCompletion(long msTimeout, long* EvCode)
 	return false;
 }
 
+// [in] The volume level that is set. The valid range for volume is [0...-32768] 0 => volume max
 bool Mp3::SetVolume(long vol)
 {
 	if (ready&&piba)
