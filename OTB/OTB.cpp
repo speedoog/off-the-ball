@@ -144,6 +144,13 @@ void Otb::Start()
 
 		Bool bSuccess =hge->System_Start();
 
+		// ---------- AUDIO -------------
+		mp3.Stop();
+		mp4.Stop();
+		mp3.Cleanup();
+		mp4.Cleanup();
+		// ---------- AUDIO -------------
+
 		_Game.Kill();
 
 		// kill low level
