@@ -1,5 +1,6 @@
 // MP3.cpp
 
+/*
 #include "Mp3.h"
 #include <uuids.h>
 
@@ -197,3 +198,4 @@ bool Mp3::SetPositions(__int64* pCurrent, __int64* pStop, bool bAbsolutePosition
 //Alan
 //-----
 //alankemp@bigfoot.com
+*/

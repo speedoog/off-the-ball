@@ -2,6 +2,7 @@
 
 //typedef MMVERSION;
 
+/*
 #include <windows.h>
 #include <mmsystem.h>
 //#include <streams.h>
@@ -75,3 +76,4 @@ private:
 };
 
 
+*/
