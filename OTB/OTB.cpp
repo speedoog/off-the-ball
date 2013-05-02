@@ -37,8 +37,7 @@ const Int32 DEFAULT_SCREENSIZEY 		=720;
 const Bool 	DEFAULT_SCREENWINDOWED   	=true;
 
 // ---------- AUDIO -------------
-#include "Audio/Mp3.h"
-Mp3 mp3, mp4;
+#include "../Bass/bass.h"
 // ---------- AUDIO -------------
 
 // ****************************************************************************************
@@ -95,6 +94,19 @@ Otb::~Otb()
 {
 }
 
+
+void startMusic () {
+	int bInit =BASS_Init(-1, 44100, 0, 0, NULL);
+	//HMUSIC hm=BASS_MusicLoad(FALSE,"data/music/freezepop_Lazy.mp3",0,0,BASS_SAMPLE_LOOP,0);
+	HSTREAM stm =BASS_StreamCreateFile(false, "data/music/freezepop_Lazy.mp3", 0, 0, 0);
+	BASS_ChannelPlay(stm, FALSE);
+}
+
+void endMusic() {
+	BASS_Stop();
+	BASS_Free();
+}
+
 // ****************************************************************************************
 //	Start
 // ****************************************************************************************
@@ -135,20 +147,21 @@ void Otb::Start()
 		MainMenu();
 
 		// ---------- AUDIO -------------
-		com_init init;
-		mp3.Load("data/music/freezepop_Lazy.mp3");
-		mp4.Load("data/snd/checkpoint_flag.wav");
-		mp3.Play();
-		mp4.Play();
+// 		com_init init;
+// 		mp3.Load("data/music/freezepop_Lazy.mp3");
+// 		mp4.Load("data/snd/checkpoint_flag.wav");
+// 		mp3.Play();
+// 		mp4.Play();
+		startMusic();
 		// ---------- AUDIO -------------
 
 		Bool bSuccess =hge->System_Start();
 
 		// ---------- AUDIO -------------
-		mp3.Stop();
-		mp4.Stop();
-		mp3.Cleanup();
-		mp4.Cleanup();
+// 		mp3.Stop();
+// 		mp4.Stop();
+// 		mp3.Cleanup();
+// 		mp4.Cleanup();
 		// ---------- AUDIO -------------
 
 		_Game.Kill();
@@ -194,6 +207,7 @@ bool Otb::Update(const Float32 rDeltaTime)
 	_Game.Update(rDeltaTime);
 
 	// ---------- AUDIO -------------
+	/*
 	static long nVolume =0;
 	mp3.SetVolume(nVolume);
 
@@ -211,6 +225,7 @@ bool Otb::Update(const Float32 rDeltaTime)
 			mp4.Play();
 		}
 	}
+	*/
 	// ---------- AUDIO -------------
 
 	return _bExitApp;
