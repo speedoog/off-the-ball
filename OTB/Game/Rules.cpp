@@ -24,7 +24,7 @@
 static const Float32 rFailDuration			=2.0f;
 static const Float32 rWinAnimationDuration	=2.0f;
 
-static const UInt32	 nMaxPoints				=2;
+static const UInt32	 nMaxPoints				=10;
 
 // ****************************************************************************************
 //	Ctor
