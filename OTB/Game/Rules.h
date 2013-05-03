@@ -46,6 +46,7 @@ public:
 			void		EventBallChangeSide(Int32 nSide);
 			void		EventBallHitGround();
 			void		EventBallHitWall();
+			void		EventBallHitCeil();
 			void		EventBallHitRacket();
 			void		EventBallHitNet();
 			void		EventServeStart();

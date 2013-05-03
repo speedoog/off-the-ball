@@ -19,6 +19,7 @@
 
 #include "Rules.h"
 #include "Game.h"
+#include "../Otb.h"
 
 static const Float32 rFailDuration			=2.0f;
 static const Float32 rWinAnimationDuration	=2.0f;
@@ -312,6 +313,9 @@ void Rules::EventBallHitGround()
 		return;
 	}
 
+	Otb* pOTB =Otb::GetInstance();
+	pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsBoing);
+
 	if (_bServing)
 	{
 		ActionServiceFailed();
@@ -343,6 +347,22 @@ void Rules::EventBallHitWall()
 		return;
 	}
 
+	Otb* pOTB =Otb::GetInstance();
+	pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsBoing);
+}
+
+// ****************************************************************************************
+//	EventBallHitCeil
+// ****************************************************************************************
+void Rules::EventBallHitCeil()
+{
+	if (GetFailMode())
+	{
+		return;
+	}
+
+	Otb* pOTB =Otb::GetInstance();
+	pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsBoing);
 }
 
 // ****************************************************************************************
@@ -354,6 +374,9 @@ void Rules::EventBallHitRacket()
 	{
 		return;
 	}
+
+	Otb* pOTB =Otb::GetInstance();
+	pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsShoot);
 
 	if (_bServing && _bRacketHit)			// double hit during service
 	{
@@ -370,6 +393,9 @@ void Rules::EventBallHitRacket()
 // ****************************************************************************************
 void Rules::EventBallHitNet()
 {
+	Otb* pOTB =Otb::GetInstance();
+	pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsNetHit);
+
 	if (GetFailMode())
 	{
 		return;

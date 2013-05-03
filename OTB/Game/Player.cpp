@@ -205,6 +205,13 @@ void Player::Update(const Float32 rDeltaTime)
 		if (rAngleDiff>(M_PI))		rAngleDiff-=2.0f*M_PI;
 		if (rAngleDiff<(-M_PI))		rAngleDiff+=2.0f*M_PI;
 
+		// play flap sound
+		if (TAbs(rAngleDiff)>M_PI*0.5f)
+		{
+			Otb* pOTB =Otb::GetInstance();
+			pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsRacketFlap);
+		}
+
 		_rRacketRotationSpeed =rAngleDiff*rRacketRotationSpeedMax;
 		_vRacketDir.Rotate(_rRacketRotationSpeed*rDeltaTime);
 

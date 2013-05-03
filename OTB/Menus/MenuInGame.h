@@ -54,6 +54,7 @@ protected:
 	void	ItemValidate(const int id);
 	void	ItemCancel();
 
+
 protected:
 	MenuScreen	_nMenuCurrent;
 };

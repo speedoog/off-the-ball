@@ -27,6 +27,7 @@
 #include "Menus/MenuMain.h"
 #include "Input/InputDirectX.h"
 #include "Xml/XMLParser.h"
+#include "Audio/Audio.h"
 
 class Otb
 {
@@ -45,6 +46,7 @@ public:
 	inline	Game&		GetGame()						{ return _Game;			}
 	inline	InputCore&	GetInputCommand()				{ return _Input;	 	}
 	inline	XML_PARSER&	GetXmlTree()					{ return _XmlTree;		}
+	inline	Audio&		GetAudio()						{ return _Audio;		}
 
 	inline	void		ExitApp()						{ _bExitApp =true;		}
 
@@ -63,6 +65,7 @@ protected:
 	static Otb*		_pOTB;
 
 	// Main objects
+	Audio			_Audio;
 	XML_PARSER		_XmlTree;
 	Game			_Game;
 	MenuMain		_MenuMain;

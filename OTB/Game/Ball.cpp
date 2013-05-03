@@ -137,6 +137,7 @@ void Ball::Update(const Float32 rDeltaTime)
 	{
 		_vPos.y =rCeil;
 		_vVelocity.y =-rWallRestitution*rRestitutionScale*_vVelocity.y;
+		_pGame->GetRules().EventBallHitCeil();
 	}
 
 	// Collision Net

@@ -36,9 +36,6 @@ const Int32 DEFAULT_SCREENSIZEX 		=1280;
 const Int32 DEFAULT_SCREENSIZEY 		=720;
 const Bool 	DEFAULT_SCREENWINDOWED   	=true;
 
-// ---------- AUDIO -------------
-#include "../Bass/bass.h"
-// ---------- AUDIO -------------
 
 // ****************************************************************************************
 //	FrameFunc
@@ -94,19 +91,6 @@ Otb::~Otb()
 {
 }
 
-
-void startMusic () {
-	int bInit =BASS_Init(-1, 44100, 0, 0, NULL);
-	//HMUSIC hm=BASS_MusicLoad(FALSE,"data/music/freezepop_Lazy.mp3",0,0,BASS_SAMPLE_LOOP,0);
-	HSTREAM stm =BASS_StreamCreateFile(false, "data/music/freezepop_Lazy.mp3", 0, 0, 0);
-	BASS_ChannelPlay(stm, FALSE);
-}
-
-void endMusic() {
-	BASS_Stop();
-	BASS_Free();
-}
-
 // ****************************************************************************************
 //	Start
 // ****************************************************************************************
@@ -146,23 +130,13 @@ void Otb::Start()
 		// start
 		MainMenu();
 
-		// ---------- AUDIO -------------
-// 		com_init init;
-// 		mp3.Load("data/music/freezepop_Lazy.mp3");
-// 		mp4.Load("data/snd/checkpoint_flag.wav");
-// 		mp3.Play();
-// 		mp4.Play();
-		startMusic();
-		// ---------- AUDIO -------------
+		_Audio.MusicSetVolume(0.4f);
+		_Audio.MusicLoad("data/music/freezepop_Lazy.mp3");
+		_Audio.MusicPlay();
 
 		Bool bSuccess =hge->System_Start();
 
-		// ---------- AUDIO -------------
-// 		mp3.Stop();
-// 		mp4.Stop();
-// 		mp3.Cleanup();
-// 		mp4.Cleanup();
-		// ---------- AUDIO -------------
+		_Audio.MusicStop();
 
 		_Game.Kill();
 
@@ -205,28 +179,6 @@ bool Otb::Update(const Float32 rDeltaTime)
 
 	_MenuMain.Update(rDeltaTime);
 	_Game.Update(rDeltaTime);
-
-	// ---------- AUDIO -------------
-	/*
-	static long nVolume =0;
-	mp3.SetVolume(nVolume);
-
-	long evCode=0;
-	if (mp4.WaitForCompletion(0, &evCode))
-	{
-		bool loop =false;
-		if (loop)
-		{
-			mp4.Stop();
-
-			__int64 duration = mp4.GetDuration();
-			__int64 pos =  0;
-			mp4.SetPositions(&pos, &duration, true);
-			mp4.Play();
-		}
-	}
-	*/
-	// ---------- AUDIO -------------
 
 	return _bExitApp;
 }

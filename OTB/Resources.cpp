@@ -18,6 +18,7 @@
 
 
 #include "Resources.h"
+#include "Otb.h"
 
 UInt32 Resources::ColorPlayerBody[]	={ 0xFF39588E, 0xFFBE3839};
 
@@ -68,6 +69,16 @@ void Resources::Init()
 	_pSpriteBallTrail =new hgeSprite(*_pSpriteBall);
 
 	_texPowerBar =hge->Texture_Load("Data/PowerBar.png");
+
+	// ---- AUDIO ---
+	Audio& audio =Otb::GetInstance()->GetAudio();
+	_hsBoing 			=audio.SampleLoad("Data/snd/player_bounce3.wav");
+	_hsShoot 			=audio.SampleLoad("Data/snd/shine_reject2.wav");
+	_hsNetHit			=audio.SampleLoad("Data/snd/bang1.wav");
+	_hsRacketFlap		=audio.SampleLoad("Data/snd/flap.wav");
+	_hsMenuChangeItem	=audio.SampleLoad("Data/snd/menu.wav");
+	_hsMenuValidate		=audio.SampleLoad("Data/snd/bedroom_switch_a.wav");
+	_hsMenuCancel		=audio.SampleLoad("Data/snd/bedroom_switch_b.wav");
 }
 
 // ****************************************************************************************
