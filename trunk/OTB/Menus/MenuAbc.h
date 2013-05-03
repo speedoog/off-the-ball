@@ -47,6 +47,10 @@ protected:
 
 	void	RenderBackground();
 
+	void	SoundChangeItem();
+	void	SoundValidate();
+	void	SoundCancel();
+
 protected:
 	hgeGUI*		_pGUI;
 	Float32		_rCurrentY;

@@ -22,6 +22,7 @@
 
 #include "Base/Base.h"
 #include "../HGE/hgefont.h"
+#include "Audio/Audio.h"
 
 class Resources
 {
@@ -45,6 +46,9 @@ public:
 	HTEXTURE	_texPowerBar;
 
 	static UInt32 ColorPlayerBody[];
+
+	HSAMPLE		_hsBoing, _hsShoot, _hsNetHit, _hsRacketFlap;
+	HSAMPLE		_hsMenuChangeItem, _hsMenuValidate, _hsMenuCancel;
 
 protected:
 	hgeFont*	LoadFont(const char* filename, const Float32 rScale =1.0f);

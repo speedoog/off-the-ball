@@ -52,11 +52,13 @@ void MenuMain::Update(Float32 dt)
 		InputCore& Input =pOTB->GetInputCommand();
 		if (Input.GetMenuInput(InputCore::MC_UP)>=0.5f)
 		{
+			SoundChangeItem();
 			_pGUI->ChangeItem(true);
 		}
 
 		if (Input.GetMenuInput(InputCore::MC_DOWN)>=0.5f)
 		{
+			SoundChangeItem();
 			_pGUI->ChangeItem(false);
 		}
 
@@ -98,6 +100,9 @@ void MenuMain::ItemValidate(const int id)
 
 	switch(id)
 	{
+	case 0:
+		return;
+
 		// ------------- Menu Main ------------- 
 	case MII_MAIN_START:
 		StartMenuStart();
@@ -181,6 +186,8 @@ void MenuMain::ItemValidate(const int id)
 
 	default:;
 	}
+
+	SoundValidate();
 }
 
 
@@ -189,6 +196,8 @@ void MenuMain::ItemValidate(const int id)
 // ****************************************************************************************
 void MenuMain::ItemCancel()
 {
+	SoundCancel();
+
 	switch(_nMenuCurrent)
 	{
 	case MS_MAIN:
