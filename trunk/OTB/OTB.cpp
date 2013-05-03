@@ -111,7 +111,7 @@ void Otb::Start()
 	hge->System_SetState(HGE_SCREENHEIGHT,	_nScreenSizeY);
 	hge->System_SetState(HGE_TITLE,			"Off the Ball");
 	hge->System_SetState(HGE_WINDOWED,		_bWindowed);
-	hge->System_SetState(HGE_LOGFILE,		"HGE.log");
+//	hge->System_SetState(HGE_LOGFILE,		"HGE.log");
 
 	hge->System_SetState(HGE_FPS,			HGEFPS_VSYNC);
 //	hge->System_SetState(HGE_FPS,			HGEFPS_UNLIMITED);
