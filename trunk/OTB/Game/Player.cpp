@@ -206,10 +206,22 @@ void Player::Update(const Float32 rDeltaTime)
 		if (rAngleDiff<(-M_PI))		rAngleDiff+=2.0f*M_PI;
 
 		// play flap sound
-		if (TAbs(rAngleDiff)>M_PI*0.5f)
+// 		if (TAbs(rAngleDiff)>M_PI*0.5f)
+// 		{
+// 			Otb* pOTB =Otb::GetInstance();
+// 			pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsRacketFlap);
+// 		}
+		if (_nPlayerId==0)
 		{
 			Otb* pOTB =Otb::GetInstance();
-			pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsRacketFlap);
+			Audio& audio =pOTB->GetAudio();
+			HCHANNEL hcZion =pOTB->GetResources()._hcZion;
+
+			Float32 rVolume =TChangeRangeClamped(0.0f, M_PI, 0.0f, 0.6f, TAbs(rAngleDiff));
+			audio.ChannelSetAttrib(hcZion, BASS_ATTRIB_VOL, rVolume);
+
+			Float32 rFreq =TChangeRangeClamped(0.0f, M_PI*0.5f, 0.0f, 44100.0f, TAbs(rAngleDiff));
+			audio.ChannelSetAttrib(hcZion, BASS_ATTRIB_FREQ, rFreq);
 		}
 
 		_rRacketRotationSpeed =rAngleDiff*rRacketRotationSpeedMax;

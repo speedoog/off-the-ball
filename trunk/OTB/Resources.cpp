@@ -77,8 +77,11 @@ void Resources::Init()
 	_hsNetHit			=audio.SampleLoad("Data/snd/bang1.wav");
 	_hsRacketFlap		=audio.SampleLoad("Data/snd/flap.wav");
 	_hsMenuChangeItem	=audio.SampleLoad("Data/snd/menu.wav");
+	_hsZion				=audio.SampleLoad("Data/snd/zion.wav");
 	_hsMenuValidate		=audio.SampleLoad("Data/snd/bedroom_switch_a.wav");
 	_hsMenuCancel		=audio.SampleLoad("Data/snd/bedroom_switch_b.wav");
+
+	_hcZion =audio.SamplePlay(_hsZion, 0.1f, 0.0f, 1.0f, true);
 }
 
 // ****************************************************************************************

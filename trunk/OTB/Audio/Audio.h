@@ -24,6 +24,9 @@ public:
 	void		SampleFree(const HSAMPLE hsSample);
 	HCHANNEL	SamplePlay(const HSAMPLE hsSample, const Float32 rVolume=1.0f, const Float32 rPan=0.0f, const Float32 rPitch=1.0f, const Bool bLoop =false);
 
+	// Channel
+	void		ChannelSetAttrib(const HCHANNEL	chan, const UInt32 nProp, const Float32 rValue);
+
 protected:
 	HSTREAM _hsMusic;		// BG music
 

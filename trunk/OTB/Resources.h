@@ -47,8 +47,10 @@ public:
 
 	static UInt32 ColorPlayerBody[];
 
-	HSAMPLE		_hsBoing, _hsShoot, _hsNetHit, _hsRacketFlap;
+	HSAMPLE		_hsBoing, _hsShoot, _hsNetHit, _hsRacketFlap, _hsZion;
 	HSAMPLE		_hsMenuChangeItem, _hsMenuValidate, _hsMenuCancel;
+
+	HCHANNEL	_hcZion;
 
 protected:
 	hgeFont*	LoadFont(const char* filename, const Float32 rScale =1.0f);
