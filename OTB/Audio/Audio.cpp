@@ -113,3 +113,14 @@ HCHANNEL Audio::SamplePlay(const HSAMPLE hsSample, const Float32 rVolume, const 
 	BASS_ChannelPlay(chn, TRUE);
 	return chn;
 }
+
+// ****************************************************************************************
+//	ChannelSetAttrib
+// ****************************************************************************************
+void Audio::ChannelSetAttrib(const HCHANNEL	chan, const UInt32 nProp, const Float32 rValue)
+{
+	if (chan==0)
+		return;
+
+	BASS_ChannelSetAttribute(chan, nProp, rValue);
+}		
