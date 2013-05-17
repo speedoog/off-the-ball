@@ -45,7 +45,7 @@ public:
 					~BallHistory();
 
 			 void	Update(const hgeVector& vBallPos, const Float32 rAngle, const Float32 rTimeElapsed);
-			 void	Draw(hgeSprite*	pSpriteBallTrail);
+			 void	Draw(hgeSprite*	pSpriteBallTrail, const Float32 rScale);
 			 void	Reset();
 
 protected:
