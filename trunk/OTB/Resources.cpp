@@ -62,9 +62,15 @@ void Resources::Init()
 
 	_pFontMessages	=LoadFont("Data/Lucida70.fnt");
 
-	_BallTexture =hge->Texture_Load("Data/TennisBall3.png");
-	_pSpriteBall =new hgeSprite(_BallTexture,0,0,16,16);
-	_pSpriteBall->SetHotSpot(8,8);
+// 	_BallTexture =hge->Texture_Load("Data/TennisBall3.png");
+// 	_pSpriteBall =new hgeSprite(_BallTexture,0,0,16,16);
+// 	_pSpriteBall->SetHotSpot(8,8);
+
+	int x=3;
+	int y=2;
+	_BallTexture =hge->Texture_Load("Data/particles.png");
+	_pSpriteBall =new hgeSprite(_BallTexture,x*32,y*32,32,32);
+	_pSpriteBall->SetHotSpot(16,16);
 
 	_pSpriteBallTrail =new hgeSprite(*_pSpriteBall);
 

@@ -220,7 +220,7 @@ void Player::Update(const Float32 rDeltaTime)
 			Float32 rVolume =TChangeRangeClamped(0.0f, M_PI, 0.0f, 0.6f, TAbs(rAngleDiff));
 			audio.ChannelSetAttrib(hcZion, BASS_ATTRIB_VOL, rVolume);
 
-			Float32 rFreq =TChangeRangeClamped(0.0f, M_PI*0.5f, 0.0f, 44100.0f, TAbs(rAngleDiff));
+			Float32 rFreq =TChangeRangeClamped(0.0f, M_PI*0.5f, 0.0f, 22100.0f, TAbs(rAngleDiff));
 			audio.ChannelSetAttrib(hcZion, BASS_ATTRIB_FREQ, rFreq);
 		}
 

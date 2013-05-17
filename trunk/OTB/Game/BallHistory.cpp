@@ -108,7 +108,7 @@ void BallHistory::Reset()
 // ****************************************************************************************
 //	Draw
 // ****************************************************************************************
-void BallHistory::Draw(hgeSprite* pSpriteBallTrail)
+void BallHistory::Draw(hgeSprite* pSpriteBallTrail, const Float32 rScale)
 {
 	UInt32 nElementCount =_lFrames.GetNbElements();
 	BallHistoryFrame* pPrev =NULL;
@@ -119,7 +119,8 @@ void BallHistory::Draw(hgeSprite* pSpriteBallTrail)
 
 	UInt32 nCurrentElement =0;
 
-	Float32 rScale =0.1f/8.0f;
+// 	Float32 rScale =0.1f/8.0f;
+// 	Float32 rScale =_rRadius/(pSpriteBall->GetWidth()/2.0f);
 
 	FOR_EACH_ELEMENT(_lFrames, pFrame, BallHistoryFrame)
 	{

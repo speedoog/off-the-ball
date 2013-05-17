@@ -210,11 +210,22 @@ void Ball::Render()
 	_pGame->GetResources()._pSpriteBall->SetColor(colBall.GetHWColor());
 	_pGame->GetResources()._pSpriteBallTrail->SetColor(colBallTrail.GetHWColor());
 
-	// draw
-	_History.Draw(_pGame->GetResources()._pSpriteBallTrail);
+	hgeSprite* pSpriteBall =_pGame->GetResources()._pSpriteBall;
+	Float32 rScale =_rRadius/(pSpriteBall->GetWidth()/2.0f);
 
-	Float32 rScale =_rRadius/8.0f;
-	_pGame->GetResources()._pSpriteBall->RenderEx(_vPos.x, _vPos.y, _rSpriteAngle, rScale, rScale);
+	// draw
+	_History.Draw(_pGame->GetResources()._pSpriteBallTrail, rScale);
+
+//	_pGame->GetResources()._pSpriteBall->RenderEx(_vPos.x, _vPos.y, _rSpriteAngle, rScale, rScale);
+
+
+	Float32 rScaleY =rScale*TChangeRangeClamped(10.0f, 0.0f, 0.7f, 1.0f, TAbs(_vVelocity.x));
+	Float32 rScaleX =rScale*TChangeRangeClamped(0.0f, 10.0f, 1.0f, 2.0f, TAbs(_vVelocity.x));
+	Float32 rAngle =_vVelocity.Angle();
+
+	pSpriteBall->RenderEx(_vPos.x, _vPos.y, rAngle, rScaleX, rScaleY);
+
+//	_pGame->GetResources()._pFontMessages->printf(_vPos.x, _vPos.y, 0, "%.1f", _vVelocity.Length());
 
 // 	hge->Gfx_RenderCircle(_vPos.x, _vPos.y, _rRadius, 0xFFFFFF00);
 }
