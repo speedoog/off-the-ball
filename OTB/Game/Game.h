@@ -66,6 +66,8 @@ public:
 	inline	Bool			GetDemoMode() const					{ return _bDemoMode;		}
 	inline	void			SetPaused(const Bool bPaused)		{ _bPaused =bPaused;		}
 
+	inline	Float32			GetTimeScale() const				{ return _rTimeScale;		}
+
 	static	CommandAbc*		CreateCommand(const CommandAbc::CmdType cmd);
 
 protected:
