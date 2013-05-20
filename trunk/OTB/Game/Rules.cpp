@@ -304,17 +304,39 @@ void Rules::EventBallChangeSide(Int32 nSide)
 }
 
 // ****************************************************************************************
+//	PlayBallSound
+// ****************************************************************************************
+void Rules::PlayBallSound(const HSAMPLE hSample)
+{
+	Otb* pOTB =Otb::GetInstance();
+	Game& game =pOTB->GetGame();
+	if (game.GetTimeScale()>2.0f)
+		return;
+
+	Ball& ball =game.GetBall();
+	const Float32 rBallVelocity =ball.GetVelocity().Length();
+	if (rBallVelocity<0.6f)
+		return;
+
+	const Float32 rVolume =TChangeRangeClamped(0.0f, 10.0f, 0.3f, 1.0f, rBallVelocity);
+	const Float32 rBallPosX=ball.GetPos().x;
+	//	const Float32 rPan =TChangeRange(-10.0f, 10.0f, 0.3f, 1.0f, TAbs(rBallPosX));
+	const Float32 rPan =rBallPosX/10.0f;
+	pOTB->GetAudio().SamplePlay(hSample, rBallVelocity, rPan);
+}
+
+// ****************************************************************************************
 //	EventBallHitGround
 // ****************************************************************************************
 void Rules::EventBallHitGround()
 {
+	Otb* pOTB =Otb::GetInstance();
+	PlayBallSound(pOTB->GetResources()._hsBoing);
+
 	if (GetFailMode())
 	{
 		return;
 	}
-
-	Otb* pOTB =Otb::GetInstance();
-	pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsBoing);
 
 	if (_bServing)
 	{
@@ -348,7 +370,7 @@ void Rules::EventBallHitWall()
 	}
 
 	Otb* pOTB =Otb::GetInstance();
-	pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsBoing);
+	PlayBallSound(pOTB->GetResources()._hsBoing);
 }
 
 // ****************************************************************************************
@@ -362,7 +384,7 @@ void Rules::EventBallHitCeil()
 	}
 
 	Otb* pOTB =Otb::GetInstance();
-	pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsBoing);
+	PlayBallSound(pOTB->GetResources()._hsBoing);
 }
 
 // ****************************************************************************************
@@ -376,7 +398,7 @@ void Rules::EventBallHitRacket()
 	}
 
 	Otb* pOTB =Otb::GetInstance();
-	pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsShoot);
+	PlayBallSound(pOTB->GetResources()._hsShoot);
 
 	if (_bServing && _bRacketHit)			// double hit during service
 	{
@@ -394,7 +416,7 @@ void Rules::EventBallHitRacket()
 void Rules::EventBallHitNet()
 {
 	Otb* pOTB =Otb::GetInstance();
-	pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsNetHit);
+	PlayBallSound(pOTB->GetResources()._hsNetHit);
 
 	if (GetFailMode())
 	{

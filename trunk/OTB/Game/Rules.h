@@ -21,6 +21,7 @@
 #pragma once
 
 #include "../Base/Base.h"
+#include "../Audio/Audio.h"
 
 class Game;
 
@@ -60,6 +61,9 @@ public:
 
 	inline	void		SetShowScores(const Bool bShowScores)		{ _bShowScores =bShowScores;		}
 	inline	void		SetShowRulesMsg(const Bool bShowRulesMsg)	{ _bShowRulesMsg =bShowRulesMsg;	}
+
+protected:
+			void		PlayBallSound(const HSAMPLE hSample);
 
 protected:
 	Game*	_pGame;

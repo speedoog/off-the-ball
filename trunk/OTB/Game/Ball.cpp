@@ -73,8 +73,9 @@ void Ball::Reset(Player* pPlayer)
 	_nSide		=pPlayer->GetPlayerId();
 	_vLastPos	=_vPos;
 
-	Float32 rVelX =pPlayer->GetFront()*-1.0f;
-	_vVelocity	=hgeVector(rVelX,4);
+//	Float32 rVelX =pPlayer->GetFront()*-1.0f;
+//	_vVelocity	=hgeVector(rVelX,4);
+	_vVelocity =hgeVector::ZERO;
 
 	_History.Reset();
 }
@@ -85,7 +86,9 @@ void Ball::Reset(Player* pPlayer)
 void Ball::Update(const Float32 rDeltaTime)
 {
 	if (_bPaused)
+	{
 		return;
+	}
 
 	Float32 rRestitutionScale =1.0f;
 	if (_pGame->GetRules().GetFailMode())

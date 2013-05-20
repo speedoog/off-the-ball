@@ -211,7 +211,7 @@ void Player::Update(const Float32 rDeltaTime)
 // 			Otb* pOTB =Otb::GetInstance();
 // 			pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsRacketFlap);
 // 		}
-		if (_nPlayerId==0)
+		if (_nPlayerId==0 && _pGame->GetTimeScale()<=2.0f)
 		{
 			Otb* pOTB =Otb::GetInstance();
 			Audio& audio =pOTB->GetAudio();

@@ -9,6 +9,7 @@
 
 #include "hgevector.h"
 
+hgeVector hgeVector::ZERO(0.0f, 0.0f);
 hgeVector hgeVector::UNIT_X(1.0f, 0.0f);
 hgeVector hgeVector::UNIT_Y(0.0f, 1.0f);
 
