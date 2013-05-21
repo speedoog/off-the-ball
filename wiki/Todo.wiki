@@ -4,32 +4,33 @@
   * ~~Interpolation orientation de la racket~~
   * ~~PcPadManager: gérer plusieurs pads~~
   * ~~Gestion correcte de la frappe~~
-  * inertie xml
   * ~~ControllerKbdMouse~~
-  * Load Controller config depuis OTB.xml ex: P1=Pad(0) P2=KbdMouse
-  * Pause entre les Fails avec un affichage de qui a scoré
-  * Fin de la partie (P1 Wins etc ...)
+  * ~~Load Controller config depuis OTB.xml ex: P1=Pad(0) P2=KbdMouse~~
+  * ~~Pause entre les Fails avec un affichage de qui a scoré~~
   * ~~Autoriser un Double service~~
+  * ~~Prédiction de la trajectoire de la balle~~
+  * ~~ControllerCpu~~
 
 = Todo Important, v2 Beta Proto =
-  * Effet de déformation de la balle en fonction de la vitesse
+  * ~~Effet de déformation de la balle en fonction de la vitesse~~
+  * ~~traînée balle~~
+  * ~~Sound Fx~~
+  * ~~Music~~
+  * ~~Menu Général~~
+  * Menu Inputs
+  * Menu Video
+  * Menu Audio
+  * End of Game (P1 Wins etc ...)
   * Collision Ball/Player
-  * Prédiction de la trajectoire de la balle
-  * ControllerCpu Easy (IA débile)
-  * Effets de particules
-    * Impacts Wall, shoot
-    * traînée balle, racket
-  * Sound Fx
+  * Particle FX (Impacts Wall, shoot)
+  * Racket FX (swipe Trail)
 
 = Todo Plus tard, v3 Demo =
   * Jump
+  * Inertie xml
   * Power Shot
-  * Music
   * ControllerCpu Medium
   * Persos un peu plus sympa (yeux qui suivent la balle)
-  * Menu Général
-  * Menu Inputs
-  * Menu Video
   * ControllerNetwork
   * Box2D
   * Levels avec de la physique
