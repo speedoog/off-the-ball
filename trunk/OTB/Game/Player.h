@@ -22,6 +22,8 @@
 
 #include "../Base/Base.h"
 #include "PowerBar.h"
+#include "../../Bass/bass.h"
+
 class Game;
 
 class Player
@@ -88,6 +90,9 @@ protected:
 
 	// Input
 	hgeVector	_vInputMove, _vInputRacket;
+
+	// sound
+	HCHANNEL	_hcZion;
 };
 
 #endif	//__PLAYER_H__
