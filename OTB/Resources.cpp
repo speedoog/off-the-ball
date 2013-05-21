@@ -86,8 +86,6 @@ void Resources::Init()
 	_hsZion				=audio.SampleLoad("Data/snd/zion.wav");
 	_hsMenuValidate		=audio.SampleLoad("Data/snd/bedroom_switch_a.wav");
 	_hsMenuCancel		=audio.SampleLoad("Data/snd/bedroom_switch_b.wav");
-
-	_hcZion =audio.SamplePlay(_hsZion, 0.1f, 0.0f, 1.0f, true);
 }
 
 // ****************************************************************************************

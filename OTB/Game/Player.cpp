@@ -40,6 +40,7 @@ Player::Player()
 	_nScore			=0;
 	_vInitialPos	=hgeVector(0,0);
 	_rRacketOffset	=0.0f;
+	_hcZion			=0;
 }
 
 // ****************************************************************************************
@@ -81,6 +82,15 @@ void Player::Init(Game* pGame, const Int32 nPlayerId)
 	_bUseTimeScale =false;
 
 	ResetPosition();
+
+	// Init audio
+	if (_hcZion==0)
+	{
+		Otb* pOTB =Otb::GetInstance();
+		Audio& audio =pOTB->GetAudio();
+		_hcZion =audio.SamplePlay(pOTB->GetResources()._hsZion, 0.0f, 0.0f, 1.0f, true);
+		audio.ChannelSetAttrib(_hcZion, BASS_ATTRIB_PAN, -GetFront());
+	}
 }
 
 // ****************************************************************************************
@@ -206,22 +216,16 @@ void Player::Update(const Float32 rDeltaTime)
 		if (rAngleDiff<(-M_PI))		rAngleDiff+=2.0f*M_PI;
 
 		// play flap sound
-// 		if (TAbs(rAngleDiff)>M_PI*0.5f)
-// 		{
-// 			Otb* pOTB =Otb::GetInstance();
-// 			pOTB->GetAudio().SamplePlay(pOTB->GetResources()._hsRacketFlap);
-// 		}
-		if (_nPlayerId==0 && _pGame->GetTimeScale()<=2.0f)
+		if (_pGame->GetTimeScale()<=2.0f)
 		{
 			Otb* pOTB =Otb::GetInstance();
 			Audio& audio =pOTB->GetAudio();
-			HCHANNEL hcZion =pOTB->GetResources()._hcZion;
 
 			Float32 rVolume =TChangeRangeClamped(0.0f, M_PI, 0.0f, 0.6f, TAbs(rAngleDiff));
-			audio.ChannelSetAttrib(hcZion, BASS_ATTRIB_VOL, rVolume);
+			audio.ChannelSetAttrib(_hcZion, BASS_ATTRIB_VOL, rVolume);
 
 			Float32 rFreq =TChangeRangeClamped(0.0f, M_PI*0.5f, 0.0f, 22100.0f, TAbs(rAngleDiff));
-			audio.ChannelSetAttrib(hcZion, BASS_ATTRIB_FREQ, rFreq);
+			audio.ChannelSetAttrib(_hcZion, BASS_ATTRIB_FREQ, rFreq);
 		}
 
 		_rRacketRotationSpeed =rAngleDiff*rRacketRotationSpeedMax;

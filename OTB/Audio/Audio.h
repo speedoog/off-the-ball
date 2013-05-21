@@ -28,7 +28,8 @@ public:
 	void		ChannelSetAttrib(const HCHANNEL	chan, const UInt32 nProp, const Float32 rValue);
 
 protected:
-	HSTREAM _hsMusic;		// BG music
+//	HSTREAM _hsMusic;		// BG music
+	HMUSIC	_hsMusic;		// BG music
 
 	// Settings
 	Float32	_rMusicVolume;

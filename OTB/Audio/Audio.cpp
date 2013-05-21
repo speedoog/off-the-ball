@@ -26,7 +26,8 @@ Audio::~Audio()
 // ****************************************************************************************
 void Audio::MusicLoad(const char* pFilename)
 {
-	_hsMusic =BASS_StreamCreateFile(false, "data/music/freezepop_Lazy.mp3", 0, 0, 0);
+//	_hsMusic =BASS_StreamCreateFile(false, "data/music/freezepop_Lazy.mp3", 0, 0, 0);
+	_hsMusic =BASS_MusicLoad(false, "data/music/beams_of_light.mod",0,0,BASS_SAMPLE_LOOP,0);
 	MusicSetVolume(_rMusicVolume);
 }
 
@@ -69,7 +70,7 @@ void Audio::MusicSetVolume(const Float32 rVolume)
 // ****************************************************************************************
 HSAMPLE Audio::SampleLoad(const char* pFilename)
 {
-	return BASS_SampleLoad(false, pFilename, 0, 0, 1, BASS_SAMPLE_OVER_VOL);
+	return BASS_SampleLoad(false, pFilename, 0, 0, 2, BASS_SAMPLE_OVER_VOL);
 }
 
 // ****************************************************************************************
