@@ -23,6 +23,7 @@
 #include "../Base/TStream.h"
 
 const Float32 BallRecord::_rFrameTime =(1.0f/60.0f);
+const char* sAiDatabaseFile ="Database.AI";
 
 // ****************************************************************************************
 //	Ctor
@@ -58,7 +59,7 @@ void BallRecorder::Init(Game* pGame)
 
 	// Load DB
 	TStream Stream;
-	Bool bOk =Stream.OpenFile("Database.AI", TStream::SM_READ);
+	Bool bOk =Stream.OpenFile(sAiDatabaseFile, TStream::SM_READ);
 	if (bOk)
 	{
 		Stream >> _Database;
@@ -77,7 +78,7 @@ void BallRecorder::Kill()
 
 		// Save DB
 		TStream Stream;
-		Stream.OpenFile("Database.AI", TStream::SM_WRITE);
+		Stream.OpenFile(sAiDatabaseFile, TStream::SM_WRITE);
 		Stream << _Database;
 		Stream.CloseFile();
 	}
