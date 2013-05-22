@@ -226,6 +226,12 @@ public:
 			}
 		}
 
+		while(_lDatabase.GetSize()>3000)
+		{
+			UInt32 nIdx =TRand(_lDatabase.GetSize());
+			_lDatabase.RemoveIndexFast(nIdx);
+		}
+
 		// remove duplicate (NEEED OPTIM !)
 		/*
 		UInt32 nDup	 =0;

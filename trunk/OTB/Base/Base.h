@@ -287,6 +287,11 @@ static inline Float32 TRand()
 	return Float32(rand())/Float32(RAND_MAX);
 }
 
+static inline UInt32 TRand(const UInt32 nMax)
+{
+	return (rand()%nMax);
+}
+
 static inline Float32 TRand(const Float32 rMin, const Float32 rMax)
 {
 	return TChangeRange(0.0f, Float32(RAND_MAX), rMin, rMax, Float32(rand()) );
