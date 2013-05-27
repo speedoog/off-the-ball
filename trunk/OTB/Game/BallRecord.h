@@ -197,7 +197,7 @@ public:
 			Bool bRemove =false;
 			BallRecord& ballRec =*it;
 
-			while (ballRec._nTry>16)
+			while (ballRec._nTry>32)
 			{
 				ballRec._nTry	 /=2;
 				ballRec._nSucced /=2;
@@ -212,7 +212,7 @@ public:
 				bRemove =true;
 
 			Float32 rRatio =Float32(ballRec._nSucced)/Float32(ballRec._nTry+1);
-			if (rRatio<0.75f)
+			if (rRatio<0.5f && ballRec._nTry>6)
 				bRemove =true;
 
 			if (bRemove)
@@ -226,17 +226,8 @@ public:
 			}
 		}
 
-		while(_lDatabase.GetSize()>3000)
-		{
-			UInt32 nIdx =TRand(_lDatabase.GetSize());
-			_lDatabase.RemoveIndexFast(nIdx);
-		}
-
 		// remove duplicate (NEEED OPTIM !)
-		/*
 		UInt32 nDup	 =0;
-		UInt32 nDup1 =0;
-		UInt32 nDup2 =0;
 		for(BallRecordVector::Iterator it1 =_lDatabase.GetHead(); it1!=_lDatabase.GetTail(); ++it1)
 		{
 			BallRecord& br1 =*it1;
@@ -256,8 +247,15 @@ public:
 					++it2;
 				}
 			}
+			if (nDup>1000)
+				break;
 		}
-		*/
+
+		while(_lDatabase.GetSize()>3000)
+		{
+			UInt32 nIdx =TRand(1000, _lDatabase.GetSize());
+			_lDatabase.RemoveIndexFast(nIdx);
+		}
 
 		int t=0;
 	}

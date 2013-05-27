@@ -55,21 +55,21 @@ hgeFont* Resources::LoadFont(const char* filename, const Float32 rScale)
 void Resources::Init()
 {
 	// load all
-	_pFontDebug	=LoadFont("Data/Verdana60.fnt", 0.4f);
-	_pFontScore	=LoadFont("Data/Bauhaus93.fnt");
-	_pFontTitle	=LoadFont("Data/Bauhaus93.fnt");
-	_pFontMenus	=LoadFont("Data/Verdana60.fnt", 0.5f);
-
+	_pFontDebug		=LoadFont("Data/Verdana60.fnt", 0.4f);
+	_pFontScore		=LoadFont("Data/Bauhaus93.fnt");
+	_pFontTitle		=LoadFont("Data/Bauhaus93.fnt");
+	_pFontMenus		=LoadFont("Data/Verdana60.fnt", 0.5f);
 	_pFontMessages	=LoadFont("Data/Lucida70.fnt");
 
 // 	_BallTexture =hge->Texture_Load("Data/TennisBall3.png");
 // 	_pSpriteBall =new hgeSprite(_BallTexture,0,0,16,16);
 // 	_pSpriteBall->SetHotSpot(8,8);
 
-	int x=3;
-	int y=2;
+	const Float32 TileSize =32.0f;
+	const int x=3;
+	const int y=2;
 	_BallTexture =hge->Texture_Load("Data/particles.png");
-	_pSpriteBall =new hgeSprite(_BallTexture,x*32,y*32,32,32);
+	_pSpriteBall =new hgeSprite(_BallTexture, x*TileSize, y*TileSize, TileSize, TileSize);
 	_pSpriteBall->SetHotSpot(16,16);
 
 	_pSpriteBallTrail =new hgeSprite(*_pSpriteBall);
@@ -94,8 +94,27 @@ void Resources::Init()
 void Resources::Kill()
 {
 	// delete all
-	delete _pFontDebug;
+	TDelete(_pFontDebug);
+	TDelete(_pFontScore);
+	TDelete(_pFontTitle);
+	TDelete(_pFontMenus);
+	TDelete(_pFontMessages);
 
 	hge->Texture_Free(_BallTexture);
+	hge->Texture_Free(_texPowerBar);
+
+	TDelete(_pSpriteBall);
+	TDelete(_pSpriteBallTrail);
+
+	// ---- AUDIO ---
+	Audio& audio =Otb::GetInstance()->GetAudio();
+	audio.SampleFree(_hsBoing 			);
+	audio.SampleFree(_hsShoot 			);
+	audio.SampleFree(_hsNetHit			);
+	audio.SampleFree(_hsRacketFlap		);
+	audio.SampleFree(_hsMenuChangeItem	);
+	audio.SampleFree(_hsZion			);
+	audio.SampleFree(_hsMenuValidate	);
+	audio.SampleFree(_hsMenuCancel		);
 
 }
