@@ -23,89 +23,6 @@
 #include "../../hge/hgeSprite.h"
 
 // ****************************************************************************************
-//	Ctor
-// ****************************************************************************************
-BallHistory::BallHistory(const Float32 rMinTimeBetweenSamples, const Float32 rMaxRecordingTime, const UInt32 nMaxFrameCount)
-: _rMaxRecordingTime		(rMaxRecordingTime)
-, _nMaxFrameCount			(nMaxFrameCount)
-, _rMinTimeBetweenSamples	(rMinTimeBetweenSamples)
-, _rCurrentTime				(0.0f)
-, _bTeleport				(false)
-, _bBlink					(false)
-{
-}
-
-// ****************************************************************************************
-//	Dtor
-// ****************************************************************************************
-BallHistory::~BallHistory()
-{
-}
-
-// ****************************************************************************************
-//	Update
-// ****************************************************************************************
-void BallHistory::Update(const hgeVector& vPosition, const Float32 rAngle, const Float32 rDeltaTime)
-{
-	if (rDeltaTime>0.0f)
-	{
-		_rCurrentTime +=rDeltaTime;
-
-		// CleanUp oldies
-		ClearOldFrames();
-
-		BallHistoryFrame* pLastFrame =(BallHistoryFrame*)_lFrames.GetQueue();
-		if ( !pLastFrame || _rCurrentTime>=(pLastFrame->_rTime+_rMinTimeBetweenSamples) || _bTeleport)
-		{
-			_bBlink =!_bBlink;
-
-			// Push new frame
-			BallHistoryFrame* pFrame =new BallHistoryFrame(vPosition, _bTeleport, _bBlink, _rCurrentTime, rAngle);
-			_lFrames.InsertQueue(pFrame);
-		}
-	}
-
-	_bTeleport =false;
-}
-
-// ****************************************************************************************
-//	ClearOldFrames
-// ****************************************************************************************
-void BallHistory::ClearOldFrames()
-{
-	const Float32 rTimeOut =_rCurrentTime-_rMaxRecordingTime;
-
-	BallHistoryFrame* pFrame =(BallHistoryFrame*)_lFrames.GetHead();
-	while (pFrame!=NULL)
-	{
-		BallHistoryFrame* pNextFrame =(BallHistoryFrame*)pFrame->GetNext();
-		if (pFrame->_rTime<rTimeOut)			// Too old ... drop Head
-		{
-			_lFrames.DeleteElement(pFrame);
-			pFrame =pNextFrame;
-		}
-		else
-		{
-			break;
-		}
-	}
-
-	// Max Frame Count limit (for TimeScale near 0)
-	while (_lFrames.GetNbElements()>=_nMaxFrameCount)
-	{
-		_lFrames.DeleteElement(_lFrames.GetHead());
-	}
-}
-
-// ****************************************************************************************
-//	Reset
-// ****************************************************************************************
-void BallHistory::Reset()
-{
-	_lFrames.DeleteAllElements();
-}
-
-// ****************************************************************************************
 //	Draw
 // ****************************************************************************************
 void BallHistory::Draw(hgeSprite* pSpriteBallTrail, const Float32 rScale)
@@ -132,9 +49,10 @@ void BallHistory::Draw(hgeSprite* pSpriteBallTrail, const Float32 rScale)
 				hgeColorRGB clCurrent =TBlend(clSrc, clDst, rRatio);
 
 				pSpriteBallTrail->SetColor(clCurrent.GetHWColor());
-				pSpriteBallTrail->RenderEx(pPrev->_vPosition.x, pPrev->_vPosition.y, pPrev->_rAngle, rScale*rRatio, rScale*rRatio);
 
-				hgeVector vDiff(pFrame->_vPosition-pPrev->_vPosition);
+				pSpriteBallTrail->RenderEx(pPrev->_Data._vPosition.x, pPrev->_Data._vPosition.y, pPrev->_Data._rAngle, rScale*rRatio, rScale*rRatio);
+
+				hgeVector vDiff(pFrame->_Data._vPosition-pPrev->_Data._vPosition);
 				hgeVector vNorm(vDiff.y, -vDiff.x);
 				vNorm.Normalize();
 
@@ -143,11 +61,11 @@ void BallHistory::Draw(hgeSprite* pSpriteBallTrail, const Float32 rScale)
 				for(Float32 i=0; i<(2.0f*M_PI); i+=(2.0f*M_PI)/3.0f)
 				{
 					Float32 rOffsetAngle =Float32(i);//*M_PI_2;
-					Float32 rSin1 =sinf(pPrev->_rAngle+rOffsetAngle)*rRatio;
-					Float32 rSin2 =sinf(pFrame->_rAngle+rOffsetAngle)*rRatio;
+					Float32 rSin1 =sinf(pPrev->_Data._rAngle+rOffsetAngle)*rRatio;
+					Float32 rSin2 =sinf(pFrame->_Data._rAngle+rOffsetAngle)*rRatio;
 
-					hgeVector v0 =pPrev->_vPosition+vNorm*0.1f*0.9f*rSin1;
-					hgeVector v1 =pFrame->_vPosition+vNorm*0.1f*0.9f*rSin2;
+					hgeVector v0 =pPrev->_Data._vPosition+vNorm*0.1f*0.9f*rSin1;
+					hgeVector v1 =pFrame->_Data._vPosition+vNorm*0.1f*0.9f*rSin2;
 
 					hge->Gfx_RenderLine(v0.x, v0.y, v1.x, v1.y, clCurrent2.GetHWColor());
 				}

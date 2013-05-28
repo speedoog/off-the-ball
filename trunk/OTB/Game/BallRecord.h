@@ -227,7 +227,10 @@ public:
 		}
 
 		// remove duplicate (NEEED OPTIM !)
-		UInt32 nDup	 =0;
+		UInt32 nDup		 =0;
+		UInt32 nDupMax	 =4000;
+		UInt32 nDupValid =0;
+		UInt32 nDupValidMax =1000*1000;
 		for(BallRecordVector::Iterator it1 =_lDatabase.GetHead(); it1!=_lDatabase.GetTail(); ++it1)
 		{
 			BallRecord& br1 =*it1;
@@ -237,7 +240,7 @@ public:
 
 				Float32 rDiff =br1.ComputeDiff(br2);
 
-				if (rDiff<0.2f)
+				if (rDiff<0.1f)
 				{
 					_lDatabase.RemoveFast(it2);
 					++nDup;
@@ -246,8 +249,9 @@ public:
 				{
 					++it2;
 				}
+				++nDupValid;
 			}
-			if (nDup>1000)
+			if (nDup>nDupMax || nDupValid>nDupValidMax)
 				break;
 		}
 
