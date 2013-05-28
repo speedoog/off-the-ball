@@ -173,7 +173,7 @@ void Ball::Update(const Float32 rDeltaTime)
 
 	_rSpriteAngle +=_vVelocity.Length()*rDeltaTime;
 
-	_History.Update(_vPos, _rSpriteAngle, rDeltaTime);
+	_History.Update(rDeltaTime, BallData(_vPos, _rSpriteAngle));
 }
 
 // ****************************************************************************************
