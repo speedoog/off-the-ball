@@ -22,6 +22,8 @@
 
 #include "../Base/Base.h"
 #include "PowerBar.h"
+#include "BallHistory.h"
+
 #include "../../Bass/bass.h"
 
 class Game;
@@ -93,6 +95,9 @@ protected:
 
 	// sound
 	HCHANNEL	_hcZion;
+
+	// fx
+	RacketHistory	_RacketHistory;
 };
 
 #endif	//__PLAYER_H__

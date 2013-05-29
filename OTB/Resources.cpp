@@ -68,13 +68,17 @@ void Resources::Init()
 	const Float32 TileSize =32.0f;
 	const int x=3;
 	const int y=2;
-	_BallTexture =hge->Texture_Load("Data/particles.png");
-	_pSpriteBall =new hgeSprite(_BallTexture, x*TileSize, y*TileSize, TileSize, TileSize);
+	_TexBall =hge->Texture_Load("Data/particles.png");
+	_pSpriteBall =new hgeSprite(_TexBall, x*TileSize, y*TileSize, TileSize, TileSize);
 	_pSpriteBall->SetHotSpot(16,16);
 
 	_pSpriteBallTrail =new hgeSprite(*_pSpriteBall);
 
 	_texPowerBar =hge->Texture_Load("Data/PowerBar.png");
+
+	_texRacketTrail =hge->Texture_Load("Data/RacketTrail.png");
+	_pSpriteRacketTrail =new hgeSprite(_texRacketTrail, 0.0f, 0.0f, 16.0f, 16.0f);
+	_pSpriteRacketTrail->SetBlendMode(BLEND_COLORADD);
 
 	// ---- AUDIO ---
 	Audio& audio =Otb::GetInstance()->GetAudio();
@@ -100,7 +104,7 @@ void Resources::Kill()
 	TDelete(_pFontMenus);
 	TDelete(_pFontMessages);
 
-	hge->Texture_Free(_BallTexture);
+	hge->Texture_Free(_TexBall);
 	hge->Texture_Free(_texPowerBar);
 
 	TDelete(_pSpriteBall);
