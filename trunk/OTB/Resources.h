@@ -39,11 +39,14 @@ public:
 	hgeFont* 	_pFontMenus;
 	hgeFont* 	_pFontMessages;
 
-	HTEXTURE	_BallTexture;
+	HTEXTURE	_TexBall;
 	hgeSprite*	_pSpriteBall;
 	hgeSprite*	_pSpriteBallTrail;
 
 	HTEXTURE	_texPowerBar;
+
+	HTEXTURE	_texRacketTrail;
+	hgeSprite*	_pSpriteRacketTrail;
 
 	static UInt32 ColorPlayerBody[];
 

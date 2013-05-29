@@ -41,20 +41,7 @@ public:
 	TType		_Data;
 };
 
-//
-// -------------------------------
-//
-class BallData
-{
-public:
-	BallData(const hgeVector& vPosition, const Float32 rAngle)
-		: _vPosition(vPosition), _rAngle(rAngle) { }
 
-	hgeVector	_vPosition;
-	Float32		_rAngle;
-};
-
-typedef HistoryFrame<BallData> BallHistoryFrame;
 
 //
 // -------------------------------
@@ -148,17 +135,47 @@ protected:
 //
 // -------------------------------
 //
+
+class BallData
+{
+public:
+	BallData(const hgeVector& vPosition, const Float32 rAngle)
+		: _vPosition(vPosition), _rAngle(rAngle) { }
+
+	hgeVector	_vPosition;
+	Float32		_rAngle;
+};
+
 class hgeSprite;
 class BallHistory : public History<BallData>
 {
 public:
 	BallHistory (const Float32 rMinTimeBetweenSamples, const Float32 rMaxRecordingTime, const UInt32 nMaxFrameCount)
-		: History(rMinTimeBetweenSamples, rMaxRecordingTime, nMaxFrameCount)
-	{
-
-	}
+		: History(rMinTimeBetweenSamples, rMaxRecordingTime, nMaxFrameCount) { }
 
 	void	Draw(hgeSprite*	pSpriteBallTrail, const Float32 rScale);
+
+};
+
+//
+// -------------------------------
+//
+class RacketData
+{
+public:
+	RacketData(const hgeVector& v1, const hgeVector& v2)
+		: _v1(v1), _v2(v2) { }
+
+	hgeVector	_v1, _v2;
+};
+
+class RacketHistory : public History<RacketData>
+{
+public:
+	RacketHistory (const Float32 rMinTimeBetweenSamples, const Float32 rMaxRecordingTime, const UInt32 nMaxFrameCount)
+		: History(rMinTimeBetweenSamples, rMaxRecordingTime, nMaxFrameCount) { }
+
+	void	Draw(hgeSprite*	pSpriteRacketTrail, const hgeColorRGB& colBase);
 
 };
 

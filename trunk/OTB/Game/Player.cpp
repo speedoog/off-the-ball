@@ -32,6 +32,7 @@ const Float32 rPlayerStrenght			=0.65f;
 //	Ctor
 // ****************************************************************************************
 Player::Player()
+: _RacketHistory(1.0f/100.0f, 0.5f, 1000)
 {
 	_rCharSpeedMax 	=7.0f;
 	_vCharSize 		=hgeVector(0.35f, 1.8f)*0.75f;
@@ -109,6 +110,8 @@ void Player::ResetPosition()
 
 	_PowerBar.Reset();
 	_bUseTimeScale =false;
+
+	_RacketHistory.Reset();
 }
 
 Float32 SegmentDist(const hgeVector& v0, const hgeVector& v1, const hgeVector& p, hgeVector* pProj=NULL, Float32* pRatio=NULL)
@@ -250,7 +253,10 @@ void Player::Update(const Float32 rDeltaTime)
 			ball.Launch(_vInputMove);
 		}
 	}
-	
+
+	hgeVector 	vRaquet0 =GetRaquetPos0();
+	hgeVector 	vRaquet1 =GetRaquetPos1();
+
 	if (pRules->GetFailMode()==false)
 	{
 		// check ball collide
@@ -258,8 +264,6 @@ void Player::Update(const Float32 rDeltaTime)
 
 		if (_rHitCooldown<=0.0f)
 		{
-			hgeVector 	vRaquet0=GetRaquetPos0();
-			hgeVector 	vRaquet1=GetRaquetPos1();
 			hgeVector 	vProj;
 			Float32		rProjRatio;
 			Float32		rDist =SegmentDist(vRaquet0, vRaquet1, vBallPos, &vProj, &rProjRatio);
@@ -325,6 +329,8 @@ void Player::Update(const Float32 rDeltaTime)
 		}
 		_bUseTimeScale =_PowerBar.Update(rDeltaTime, _bUseTimeScale);
 	}
+
+	_RacketHistory.Update(rDeltaTime, RacketData(vRaquet0, vRaquet1));
 }
 
 //const UInt32 nColorPlayerRaquet	=0xFF60E060;
@@ -339,6 +345,9 @@ void Player::Render()
 	hgeColorRGB	colBody;	colBody.SetHWColor(Resources::ColorPlayerBody[_nPlayerId]);
 	hgeColorRGB colRaquet;	colRaquet.SetHWColor(nColorPlayerRaquet);
 	hgeColorRGB colEye;		colEye.SetHWColor(nColorPlayerEye);
+
+	// racket trail
+	_RacketHistory.Draw(_pGame->GetResources()._pSpriteRacketTrail, colBody);
 
 	// Player
 	Otb::RenderQuad(hgeVector(_vPos.x-_vCharSize.x, _vPos.y), hgeVector(_vPos.x+_vCharSize.x, _vPos.y+_vCharSize.y), colBody.GetHWColor());
