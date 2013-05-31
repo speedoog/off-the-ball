@@ -103,8 +103,48 @@ void RacketHistory::Draw(hgeSprite* pSpriteRacketTrail, const hgeColorRGB& colBa
 		{
 			if (!pFrame->_bTeleport)
 			{
-				Float32 rRatio =Float32(nCurrentElement)/Float32(nElementCount);
-				hgeColorRGB clCurrent =TBlend(clSrc, clDst, rRatio);
+				Float32 rRatio1 =Float32(nCurrentElement)/Float32(nElementCount);
+				Float32 rRatio2 =Float32(nCurrentElement+1)/Float32(nElementCount);
+				hgeColorRGB clCurrent1 =TBlend(clSrc, clDst, rRatio1);
+				hgeColorRGB clCurrent2 =TBlend(clSrc, clDst, rRatio2);
+
+				hgeQuad quad;
+				quad.v[0].x 	=pPrev->_Data._v1.x;
+				quad.v[0].y 	=pPrev->_Data._v1.y;
+				quad.v[0].z 	=0;
+				quad.v[0].tx	=0;
+				quad.v[0].ty	=0;
+				quad.v[0].col	=clCurrent1.GetHWColor();
+
+				quad.v[1].x 	=pPrev->_Data._v2.x;
+				quad.v[1].y 	=pPrev->_Data._v2.y;
+				quad.v[1].z 	=0;
+				quad.v[1].tx	=1;
+				quad.v[1].ty	=0;
+				quad.v[1].col	=clCurrent1.GetHWColor();
+
+				quad.v[2].x 	=pFrame->_Data._v2.x;
+				quad.v[2].y 	=pFrame->_Data._v2.y;
+				quad.v[2].z 	=0;
+				quad.v[2].tx	=1;
+				quad.v[2].ty	=1;
+				quad.v[2].col	=clCurrent2.GetHWColor();
+
+				quad.v[3].x 	=pFrame->_Data._v1.x;
+				quad.v[3].y 	=pFrame->_Data._v1.y;
+				quad.v[3].z 	=0;
+				quad.v[3].tx	=0;
+				quad.v[3].ty	=1;
+				quad.v[3].col	=clCurrent2.GetHWColor();
+
+				quad.blend	=BLEND_DEFAULT;
+
+				quad.tex	=pSpriteRacketTrail->GetTexture();
+
+				hge->Gfx_RenderQuad(&quad);
+
+
+				/*
 
 				pSpriteRacketTrail->SetColor(clCurrent.GetHWColor());
 
@@ -112,6 +152,9 @@ void RacketHistory::Draw(hgeSprite* pSpriteRacketTrail, const hgeColorRGB& colBa
 											 , pPrev->_Data._v2.x, pPrev->_Data._v2.y
 											 , pFrame->_Data._v2.x, pFrame->_Data._v2.y
 											 , pFrame->_Data._v1.x, pFrame->_Data._v1.y);
+
+				*/
+
 
 				/*
 				pSpriteRacketTrail->RenderEx(pPrev->_Data._vPosition.x, pPrev->_Data._vPosition.y, pPrev->_Data._rAngle, rScale*rRatio, rScale*rRatio);
