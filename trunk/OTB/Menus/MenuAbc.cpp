@@ -87,7 +87,7 @@ void MenuAbc::RenderBackground()
 {
 	Otb* pOTB =Otb::GetInstance();
 	Otb::RenderQuad( hgeVector(-50.0f, -50.0f), hgeVector(50.0f, 50.0f), hgeColorRGB(0.0f, 0.0f, 0.0f, 0.4f), pOTB->GetResources()._texPowerBar);
-	Otb::RenderQuad( hgeVector(-3.0f, 2.0f), hgeVector(3.0f, 7.0f), hgeColorRGB(0.0f, 0.0f, 0.63f, 0.4f), pOTB->GetResources()._texPowerBar);
+//	Otb::RenderQuad( hgeVector(-3.0f, 2.0f), hgeVector(3.0f, 7.0f), hgeColorRGB(0.0f, 0.0f, 0.63f, 0.4f), pOTB->GetResources()._texPowerBar);
 }
 
 // ****************************************************************************************

@@ -93,6 +93,8 @@ void Level::Render()
 	hgeColorRGB	colNet;		colNet.SetHWColor(nColorLevelNet);			
 	hgeColorRGB	colNetGrow;	colNetGrow.SetHWColor(nColorLevelNetGrow);
 
+	Otb::RenderQuad(hgeVector(-_vSize.x, 0.0f), hgeVector(_vSize.x, _vSize.y), 0xFF152A29);
+
 	hge->Gfx_RenderLine(-_vSize.x, 0,			 _vSize.x, 0,			colGround.GetHWColor());	// gnd
 	hge->Gfx_RenderLine(-_vSize.x, _vSize.y,	 _vSize.x, _vSize.y,	colSides.GetHWColor());		// top
 	hge->Gfx_RenderLine(-_vSize.x, 0,			-_vSize.x, _vSize.y,	colSides.GetHWColor());		// left
