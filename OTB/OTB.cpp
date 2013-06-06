@@ -287,7 +287,7 @@ void Otb::RenderQuad(const hgeVector& vMin, const hgeVector& vMax, const hgeColo
 	quad.v[3].tx=1;
 	quad.v[3].ty=0;
 
-	quad.blend	=BLEND_DEFAULT_Z;
+	quad.blend	=BLEND_DEFAULT;
 	quad.v[0].col = quad.v[1].col = quad.v[2].col = quad.v[3].col = color.GetHWColor();
 
 	quad.tex	=tex;
