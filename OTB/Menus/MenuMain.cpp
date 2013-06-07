@@ -229,19 +229,29 @@ void MenuMain::Render()
 		RenderBackground();
 
 		Otb* pOTB =Otb::GetInstance();
+		Resources& resources =pOTB->GetResources();
+		const hgeVector& vLevelSize =pOTB->GetGame().GetLevel().GetSize();
 
 		// Title
 		{
-			hgeFont* pFont=pOTB->GetResources()._pFontTitle;
-			float rPosY =pOTB->GetGame().GetLevel().GetSize().y;
+			hgeFont* pFont=resources._pFontTitle;
+			float rPosY =vLevelSize.y;
 			pFont->printf(0.0f, rPosY*0.96f, HGETEXT_CENTER, "Off  the  ball");
 		}
 
-		hgeFont* pFontMenu =pOTB->GetResources()._pFontMenus;
+		hgeFont* pFontMenu =resources._pFontMenus;
 		pFontMenu->SetColor(0xFFFFFFFF);
 		pFontMenu->Render(0.0f, GetMenuPosY(), HGETEXT_CENTER, SMARTENUM_GET_STRING(MenuScreen, _nMenuCurrent)+3 );
 
 		_pGUI->Render();
+
+		if (_nMenuCurrent==MS_HELP)
+		{
+			resources._pSpritePadXbox->Render4V( -vLevelSize.x,  vLevelSize.y,
+												  vLevelSize.x,  vLevelSize.y,
+												  vLevelSize.x,  0.0f,
+												 -vLevelSize.x,  0.0f );
+		}
 	}
 }
 

@@ -80,6 +80,13 @@ void Resources::Init()
 	_pSpriteRacketTrail =new hgeSprite(_texRacketTrail, 0.0f, 0.0f, 16.0f, 16.0f);
 	_pSpriteRacketTrail->SetBlendMode(BLEND_COLORADD);
 
+	// ---- help ----
+	_texPadXbox =hge->Texture_Load("Data/Common_Controller_0.png");
+	const int nPadXboxSizeX =hge->Texture_GetWidth(_texPadXbox, true);
+	const int nPadXboxSizeY =hge->Texture_GetHeight(_texPadXbox, true);
+	_pSpritePadXbox	=new hgeSprite(_texPadXbox, 0, 0, nPadXboxSizeX, nPadXboxSizeY);
+	_pSpritePadXbox->SetHotSpot(nPadXboxSizeX/2,nPadXboxSizeY/2);
+
 	// ---- AUDIO ---
 	Audio& audio =Otb::GetInstance()->GetAudio();
 	_hsBoing 			=audio.SampleLoad("Data/snd/player_bounce3.wav");
