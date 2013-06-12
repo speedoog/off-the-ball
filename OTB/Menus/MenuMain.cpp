@@ -247,10 +247,23 @@ void MenuMain::Render()
 
 		if (_nMenuCurrent==MS_HELP)
 		{
-			resources._pSpritePadXbox->Render4V( -vLevelSize.x,  vLevelSize.y,
-												  vLevelSize.x,  vLevelSize.y,
-												  vLevelSize.x,  0.0f,
-												 -vLevelSize.x,  0.0f );
+			const Float32 rScalePad =0.3f;
+			hgeVector vCenter(0.0f, vLevelSize.y*0.5f);
+			hgeVector vHalfSize(vLevelSize.x, vLevelSize.y);
+			hgeVector vHalfSizeScaled =vHalfSize*rScalePad;
+			resources._pSpritePadXbox->Render4V( vCenter.x-vHalfSizeScaled.x, vCenter.y+vHalfSizeScaled.y,
+												 vCenter.x+vHalfSizeScaled.x, vCenter.y+vHalfSizeScaled.y,
+												 vCenter.x+vHalfSizeScaled.x, vCenter.y-vHalfSizeScaled.y,
+												 vCenter.x-vHalfSizeScaled.x, vCenter.y-vHalfSizeScaled.y );
+
+
+			hgeVector vHalfSizeScaled2 =vHalfSize*rScalePad*0.1f;
+			resources._pSpritePadStick->Render4V( vCenter.x-vHalfSizeScaled2.x, vCenter.y+vHalfSizeScaled2.y,
+												 vCenter.x+vHalfSizeScaled2.x, vCenter.y+vHalfSizeScaled2.y,
+												 vCenter.x+vHalfSizeScaled2.x, vCenter.y-vHalfSizeScaled2.y,
+												 vCenter.x-vHalfSizeScaled2.x, vCenter.y-vHalfSizeScaled2.y );
+
+
 		}
 	}
 }
