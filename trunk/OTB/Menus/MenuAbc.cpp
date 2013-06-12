@@ -77,7 +77,7 @@ void MenuAbc::AddMenuItem(const UInt32 ItemId, const TString& sLabel)
 Float32	MenuAbc::GetMenuPosY()
 {
 	Otb* pOTB =Otb::GetInstance();
-	return pOTB->GetGame().GetLevel().GetSize().y*0.75f;
+	return pOTB->GetGame().GetLevel().GetSize().y*0.85f;
 }
 
 // ****************************************************************************************

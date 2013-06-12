@@ -53,6 +53,8 @@ public:
 	// help
 	HTEXTURE	_texPadXbox;
 	hgeSprite*	_pSpritePadXbox;
+	HTEXTURE	_texPadStick;
+	hgeSprite*	_pSpritePadStick;
 
 	// Sound
 	HSAMPLE		_hsBoing, _hsShoot, _hsNetHit, _hsRacketFlap, _hsZion;

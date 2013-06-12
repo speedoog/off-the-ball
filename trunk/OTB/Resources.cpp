@@ -81,11 +81,17 @@ void Resources::Init()
 	_pSpriteRacketTrail->SetBlendMode(BLEND_COLORADD);
 
 	// ---- help ----
-	_texPadXbox =hge->Texture_Load("Data/Common_Controller_0.png");
+	_texPadXbox =hge->Texture_Load("Data/Common_Controller_NoStick.png");
 	const int nPadXboxSizeX =hge->Texture_GetWidth(_texPadXbox, true);
 	const int nPadXboxSizeY =hge->Texture_GetHeight(_texPadXbox, true);
 	_pSpritePadXbox	=new hgeSprite(_texPadXbox, 0, 0, nPadXboxSizeX, nPadXboxSizeY);
 	_pSpritePadXbox->SetHotSpot(nPadXboxSizeX/2,nPadXboxSizeY/2);
+
+	_texPadStick =hge->Texture_Load("Data/Stick.png");
+	const int nPadStickSizeX =hge->Texture_GetWidth(_texPadStick, true);
+	const int nPadStickSizeY =hge->Texture_GetHeight(_texPadStick, true);
+	_pSpritePadStick	=new hgeSprite(_texPadStick, 0, 0, nPadStickSizeX, nPadStickSizeY);
+	_pSpritePadStick->SetHotSpot(nPadStickSizeX/2,nPadStickSizeY/2);
 
 	// ---- AUDIO ---
 	Audio& audio =Otb::GetInstance()->GetAudio();
