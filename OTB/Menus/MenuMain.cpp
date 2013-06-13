@@ -247,21 +247,42 @@ void MenuMain::Render()
 
 		if (_nMenuCurrent==MS_HELP)
 		{
-			const Float32 rScalePad =0.3f;
+			const Float32 rScalePad =1.0f/250.0f;
 			hgeVector vCenter(0.0f, vLevelSize.y*0.5f);
 			hgeVector vHalfSize(vLevelSize.x, vLevelSize.y);
 			hgeVector vHalfSizeScaled =vHalfSize*rScalePad;
-			resources._pSpritePadXbox->Render4V( vCenter.x-vHalfSizeScaled.x, vCenter.y+vHalfSizeScaled.y,
-												 vCenter.x+vHalfSizeScaled.x, vCenter.y+vHalfSizeScaled.y,
-												 vCenter.x+vHalfSizeScaled.x, vCenter.y-vHalfSizeScaled.y,
-												 vCenter.x-vHalfSizeScaled.x, vCenter.y-vHalfSizeScaled.y );
+// 			resources._pSpritePadXbox->Render4V( vCenter.x-vHalfSizeScaled.x, vCenter.y+vHalfSizeScaled.y,
+// 												 vCenter.x+vHalfSizeScaled.x, vCenter.y+vHalfSizeScaled.y,
+// 												 vCenter.x+vHalfSizeScaled.x, vCenter.y-vHalfSizeScaled.y,
+// 												 vCenter.x-vHalfSizeScaled.x, vCenter.y-vHalfSizeScaled.y );
+
+			resources._pSpritePadXbox->RenderEx(vCenter.x, vCenter.y, 0.0f, rScalePad, -rScalePad);
+
+			InputCore& inputCore =pOTB->GetInputCommand();
+			hgeVector vInputLeft  =inputCore.GetAxisLeft(0);
+			hgeVector vInputRigth =inputCore.GetAxisRight(0);
+
+// 			Player& player =pOTB->GetGame().GetPlayer(0);
+// 			hgeVector vInputLeft  =player.GetInputMove();
+// 			hgeVector vInputRigth =player.GetInputRacket();
+
+			static hgeVector vOffsetLeft(-1.79f, 0.8f);
+			static hgeVector vOffsetRight(0.88f, -0.25f);
+			static Float32	 rPadAmplitude =0.2f;
+			resources._pSpritePadStick->RenderEx(	vCenter.x+vOffsetLeft.x+vInputLeft.x*rPadAmplitude,
+													vCenter.y+vOffsetLeft.y+vInputLeft.y*rPadAmplitude,
+													0.0f, rScalePad, -rScalePad);
+
+			resources._pSpritePadStick->RenderEx(	vCenter.x+vOffsetRight.x+vInputRigth.x*rPadAmplitude,
+													vCenter.y+vOffsetRight.y+vInputRigth.y*rPadAmplitude,
+													0.0f, rScalePad, -rScalePad);
 
 
-			hgeVector vHalfSizeScaled2 =vHalfSize*rScalePad*0.1f;
-			resources._pSpritePadStick->Render4V( vCenter.x-vHalfSizeScaled2.x, vCenter.y+vHalfSizeScaled2.y,
-												 vCenter.x+vHalfSizeScaled2.x, vCenter.y+vHalfSizeScaled2.y,
-												 vCenter.x+vHalfSizeScaled2.x, vCenter.y-vHalfSizeScaled2.y,
-												 vCenter.x-vHalfSizeScaled2.x, vCenter.y-vHalfSizeScaled2.y );
+// 			hgeVector vHalfSizeScaled2 =vHalfSize*rScalePad*0.1f;
+// 			resources._pSpritePadStick->Render4V( vCenter.x-vHalfSizeScaled2.x, vCenter.y+vHalfSizeScaled2.y,
+// 												 vCenter.x+vHalfSizeScaled2.x, vCenter.y+vHalfSizeScaled2.y,
+// 												 vCenter.x+vHalfSizeScaled2.x, vCenter.y-vHalfSizeScaled2.y,
+// 												 vCenter.x-vHalfSizeScaled2.x, vCenter.y-vHalfSizeScaled2.y );
 
 
 		}
