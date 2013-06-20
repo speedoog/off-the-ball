@@ -66,8 +66,8 @@ void Resources::Init()
 // 	_pSpriteBall->SetHotSpot(8,8);
 
 	const Float32 TileSize =32.0f;
-	const int x=3;
-	const int y=2;
+	const Int32 x=3;
+	const Int32 y=2;
 	_TexBall =hge->Texture_Load("Data/particles.png");
 	_pSpriteBall =new hgeSprite(_TexBall, x*TileSize, y*TileSize, TileSize, TileSize);
 	_pSpriteBall->SetHotSpot(16,16);
@@ -82,16 +82,16 @@ void Resources::Init()
 
 	// ---- help ----
 	_texPadXbox =hge->Texture_Load("Data/Common_Controller_NoStick.png");
-	const int nPadXboxSizeX =hge->Texture_GetWidth(_texPadXbox, true);
-	const int nPadXboxSizeY =hge->Texture_GetHeight(_texPadXbox, true);
-	_pSpritePadXbox	=new hgeSprite(_texPadXbox, 0, 0, nPadXboxSizeX, nPadXboxSizeY);
-	_pSpritePadXbox->SetHotSpot(nPadXboxSizeX/2,nPadXboxSizeY/2);
+	const Int32 nPadXboxSizeX =hge->Texture_GetWidth(_texPadXbox, true);
+	const Int32 nPadXboxSizeY =hge->Texture_GetHeight(_texPadXbox, true);
+	_pSpritePadXbox	=new hgeSprite(_texPadXbox, 0, 0, (Float32)nPadXboxSizeX, (Float32)nPadXboxSizeY);
+	_pSpritePadXbox->SetHotSpot((Float32)(nPadXboxSizeX/2), (Float32)(nPadXboxSizeY/2));
 
 	_texPadStick =hge->Texture_Load("Data/Stick.png");
-	const int nPadStickSizeX =hge->Texture_GetWidth(_texPadStick, true);
-	const int nPadStickSizeY =hge->Texture_GetHeight(_texPadStick, true);
-	_pSpritePadStick	=new hgeSprite(_texPadStick, 0, 0, nPadStickSizeX, nPadStickSizeY);
-	_pSpritePadStick->SetHotSpot(nPadStickSizeX/2,nPadStickSizeY/2);
+	const Int32 nPadStickSizeX =hge->Texture_GetWidth(_texPadStick, true);
+	const Int32 nPadStickSizeY =hge->Texture_GetHeight(_texPadStick, true);
+	_pSpritePadStick	=new hgeSprite(_texPadStick, 0, 0, (Float32)nPadStickSizeX, (Float32)nPadStickSizeY);
+	_pSpritePadStick->SetHotSpot((Float32)(nPadStickSizeX/2), (Float32)(nPadStickSizeY/2));
 
 	// ---- AUDIO ---
 	Audio& audio =Otb::GetInstance()->GetAudio();
