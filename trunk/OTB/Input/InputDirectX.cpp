@@ -188,6 +188,13 @@ bool IsPs3Pad(const DIDEVICEINSTANCE* pCurrentDevice)
 	return (p!=NULL);
 }
 
+bool IsPs4Pad(const DIDEVICEINSTANCE* pCurrentDevice)
+{
+	const char* pName =pCurrentDevice->tszInstanceName;
+	const char* p=strstr(pName, "Wireless Controller");
+	return (p!=NULL);
+}
+
 // ****************************************************************************************
 //	Name: EnumJoysticks()
 //	Desc: Called once for each enumerated joystick. If we find one, create a
@@ -200,6 +207,10 @@ Bool InputDirectX::EnumJoysticks(const DIDEVICEINSTANCE* pdidInstance)
 	if (IsPs3Pad(pdidInstance))
 	{
 		PadCurrent._PadType =PT_PS3;
+	}
+	else if (IsPs4Pad(pdidInstance))
+	{
+		PadCurrent._PadType =PT_PS4;
 	}
 	else if (IsXboxPad(pdidInstance))
 	{

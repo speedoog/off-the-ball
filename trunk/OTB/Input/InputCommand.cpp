@@ -104,6 +104,9 @@ int	InputCore::Init(HWND hWnd)
 			case InputDirectX::PT_PS3:
 				_Mapper[iPad].InitForPS3();
 				break;
+			case InputDirectX::PT_PS4:
+				_Mapper[iPad].InitForPS3();
+				break;
 			default:
 				_Mapper[iPad].InitForOther();
 				break;

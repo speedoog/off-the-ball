@@ -44,6 +44,7 @@ public:
 		PT_INVALID,
 		PT_XBOX,
 		PT_PS3,
+		PT_PS4,
 		PT_OTHER,
 		PT_MAX,
 		);
