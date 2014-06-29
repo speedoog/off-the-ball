@@ -25,6 +25,7 @@ static const Float32 rFailDuration			=2.0f;
 static const Float32 rWinAnimationDuration	=2.0f;
 
 static const UInt32	 nMaxPoints				=10;
+static const Float32 rBallSoundRepeatTime	=0.1f;
 
 // ****************************************************************************************
 //	Ctor
@@ -55,6 +56,7 @@ void Rules::Init(Game* pGame)
 	_bSecondServe		=false;
 	_nPlayerWin			=-1;
 	_rWinAnimation		=0.0f;
+	_rBallSoundRepeat	=0.0f;
 }
 
 // ****************************************************************************************
@@ -62,6 +64,7 @@ void Rules::Init(Game* pGame)
 // ****************************************************************************************
 void Rules::Update(const Float32 rDeltaTime)
 {
+	_rBallSoundRepeat -=rDeltaTime;
 	if (GetFailMode())
 	{
 		_rFailTimer -=rDeltaTime;
@@ -308,6 +311,9 @@ void Rules::EventBallChangeSide(Int32 nSide)
 // ****************************************************************************************
 void Rules::PlayBallSound(const HSAMPLE hSample)
 {
+	if ((_rBallSoundRepeat>0.0f) || (_nPlayerWin!=-1))
+		return;
+
 	Otb* pOTB =Otb::GetInstance();
 	Game& game =pOTB->GetGame();
 	if (game.GetTimeScale()>2.0f)
@@ -315,14 +321,15 @@ void Rules::PlayBallSound(const HSAMPLE hSample)
 
 	Ball& ball =game.GetBall();
 	const Float32 rBallVelocity =ball.GetVelocity().Length();
-	if (rBallVelocity<0.6f)
+	if (rBallVelocity<0.1f)
 		return;
 
-	const Float32 rVolume =TChangeRangeClamped(0.0f, 10.0f, 0.3f, 1.0f, rBallVelocity);
+	const Float32 rVolume =TChangeRangeClamped(0.0f, 10.0f, 0.0f, 1.0f, rBallVelocity);
 	const Float32 rBallPosX=ball.GetPos().x;
 	//	const Float32 rPan =TChangeRange(-10.0f, 10.0f, 0.3f, 1.0f, TAbs(rBallPosX));
 	const Float32 rPan =rBallPosX/10.0f;
 	pOTB->GetAudio().SamplePlay(hSample, rBallVelocity, rPan);
+	_rBallSoundRepeat =rBallSoundRepeatTime;
 }
 
 // ****************************************************************************************

@@ -66,15 +66,16 @@ protected:
 			void		PlayBallSound(const HSAMPLE hSample);
 
 protected:
-	Game*	_pGame;
+	Game*		_pGame;
 
-	Bool	_bServing;
-	Bool	_bSecondServe;
-	Bool	_bWaitServe;
-	Bool	_bRacketHit;
-	Int32	_nBallSide;
-	Int32	_nGroundTouch;
-	Int32	_nServicePlayer;
+	Bool		_bServing;
+	Bool		_bSecondServe;
+	Bool		_bWaitServe;
+	Bool		_bRacketHit;
+	Int32		_nBallSide;
+	Int32		_nGroundTouch;
+	Int32		_nServicePlayer;
+	Float32		_rBallSoundRepeat;
 
 	// Fail mode
 	Bool		_bScoreMsg;
